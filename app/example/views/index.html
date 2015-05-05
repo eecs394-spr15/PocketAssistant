@@ -1,4 +1,11 @@
 <div ng-controller="IndexController">
-    <button ng-click="auth();">Authorize</button>
-    <div>Token: {{token}}</div>
+    <div ng-hide="cal">
+        <button ng-click="auth();">Authorize</button>
+        <div>Token: {{token}}</div>
+    </div>
+
+    <div ng-show="cal"><p>ITS A CALENDAR!!!</p>
+
+        <div ng-repeat="ev in events">{{ev.summary}}</div>
+    </div>
 </div>

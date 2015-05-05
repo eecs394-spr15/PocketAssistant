@@ -11,8 +11,27 @@ angular
             };
             gapi.auth.authorize(config, function () {
                 supersonic.logger.log('login complete');
-                alert('login complete');
                 $scope.token = gapi.auth.getToken();
+                gapi.client.load('calendar', 'v3', getCalendarData)
+            });
+        };
+
+        function getCalendarData(){
+            $scope.cal = true;
+            var request = gapi.client.calendar.events.list({
+                'calendarId': 'primary',
+                'timeMin': (new Date()).toISOString(),
+                'showDeleted': false,
+                'singleEvents': true,
+                'maxResults': 10,
+                'orderBy': 'startTime'
+            });
+
+            request.execute(function(resp) {
+                supersonic.logger.log('request executing');
+                supersonic.logger.log(resp);
+                var events = resp.items;
+                $scope.events = events;
             });
         }
     });
