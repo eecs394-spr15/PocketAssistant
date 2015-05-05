@@ -4,7 +4,8 @@
  ***********************************************************/
 
 navigation-bar {
-  background-color: #00B5FF;
+  /*background-color: #00B5FF;*/
+  background-color: purple;
   color: #ffffff;
 }
 
@@ -31,7 +32,8 @@ tab-bar tab-bar-item {
 }
 
 tab-bar tab-bar-item:selected {
-  color: #1596f7;
+  /*color: #1596f7;*/
+  color: purple;
 }
 
 tab-bar-item#settings {
@@ -44,4 +46,12 @@ tab-bar-item#index {
 
 tab-bar-item#internet {
   background-image: url(icons/search.svg);
+}
+
+tab-bar-item#calendar {
+  background-image: url(icons/calendar.svg);
+}
+
+tab-bar-item#day {
+  background-image: url(icons/day.svg);
 }
