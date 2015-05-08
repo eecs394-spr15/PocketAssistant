@@ -17,3 +17,17 @@
 {
     text-align:center;
 }
+.suggestion
+{
+    padding-left: 10px;
+    background-color: #e11f6e;
+    color: #f8f8f8;
+    font-size: 15px;
+}
+.go
+{
+    float: right;
+    border: 5px black;
+    padding-right: 10px;
+}
+

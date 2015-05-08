@@ -1,4 +1,4 @@
-<div ng-controller="IndexController">
+<div ng-controller="IndexController" class="padding">
     <div ng-hide="cal">
         <button ng-click="auth();">Authorize</button>
         <div><p>Token:</p>{{token}}</div>
@@ -15,12 +15,10 @@
         </super-navbar>
 
         <div>
-            <button class="button button-outline button-positive date">
-                <i class="icon super-calendar"></i>&nbsp
-
-                Today is {{month}} / {{day}}
-
-            </button>
+            <div class="button button-outline button-positive date">
+                <i class="icon super-calendar"></i>
+                {{" Today is "+day+", "+month+" "+date+", "+year+"!"}}
+            </div>
         </div>
 
         <div>
@@ -55,6 +53,7 @@
                 Schedule
                 <i class="icon super-clipboard"></i>
             </div>
+
             <div>
                 <button class="button button-block button-balanced">
                     <div class="row">
@@ -68,13 +67,16 @@
                         <div>EECS394 Course</div>
                     </div>
                 </button>
-                <button class="button button-block button-royal meal">
-                    <div class="row">
-                        <i class="icon super-fork"></i>&nbsp
-                        <i class="icon super-knife"></i>&nbsp&nbsp&nbsp
-                        <div>Lunch?</div>
+                <div class="suggestion" >
+                    <div class="row" >
+                        <div class="sugg">{{suggAct[suggId]}}</div>
+                        <div>{{suggCount[suggId]}}</div>
+                        <div>
+                            <button class="button go" ng-disabled="take[suggId]" ng-click="takeSugg()">GO</button>
+                            <button class="button go" ng-click="nextSugg()">Try Next</button>
+                        </div>
                     </div>
-                </button>
+                </div>
                 <button class="button button-block button-calm">
                     <div class="row">
                         <div>2:00 PM</div>&nbsp&nbsp&nbsp
@@ -103,6 +105,6 @@
             </div>
         </div>
 
-        <div ng-repeat="ev in events">{{ev.summary}}</div>
+        <div ng-repeat="ev in events">{{ev.start}}</div>
     </div>
 </div>
