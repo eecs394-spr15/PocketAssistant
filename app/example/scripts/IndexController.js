@@ -46,7 +46,7 @@ angular
         }
 
         /*$scope.sugg = [{activity:'gym',count:0},{activity:'meal',count:0},{activity:'pills',count:0}];*/
-        $scope.suggAct=['gym','meal','pills'];
+        $scope.suggAct=['SPAC','Meal','Walk'];
         $scope.suggCount = [0,0,0];
         $scope.take = [false, false,false];
         $scope.suggId = 0;

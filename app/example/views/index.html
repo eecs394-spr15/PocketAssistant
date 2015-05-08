@@ -1,7 +1,6 @@
 <div ng-controller="IndexController" class="padding">
     <div ng-hide="cal">
-        <button ng-click="auth();">Authorize</button>
-        <div><p>Token:</p>{{token}}</div>
+        <button class="button button-block button-stable" ng-click="auth();">Authorize</button>
     </div>
 
     <div ng-show="cal">
@@ -14,10 +13,12 @@
             </super-navbar-title>
         </super-navbar>
 
-        <div>
-            <div class="button button-outline button-positive date">
+        <div class="date">
+            <div class="date-content">
+                <i class="icon super-chevron-left"></i>
                 <i class="icon super-calendar"></i>
-                {{" Today is "+day+", "+month+" "+date+", "+year+"!"}}
+                {{day+", "+month+" "+date+", "+year}}
+                <i class="icon super-chevron-right"></i>
             </div>
         </div>
 
@@ -67,15 +68,12 @@
                         <div>EECS394 Course</div>
                     </div>
                 </button>
-                <div class="suggestion" >
-                    <div class="row" >
-                        <div class="sugg">{{suggAct[suggId]}}</div>
-                        <div>{{suggCount[suggId]}}</div>
-                        <div>
-                            <button class="button go" ng-disabled="take[suggId]" ng-click="takeSugg()">GO</button>
-                            <button class="button go" ng-click="nextSugg()">Try Next</button>
-                        </div>
-                    </div>
+                <div class="row suggestion" >
+
+                        <div class="col col-50">{{suggAct[suggId]+"?"}}</div>
+                        <button class="button icon button-clear super-heart col col-25" ng-disabled="take[suggId]" ng-click="takeSugg()"></button>
+                        <button class="button button-clear icon super-arrow-right-a col col-25" ng-click="nextSugg()"></button>
+
                 </div>
                 <button class="button button-block button-calm">
                     <div class="row">
