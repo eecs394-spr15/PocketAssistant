@@ -62,4 +62,7 @@ angular
                 $scope.suggId = 0;
             }
         };
+
+
+       
     });
