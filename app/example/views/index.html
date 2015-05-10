@@ -1,5 +1,6 @@
 <div ng-controller="IndexController" class="padding">
 
+    <script src="https://apis.google.com/js/client.js" ng-init="handleClientLoad()"></script>
     <link rel="stylesheet" href="styles/index.css">
 
     <super-navbar>
@@ -9,7 +10,7 @@
     </super-navbar>
 
     <div ng-hide="cal">
-        <button class="button button-stable button-block" ng-click="auth();">Authorize</button>
+        <button id="authorize-button" ng-click="handleClientLoad();">Authorize</button>
     </div>
 
     <div ng-show="cal">
