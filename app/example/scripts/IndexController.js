@@ -19,8 +19,9 @@ angular
                 'scope': 'https://www.googleapis.com/auth/calendar',
                 'immediate': 'true'
             };
-            gapi.auth.authorize(config, function () {
+            gapi.auth.authorize(config, function (tok) {
                 supersonic.logger.log('login complete');
+                supersonic.logger.log(tok);
                 $scope.token = gapi.auth.getToken();
                 gapi.client.load('calendar', 'v3', getCalendarData)
             });
@@ -41,6 +42,7 @@ angular
                 supersonic.logger.log('request executing');
                 supersonic.logger.log(resp);
                 var events = resp.items;
+                events.forEach(function(x){supersonic.logger.log(x)});
                 $scope.events = events;
             });
         }

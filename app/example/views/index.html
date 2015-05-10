@@ -1,25 +1,23 @@
-<div ng-controller="IndexController">
+<div ng-controller="IndexController" class="padding">
+
+    <link rel="stylesheet" href="styles/index.css">
+
+    <super-navbar>
+        <super-navbar-title>
+            Pocket Assistant
+        </super-navbar-title>
+    </super-navbar>
+
     <div ng-hide="cal">
-        <button ng-click="auth();">Authorize</button>
-        <div><p>Token:</p>{{token}}</div>
+        <button class="button button-stable button-block" ng-click="auth();">Authorize</button>
     </div>
 
     <div ng-show="cal">
 
-        <link rel="stylesheet" href="styles/index.css">
-
-        <super-navbar>
-            <super-navbar-title>
-                Pocket Assistant
-            </super-navbar-title>
-        </super-navbar>
-
         <div>
             <button class="button button-outline button-positive date">
                 <i class="icon super-calendar"></i>&nbsp
-
                 Today is {{month}} / {{day}}
-
             </button>
         </div>
 
@@ -55,54 +53,15 @@
                 Schedule
                 <i class="icon super-clipboard"></i>
             </div>
-            <div>
-                <button class="button button-block button-balanced">
+            <div class>
+                <div ng-repeat="ev in events" class="button button-balanced button-block">
                     <div class="row">
-                        <div>9:00 AM</div>&nbsp&nbsp&nbsp
-                        <div>Machine Learning Course</div>
+                        <div class="col col-20 eventTime">{{ev.start.dateTime.toString().substring(12,16)}} - {{ev.end.dateTime.toString().substring(12,16)}}</div>
+                        <div class="col col-80">&emsp;{{ev.summary}}</div>
                     </div>
-                </button>
-                <button class="button button-block button-balanced">
-                    <div class="row">
-                        <div>11:00 AM</div>&nbsp&nbsp&nbsp
-                        <div>EECS394 Course</div>
-                    </div>
-                </button>
-                <button class="button button-block button-royal meal">
-                    <div class="row">
-                        <i class="icon super-fork"></i>&nbsp
-                        <i class="icon super-knife"></i>&nbsp&nbsp&nbsp
-                        <div>Lunch?</div>
-                    </div>
-                </button>
-                <button class="button button-block button-calm">
-                    <div class="row">
-                        <div>2:00 PM</div>&nbsp&nbsp&nbsp
-                        <div>Team Brown Meeting</div>
-                    </div>
-                </button>
-                <button class="button button-block button-balanced">
-                    <div class="row">
-                        <div>4:00 AM</div>&nbsp&nbsp&nbsp
-                        <div>Algorithm Course</div>
-                    </div>
-                </button>
-                <button class="button button-block button-stable meal">
-                    <div class="row">
-                        <i class="icon super-coffee"></i>&nbsp&nbsp&nbsp
-                        <div>Take a break?</div>
-                    </div>
-                </button>
-                <button class="button button-block button-royal meal">
-                    <div class="row">
-                        <i class="icon super-fork"></i>&nbsp
-                        <i class="icon super-knife"></i>&nbsp&nbsp&nbsp
-                        <div>Dinner?</div>
-                    </div>
-                </button>
+                </div>
+
             </div>
         </div>
-
-        <div ng-repeat="ev in events">{{ev.summary}}</div>
     </div>
 </div>
