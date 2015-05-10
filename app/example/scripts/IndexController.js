@@ -8,13 +8,13 @@ angular
                     "title": "394 midterm"
                 },
                 "start": {
-                    "date": "5/12/2015",
-                    "dateTime": "11:00",
+                    "date": 2015-5-12,
+                    "dateTime": "2015-5-12T12:00:00+0000",
                     "timeZone": "ET"
                 },
                 "end": {
-                    "date": "5/12/2015",
-                    "dateTime": "12:00",
+                    "date": 2015-5-12,
+                    "dateTime": "2015-5-12T13:00:00+0000",
                     "timeZone": "ET"
                 }
             },
@@ -23,13 +23,13 @@ angular
                     "title": "395 midterm"
                 },
                 "start": {
-                    "date": "5/13/2015",
-                    "dateTime": "13:00",
+                    "date": 2015-5-13,
+                    "dateTime": "2015-5-13T12:00:00+0000",
                     "timeZone": "ET"
                 },
                 "end": {
-                    "date": "5/13/2015",
-                    "dateTime": "14:00",
+                    "date": 2015-5-13,
+                    "dateTime": "2015-5-13T13:00:00+0000",
                     "timeZone": "ET"
                 }
             }
@@ -41,13 +41,13 @@ angular
                     "title": "394 class"
                 },
                 "start": {
-                    "date": "5/10/2015",
-                    "dateTime": "11:00",
+                    "date": 2015-5-10,
+                    "dateTime": "2015-5-10T11:00:00+0000",
                     "timeZone": "ET"
                 },
                 "end": {
-                    "date": "5/10/2015",
-                    "dateTime": "12:00",
+                    "date": 2015-5-10,
+                    "dateTime": "2015-5-10T12:00:00+0000",
                     "timeZone": "ET"
                 }
             },
@@ -56,13 +56,13 @@ angular
                     "title": "395 class"
                 },
                 "start": {
-                    "date": "5/10/2015",
-                    "dateTime": "13:00",
+                    "date": 2015-5-10,
+                    "dateTime": "2015-5-10T13:00:00+0000",
                     "timeZone": "ET"
                 },
                 "end": {
                     "date": "5/10/2015",
-                    "dateTime": "14:00",
+                    "dateTime": "2015-5-10T14:00:00+0000",
                     "timeZone": "ET"
                 }
             },
@@ -72,16 +72,44 @@ angular
                 },
                 "start": {
                     "date": "5/10/2015",
-                    "dateTime": "15:00",
+                    "dateTime": "2015-5-10T15:00:00+0000",
                     "timeZone": "ET"
                 },
                 "end": {
                     "date": "5/10/2015",
-                    "dateTime": "16:00",
+                    "dateTime": "2015-5-10T16:00:00+0000",
                     "timeZone": "ET"
                 }
             }
         ]
+
+        // this code determines if the user has a block of free time
+        var lastEvent;
+        var firstEvent = true;
+        $scope.events.forEach(function(event) {
+            var now = event.start.dateTime;
+            var hour = parseInt(now.toString().substring(10,12));
+            var minute = parseInt(now.toString().substring(13,15));
+            var effectiveTime = 60 * hour + minute;
+
+            if(firstEvent == true) {
+                lastEvent = event;
+                firstEvent = false;
+                return;
+            }
+
+            var before = lastEvent.end.dateTime;
+            var lastHour = parseInt(before.toString().substring(10,12));
+            var lastMinute = parseInt(before.toString().substring(13,15));
+            var effectiveLastTime = 60 * lastHour + lastMinute;
+
+            if(effectiveTime - effectiveLastTime >= 60 && hour > 9 && hour < 18) {
+                window.alert("good");
+                //add code that deals with this now
+            }
+
+            lastEvent = event;
+        });
 
         today=new Date();
         $scope.today=new Date();
