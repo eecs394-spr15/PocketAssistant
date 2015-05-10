@@ -1,6 +1,56 @@
 angular
     .module('example')
     .controller('IndexController', function($scope, supersonic) {
+
+        $scope.events = [
+            {
+                "source": {
+                    "title": "394 class"
+                },
+                "start": {
+                    "date": "5/10/2015",
+                    "dateTime": "11:00",
+                    "timeZone": "ET"
+                },
+                "end": {
+                    "date": "5/10/2015",
+                    "dateTime": "12:00",
+                    "timeZone": "ET"
+                }
+            },
+            {
+                "source": {
+                    "title": "395 class"
+                },
+                "start": {
+                    "date": "5/10/2015",
+                    "dateTime": "13:00",
+                    "timeZone": "ET"
+                },
+                "end": {
+                    "date": "5/10/2015",
+                    "dateTime": "14:00",
+                    "timeZone": "ET"
+                }
+            },
+            {
+                "source": {
+                    "title": "396 class"
+                },
+                "start": {
+                    "date": "5/10/2015",
+                    "dateTime": "15:00",
+                    "timeZone": "ET"
+                },
+                "end": {
+                    "date": "5/10/2015",
+                    "dateTime": "16:00",
+                    "timeZone": "ET"
+                }
+            }
+        ]
+
+        today=new Date();
         $scope.today=new Date();
         function initArray(){
             this.length=initArray.arguments.length;
