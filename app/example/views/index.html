@@ -14,12 +14,13 @@
     </div>
 
     <div ng-show="cal">
-
-        <div>
-            <button class="button button-outline button-positive date">
-                <i class="icon super-calendar"></i>&nbsp
-                Today is {{month}} / {{day}}
-            </button>
+        <div class="date">
+            <div class="date-content">
+                <i class="icon super-chevron-left"></i>
+                <i class="icon super-calendar"></i>
+                {{day+", "+month+" "+date+", "+year}}
+                <i class="icon super-chevron-right"></i>
+            </div>
         </div>
 
         <div>
@@ -54,8 +55,8 @@
                 Schedule
                 <i class="icon super-clipboard"></i>
             </div>
-            <div class>
-                <div ng-repeat="ev in events" class="button button-balanced button-block">
+            <div>
+                <button class="button button-block button-balanced">
                     <div class="row">
                         <div class="col col-20 eventTime">{{ev.start.dateTime.toString().substring(12,16)}} - {{ev.end.dateTime.toString().substring(12,16)}}</div>
                         <div class="col col-80">&emsp;{{ev.summary}}</div>
@@ -64,5 +65,7 @@
 
             </div>
         </div>
+
+        
     </div>
 </div>
