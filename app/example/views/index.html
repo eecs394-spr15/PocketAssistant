@@ -1,18 +1,19 @@
 <div ng-controller="IndexController" class="padding">
+
+    <script src="https://apis.google.com/js/client.js" ng-init="handleClientLoad()"></script>
+    <link rel="stylesheet" href="styles/index.css">
+
+    <super-navbar>
+        <super-navbar-title>
+            Pocket Assistant
+        </super-navbar-title>
+    </super-navbar>
+
     <div ng-hide="cal">
-        <button class="button button-block button-stable" ng-click="auth();">Authorize</button>
+        <button id="authorize-button" ng-click="handleClientLoad();">Authorize</button>
     </div>
 
     <div ng-show="cal">
-
-        <link rel="stylesheet" href="styles/index.css">
-
-        <super-navbar>
-            <super-navbar-title>
-                Pocket Assistant
-            </super-navbar-title>
-        </super-navbar>
-
         <div class="date">
             <div class="date-content">
                 <i class="icon super-chevron-left"></i>
@@ -55,60 +56,17 @@
                 <i class="icon super-clipboard"></i>
             </div>
             <div>
-                <div class="row event" ng-repeat="ev in events">
-                    <p>test</p>
-
-                </div>
+                <button ng-repeat="ev in events" class="button button-block button-balanced">
+                    <div class="row">
+                        <div class="col col-20 eventTime">{{ev.start.dateTime.toString().substring(12,16)}} - {{ev.end.dateTime.toString().substring(12,16)}}</div>
+                        <div class="col col-80">&emsp;{{ev.summary}}</div>
+                    </div>
+                </button>
             </div>
 
-            <div>
-                <button class="button button-block button-balanced">
-                    <div class="row">
-                        <div>9:00 AM</div>&nbsp&nbsp&nbsp
-                        <div>Machine Learning Course</div>
-                    </div>
-                </button>
-                <button class="button button-block button-balanced">
-                    <div class="row">
-                        <div>11:00 AM</div>&nbsp&nbsp&nbsp
-                        <div>EECS394 Course</div>
-                    </div>
-                </button>
-                <div class="row suggestion" >
-
-                    <div class="col col-50">{{suggAct[suggId]+"?"}}</div>
-                    <button class="button icon button-clear super-heart col col-25" ng-disabled="take[suggId]" ng-click="takeSugg()"></button>
-                    <button class="button button-clear icon super-arrow-right-a col col-25" ng-click="nextSugg()"></button>
-
-                </div>
-                <button class="button button-block button-calm">
-                    <div class="row">
-                        <div>2:00 PM</div>&nbsp&nbsp&nbsp
-                        <div>Team Brown Meeting</div>
-                    </div>
-                </button>
-                <button class="button button-block button-balanced">
-                    <div class="row">
-                        <div>4:00 AM</div>&nbsp&nbsp&nbsp
-                        <div>Algorithm Course</div>
-                    </div>
-                </button>
-                <button class="button button-block button-stable meal">
-                    <div class="row">
-                        <i class="icon super-coffee"></i>&nbsp&nbsp&nbsp
-                        <div>Take a break?</div>
-                    </div>
-                </button>
-                <button class="button button-block button-royal meal">
-                    <div class="row">
-                        <i class="icon super-fork"></i>&nbsp
-                        <i class="icon super-knife"></i>&nbsp&nbsp&nbsp
-                        <div>Dinner?</div>
-                    </div>
-                </button>
             </div>
         </div>
 
-        <div ng-repeat="ev in events">{{ev.start}}</div>
+        
     </div>
 </div>

@@ -33,58 +33,11 @@ angular
                     "timeZone": "ET"
                 }
             }
-        ]
+        ];
 
-        $scope.events = [
-            {
-                "source": {
-                    "title": "394 class"
-                },
-                "start": {
-                    "date": 2015-5-10,
-                    "dateTime": "2015-5-10T11:00:00+0000",
-                    "timeZone": "ET"
-                },
-                "end": {
-                    "date": 2015-5-10,
-                    "dateTime": "2015-5-10T12:00:00+0000",
-                    "timeZone": "ET"
-                }
-            },
-            {
-                "source": {
-                    "title": "395 class"
-                },
-                "start": {
-                    "date": 2015-5-10,
-                    "dateTime": "2015-5-10T13:00:00+0000",
-                    "timeZone": "ET"
-                },
-                "end": {
-                    "date": "5/10/2015",
-                    "dateTime": "2015-5-10T14:00:00+0000",
-                    "timeZone": "ET"
-                }
-            },
-            {
-                "source": {
-                    "title": "396 class"
-                },
-                "start": {
-                    "date": "5/10/2015",
-                    "dateTime": "2015-5-10T15:00:00+0000",
-                    "timeZone": "ET"
-                },
-                "end": {
-                    "date": "5/10/2015",
-                    "dateTime": "2015-5-10T16:00:00+0000",
-                    "timeZone": "ET"
-                }
-            }
-        ]
 
         // this code determines if the user has a block of free time
-        var lastEvent;
+        /*var lastEvent;
         var firstEvent = true;
         $scope.events.forEach(function(event) {
             var now = event.start.dateTime;
@@ -109,7 +62,7 @@ angular
             }
 
             lastEvent = event;
-        });
+        });*/
 
         today=new Date();
         $scope.today=new Date();
@@ -124,18 +77,42 @@ angular
         $scope.year =$scope.today.getFullYear();
         $scope.day = d[$scope.today.getDay()+1];
 
-        $scope.auth = function() {
-            var config = {
-                'client_id': '792909163379-01odbc9kccakdhrhpgognar3d8idug0q.apps.googleusercontent.com',
-                'scope': 'https://www.googleapis.com/auth/calendar',
-                'immediate': 'true'
-            };
-            gapi.auth.authorize(config, function () {
-                supersonic.logger.log('login complete');
-                $scope.token = gapi.auth.getToken();
-                gapi.client.load('calendar', 'v3', getCalendarData)
-            });
+        var clientId = '792909163379-01odbc9kccakdhrhpgognar3d8idug0q.apps.googleusercontent.com';
+        var scopes = 'https://www.googleapis.com/auth/calendar';
+        var apiKey = 'AIzaSyAZkvW_yVrdUVEjrO7_DwFq2NidEkSEAoE';
+
+        $scope.handleClientLoad = function() {
+            supersonic.logger.log('enter');
+            // Step 2: Reference the API key
+            gapi.client.setApiKey(apiKey);
+            window.setTimeout(checkAuth,1);
         };
+
+        function checkAuth() {
+            gapi.auth.authorize({client_id: clientId, scope: scopes, immediate: true}, handleAuthResult);
+        }
+
+        function handleAuthResult(authResult) {
+            var authorizeButton = document.getElementById('authorize-button');
+            if (authResult && !authResult.error) {
+                authorizeButton.style.visibility = 'hidden';
+                makeApiCall();
+            } else {
+                authorizeButton.style.visibility = '';
+                authorizeButton.onclick = handleAuthClick;
+            }
+        }
+
+        function handleAuthClick(event) {
+            // Step 3: get authorization to use private data
+            gapi.auth.authorize({client_id: clientId, scope: scopes, immediate: false}, handleAuthResult);
+            return false;
+        }
+
+        function makeApiCall() {
+            gapi.client.load('calendar', 'v3', getCalendarData);
+        }
+
 
         function getCalendarData(){
             $scope.cal = true;
@@ -152,11 +129,12 @@ angular
                 supersonic.logger.log('request executing');
                 supersonic.logger.log(resp);
                 var events = resp.items;
+                events.forEach(function(x){supersonic.logger.log(x)});
                 $scope.events = events;
             });
         }
 
-        /*$scope.sugg = [{activity:'gym',count:0},{activity:'meal',count:0},{activity:'pills',count:0}];*/
+
         $scope.suggAct=['SPAC','Meal','Walk'];
         $scope.suggCount = [0,0,0];
         $scope.take = [false, false,false];
