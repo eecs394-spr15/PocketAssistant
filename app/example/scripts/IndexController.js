@@ -2,6 +2,39 @@ angular
     .module('example')
     .controller('IndexController', function($scope, supersonic) {
 
+        $scope.reminders = [
+            {
+                "source": {
+                    "title": "394 midterm"
+                },
+                "start": {
+                    "date": "5/12/2015",
+                    "dateTime": "11:00",
+                    "timeZone": "ET"
+                },
+                "end": {
+                    "date": "5/12/2015",
+                    "dateTime": "12:00",
+                    "timeZone": "ET"
+                }
+            },
+            {
+                "source": {
+                    "title": "395 midterm"
+                },
+                "start": {
+                    "date": "5/13/2015",
+                    "dateTime": "13:00",
+                    "timeZone": "ET"
+                },
+                "end": {
+                    "date": "5/13/2015",
+                    "dateTime": "14:00",
+                    "timeZone": "ET"
+                }
+            }
+        ]
+
         $scope.events = [
             {
                 "source": {
