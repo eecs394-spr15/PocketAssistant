@@ -33,58 +33,11 @@ angular
                     "timeZone": "ET"
                 }
             }
-        ]
+        ];
 
-        $scope.events = [
-            {
-                "source": {
-                    "title": "394 class"
-                },
-                "start": {
-                    "date": 2015-5-10,
-                    "dateTime": "2015-5-10T11:00:00+0000",
-                    "timeZone": "ET"
-                },
-                "end": {
-                    "date": 2015-5-10,
-                    "dateTime": "2015-5-10T12:00:00+0000",
-                    "timeZone": "ET"
-                }
-            },
-            {
-                "source": {
-                    "title": "395 class"
-                },
-                "start": {
-                    "date": 2015-5-10,
-                    "dateTime": "2015-5-10T13:00:00+0000",
-                    "timeZone": "ET"
-                },
-                "end": {
-                    "date": "5/10/2015",
-                    "dateTime": "2015-5-10T14:00:00+0000",
-                    "timeZone": "ET"
-                }
-            },
-            {
-                "source": {
-                    "title": "396 class"
-                },
-                "start": {
-                    "date": "5/10/2015",
-                    "dateTime": "2015-5-10T15:00:00+0000",
-                    "timeZone": "ET"
-                },
-                "end": {
-                    "date": "5/10/2015",
-                    "dateTime": "2015-5-10T16:00:00+0000",
-                    "timeZone": "ET"
-                }
-            }
-        ]
 
         // this code determines if the user has a block of free time
-        var lastEvent;
+        /*var lastEvent;
         var firstEvent = true;
         $scope.events.forEach(function(event) {
             var now = event.start.dateTime;
@@ -109,7 +62,7 @@ angular
             }
 
             lastEvent = event;
-        });
+        });*/
 
         today=new Date();
         $scope.today=new Date();
@@ -181,7 +134,7 @@ angular
             });
         }
 
-        /*$scope.sugg = [{activity:'gym',count:0},{activity:'meal',count:0},{activity:'pills',count:0}];*/
+
         $scope.suggAct=['SPAC','Meal','Walk'];
         $scope.suggCount = [0,0,0];
         $scope.take = [false, false,false];

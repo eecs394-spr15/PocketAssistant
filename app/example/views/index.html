@@ -56,12 +56,13 @@
                 <i class="icon super-clipboard"></i>
             </div>
             <div>
-                <button class="button button-block button-balanced">
+                <button ng-repeat="ev in events" class="button button-block button-balanced">
                     <div class="row">
                         <div class="col col-20 eventTime">{{ev.start.dateTime.toString().substring(12,16)}} - {{ev.end.dateTime.toString().substring(12,16)}}</div>
                         <div class="col col-80">&emsp;{{ev.summary}}</div>
                     </div>
-                </div>
+                </button>
+            </div>
 
             </div>
         </div>
