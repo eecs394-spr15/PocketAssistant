@@ -64,7 +64,6 @@ angular
             lastEvent = event;
         });*/
 
-        today=new Date();
         $scope.today=new Date();
         function initArray(){
             this.length=initArray.arguments.length;
@@ -134,24 +133,25 @@ angular
             });
         }
 
+        $scope.sugg = [
+            {"id":1,"activity":'SPAC',"count":0,"take": false},
+            {"id":2,"activity":'Meal',"count":0,"take": false},
+            {"id":3,"activity":'Walk',"count":0,"take": false}
+        ];
+        $scope.active = 0;
+        $scope.isActive = function (id) {
+            return $scope.active === id;
+        };
 
-        $scope.suggAct=['SPAC','Meal','Walk'];
-        $scope.suggCount = [0,0,0];
-        $scope.take = [false, false,false];
-        $scope.suggId = 0;
-        $scope.takeSugg= function() {
-            $scope.suggCount[$scope.suggId] += 1;
-            $scope.take[$scope.suggId] = true;
+        $scope.setActive= function(id) {
+            $scope.active = id;
         };
         $scope.nextSugg = function() {
-            if ($scope.suggId < $scope.suggAct.length-1) {
-                $scope.suggId +=1;
-            }
-            else {
-                $scope.suggId = 0;
-            }
         };
 
+        $scope.showOption = false;
+        $scope.toggle = function() {
+            $scope.showOption = !$scope.showOption;
+        }
 
-       
     });

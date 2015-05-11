@@ -31,38 +31,53 @@
     color: black;
     font-weight:bold;
 }
-.suggestion
-{
-    text-align:center;
-}
-
-.eventTime{
-    line-height: 100%;
-    text-align:left;
-    height: 52px;
-    padding-left: 10px;
-
-    color: #f8f8f8;
-    font-size: 16px;
-    border-radius: 2px;
-    border: 1px solid #b21648;
-}
-
-.suggestion div
-{
-    padding-top: 10px;
-}
-.suggestion button
-{
-    margin-top: -5px;
-}
-
 .event
 {
     height: 52px;
     padding-left: 10px;
     padding-right: 10px;
+    padding-top:2px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    color: #fafafa;
     font-size: 16px;
     border-radius: 2px;
-    border: 1px solid #b21648;
+}
+.green
+{
+    background-color: #17b225;
+    border: 1px solid #18b273;
+}
+.blue
+{
+    background-color: #27c3ff;
+    border: 1px solid #1c98ff;
+}
+.suggestion
+{
+    height: 52px;
+    padding-left: 10px;
+    background-color: #f8f8f8;
+    color: #444;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    font-size: 16px;
+    border-radius: 2px;
+    border: 1px solid #b2b2b2;
+}
+.suggestion i
+{
+    font-size:25px;
+}
+.sugglist
+{
+    height: 45px;
+    background-color: #ffcaca;
+    padding-left:10px;
+    padding-top: 10px;
+    border: 1px solid #b2b2b2
+}
+.active
+{
+    background-color: #ff8e9b;
 }
