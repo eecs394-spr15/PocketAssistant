@@ -10,7 +10,7 @@
     </super-navbar>
 
     <div ng-hide="cal">
-        <button id="authorize-button" ng-click="handleClientLoad();">Authorize</button>
+        <button id="authorize-button" class="button button-block button-stable" ng-click="handleClientLoad();">Authorize</button>
     </div>
 
     <div ng-show="cal">
@@ -38,7 +38,7 @@
                 <button class="button button-block button-energized">
                     <div class="row">
                         <div>3 days</div>&nbsp&nbsp&nbsp
-                        <div>Midterm - Machine Learning</div>
+                        <div>Midterm-Machine Learning</div>
                     </div>
                 </button>
                 <button class="button button-block button-assertive">
@@ -56,17 +56,42 @@
                 <i class="icon super-clipboard"></i>
             </div>
             <div>
-                <button ng-repeat="ev in events" class="button button-block button-balanced">
-                    <div class="row">
-                        <div class="col col-20 eventTime">{{ev.start.dateTime.toString().substring(12,16)}} - {{ev.end.dateTime.toString().substring(12,16)}}</div>
-                        <div class="col col-80">&emsp;{{ev.summary}}</div>
+                <div class="row suggestion" >
+                    <div ng-show="isActive(0)" class="col col-85"><i class="icon super-coffee"></i>{{"  "+"FREE TIME NOW"}}</div>
+                    <div ng-hide="isActive(0)" class="col col-85">{{sugg[active-1].activity}}</div>
+                    <button class="col-col-15 button button-icon icon super-navicon" ng-click="toggle()"></button>
+                </div>
+
+                <div ng-show="showOption">
+                    <div ng-repeat="suggestion in sugg">
+                        <div class="sugglist row" ng-class="{active: isActive(suggestion.id)}" ng-click="setActive(suggestion.id)">
+                            <div class="col col-90">{{suggestion.activity}}</div>
+                            <i class="col col-10 icon super-checkmark"></i>
+                        </div>
                     </div>
-                </button>
+                    <div class="sugglist row" ng-class="{active: isActive(0)}" ng-click="setActive(0)">
+                        <div class="col col-90">None of the above</div>
+                        <i class="col col-10 icon super-checkmark"></i>
+                    </div>
+                </div>
+
+                <div>
+                    <div ng-repeat="ev in events">
+                        <div class="row event" ng-class="{'blue' : ev.colorId === '5', 'green': ev.colorId === Null}">
+                            <div class="col col-20 eventTime">{{ev.start.dateTime.toString().substring(12,16)}} - {{ev.end.dateTime.toString().substring(12,16)}}</div>
+                            <div class="col col-80">&emsp;{{ev.summary}}</div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <!--<div class="row suggestion" >
+                    <div class="col col-50">{{sugg[suggId].activity+"?"}}</div>
+                    <button class="button icon button-clear super-heart col col-25" ng-disabled="sugg[suggId].take" ng-click="takeSugg()"></button>
+                    <button class="button button-clear icon super-arrow-right-a col col-25" ng-click="nextSugg()"></button>
+                </div>-->
             </div>
 
-            </div>
         </div>
-
-        
     </div>
-</div>
