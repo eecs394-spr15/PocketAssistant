@@ -1,6 +1,6 @@
 angular
     .module('example')
-    .controller('IndexController', function($scope, supersonic) {
+    .controller('IndexController', function($scope, supersonic, $filter) {
 
         $scope.reminders = [
             {
@@ -115,9 +115,19 @@ angular
 
         function getCalendarData(){
             $scope.cal = true;
+            var today = new Date();
+            today.setHours(0,0,0,0);
+            today = today.toISOString();
+
+            var tomorrow = new Date()
+            tomorrow.setHours(23,59,59,999);
+            tomorrow = tomorrow.toISOString();
+
+
             var request = gapi.client.calendar.events.list({
                 'calendarId': 'primary',
-                'timeMin': (new Date()).toISOString(),
+                'timeMin': today,
+                'timeMax' : tomorrow,
                 'showDeleted': false,
                 'singleEvents': true,
                 'maxResults': 10,
