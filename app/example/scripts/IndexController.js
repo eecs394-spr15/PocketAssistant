@@ -38,31 +38,31 @@ angular
 
         // this code determines if the user has a block of free time
         /*var lastEvent;
-        var firstEvent = true;
-        $scope.events.forEach(function(event) {
-            var now = event.start.dateTime;
-            var hour = parseInt(now.toString().substring(10,12));
-            var minute = parseInt(now.toString().substring(13,15));
-            var effectiveTime = 60 * hour + minute;
+         var firstEvent = true;
+         $scope.events.forEach(function(event) {
+         var now = event.start.dateTime;
+         var hour = parseInt(now.toString().substring(10,12));
+         var minute = parseInt(now.toString().substring(13,15));
+         var effectiveTime = 60 * hour + minute;
 
-            if(firstEvent == true) {
-                lastEvent = event;
-                firstEvent = false;
-                return;
-            }
+         if(firstEvent == true) {
+         lastEvent = event;
+         firstEvent = false;
+         return;
+         }
 
-            var before = lastEvent.end.dateTime;
-            var lastHour = parseInt(before.toString().substring(10,12));
-            var lastMinute = parseInt(before.toString().substring(13,15));
-            var effectiveLastTime = 60 * lastHour + lastMinute;
+         var before = lastEvent.end.dateTime;
+         var lastHour = parseInt(before.toString().substring(10,12));
+         var lastMinute = parseInt(before.toString().substring(13,15));
+         var effectiveLastTime = 60 * lastHour + lastMinute;
 
-            if(effectiveTime - effectiveLastTime >= 60 && hour > 9 && hour < 18) {
-                window.alert("good");
-                //add code that deals with this now
-            }
+         if(effectiveTime - effectiveLastTime >= 60 && hour > 9 && hour < 18) {
+         window.alert("good");
+         //add code that deals with this now
+         }
 
-            lastEvent = event;
-        });*/
+         lastEvent = event;
+         });*/
 
         function initArray(){
             this.length=initArray.arguments.length;
@@ -160,7 +160,9 @@ angular
             {"id":2,"activity":'Meal',"count":0,"take": false},
             {"id":3,"activity":'Walk',"count":0,"take": false}
         ];
+
         $scope.active = 0;
+        $scope.addedEvent = false;
         $scope.isActive = function (id) {
             return $scope.active === id;
         };
@@ -174,6 +176,25 @@ angular
         $scope.showOption = false;
         $scope.toggle = function() {
             $scope.showOption = !$scope.showOption;
-        }
+        };
+
+
+        $scope.newEvent = { end: { dateTime: "2015-05-12T10:30:00-05:00" }
+            , start: { dateTime: "2015-05-12T10:00:00-05:00" }
+            , summary: "test"
+        };
+        $scope.addCalendarData = function(){
+            $scope.newEvent.summary = $scope.sugg[$scope.active-1].activity;
+            var request = gapi.client.calendar.events.insert({
+                'calendarId': 'primary',
+                'resource': $scope.newEvent
+            });
+            request.execute(function(resp) {
+                supersonic.logger.log('Event Added');
+                supersonic.logger.log(resp);
+            });
+            $scope.addedEvent = true;
+            $scope.showOption = !$scope.showOption;
+        };
 
     });

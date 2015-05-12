@@ -69,6 +69,11 @@
 {
     font-size:25px;
 }
+.addButton
+{
+    margin-top: -5px;
+    font-size: 13px;
+}
 .sugglist
 {
     height: 45px;
@@ -81,6 +86,22 @@
 {
     background-color: #ff8e9b;
 }
+.col-15 {
+    -webkit-box-flex: 0;
+    -webkit-flex: 0 0 15%;
+    -moz-box-flex: 0;
+    -moz-flex: 0 0 15%;
+    -ms-flex: 0 0 15%;
+    flex: 0 0 15%;
+    max-width: 15%; }
+.col-70 {
+    -webkit-box-flex: 0;
+    -webkit-flex: 0 0 70%;
+    -moz-box-flex: 0;
+    -moz-flex: 0 0 70%;
+    -ms-flex: 0 0 70%;
+    flex: 0 0 70%;
+    max-width: 70%; }
 
 .eventTime{
     font-size:14px;
