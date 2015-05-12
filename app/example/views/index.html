@@ -78,7 +78,7 @@
                 <div>
                     <div ng-repeat="ev in events">
                         <div class="row event" ng-class="{'blue' : ev.colorId === '5', 'green': ev.colorId === Null}">
-                            <div class="col col-20 eventTime">{{ev.start.dateTime.toString().substring(12,16)}} - {{ev.end.dateTime.toString().substring(12,16)}}</div>
+                            <div class="col col-20 eventTime">{{ev.start.dateTime | date:"h:mm a"}} - {{ev.end.dateTime | date:"h:mm a"}}</div>
                             <div class="col col-80">&emsp;{{ev.summary}}</div>
                         </div>
                     </div>
