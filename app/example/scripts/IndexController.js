@@ -1,6 +1,6 @@
 angular
     .module('example')
-    .controller('IndexController', function($scope, supersonic, $filter) {
+    .controller('IndexController', function($scope, supersonic) {
 
         $scope.reminders = [
             {
