@@ -35,68 +35,44 @@ angular
             }
         ];
 
-        $scope.eventlist = [
-            {
-                "source": {
-                    "title": "394 class"
-                },
-                "start": {
-                    "date": 2015-5-12,
-                    "dateTime": "2015-5-12T11:00:00+0000",
-                    "timeZone": "ET"
-                },
-                "end": {
-                    "date": 2015-5-12,
-                    "dateTime": "2015-5-12T12:00:00+0000",
-                    "timeZone": "ET"
-                }
-            },
-            {
-                "source": {
-                    "title": "395 class"
-                },
-                "start": {
-                    "date": 2015-5-12,
-                    "dateTime": "2015-5-12T13:00:00+0000",
-                    "timeZone": "ET"
-                },
-                "end": {
-                    "date": 2015-5-12,
-                    "dateTime": "2015-5-12T14:00:00+0000",
-                    "timeZone": "ET"
-                }
-            },
-            {
-                "source": {
-                    "title": "396 class"
-                },
-                "start": {
-                    "date": 2015 - 5 - 12,
-                    "dateTime": "2015-5-12T15:00:00+0000",
-                    "timeZone": "ET"
-                },
-                "end": {
-                    "date": 2015 - 5 - 12,
-                    "dateTime": "2015-5-12T16:00:00+0000",
-                    "timeZone": "ET"
-                }
-            }];
 
         // this code determines if the user has a block of free time
         function makeSuggestion() {
             /*alert("here");
             var suggestion = {};
             //var source = {};
+        /*var lastEvent;
+         var firstEvent = true;
+         $scope.events.forEach(function(event) {
+         var now = event.start.dateTime;
+         var hour = parseInt(now.toString().substring(10,12));
+         var minute = parseInt(now.toString().substring(13,15));
+         var effectiveTime = 60 * hour + minute;
 
             //source.title = "Test";
             suggestion.summary = "Test";
+         if(firstEvent == true) {
+         lastEvent = event;
+         firstEvent = false;
+         return;
+         }
 
             //suggestion.source = source;
+         var before = lastEvent.end.dateTime;
+         var lastHour = parseInt(before.toString().substring(10,12));
+         var lastMinute = parseInt(before.toString().substring(13,15));
+         var effectiveLastTime = 60 * lastHour + lastMinute;
 
             var start = {};
+         if(effectiveTime - effectiveLastTime >= 60 && hour > 9 && hour < 18) {
+         window.alert("good");
+         //add code that deals with this now
+         }
 
             start.dateTime = "2015-05-11T20:00:00+0000";
             start.timeZone = "America/Chicago";
+         lastEvent = event;
+         });*/
 
             suggestion.start = start;
 
@@ -238,10 +214,8 @@ angular
                 this[i+1]=initArray.arguments[i]}
         var d=new initArray("Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday");
         $scope.month_names=['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        $scope.month = $scope.month_names[$scope.today.getMonth()];
-        $scope.date = $scope.today.getDate();
-        $scope.year =$scope.today.getFullYear();
-        $scope.day = d[$scope.today.getDay()+1];
+
+        //$scope.date = $scope.today.getDate();
 
         var clientId = '792909163379-01odbc9kccakdhrhpgognar3d8idug0q.apps.googleusercontent.com';
         var scopes = 'https://www.googleapis.com/auth/calendar';
@@ -279,18 +253,24 @@ angular
             gapi.client.load('calendar', 'v3', getCalendarData);
         }
 
-
+        $scope.datacount=1;
         function getCalendarData(){
             $scope.cal = true;
-            var today = new Date();
+            var today = new Date(new Date().getTime() + 24 * 60 * 60 * 1000 * $scope.datacount);
             today.setHours(0,0,0,0);
             today = today.toISOString();
 
-            var tomorrow = new Date()
+            var tomorrow = new Date(new Date().getTime() + 24 * 60 * 60 * 1000 * $scope.datacount)
             tomorrow.setHours(23,59,59,999);
             tomorrow = tomorrow.toISOString();
 
-
+            $scope.switch =  new Date(new Date().getTime() + 24 * 60 * 60 * 1000 * $scope.datacount);
+            $scope.date = $scope.switch.getDate()
+               // $scope.month_names=['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            $scope.month = $scope.month_names[$scope.switch.getMonth()];
+            //$scope.date = $scope.today.getDate();
+            $scope.year =$scope.switch.getFullYear();
+            $scope.day = d[$scope.switch.getDay()+1];
             var request = gapi.client.calendar.events.list({
                 'calendarId': 'primary',
                 'timeMin': today,
@@ -300,7 +280,6 @@ angular
                 'maxResults': 10,
                 'orderBy': 'startTime'
             });
-
             request.execute(function(resp) {
                 supersonic.logger.log('request executing');
                 supersonic.logger.log(resp);
@@ -311,12 +290,24 @@ angular
             });
         }
 
+        $scope.nextdate = function(){
+            $scope.datacount+=1;
+            getCalendarData()
+        };
+
+        $scope.prevdate = function(){
+            $scope.datacount-=1;
+            getCalendarData()
+        };
+
         $scope.sugg = [
             {"id":1,"activity":'SPAC',"count":0,"take": false},
             {"id":2,"activity":'Meal',"count":0,"take": false},
             {"id":3,"activity":'Walk',"count":0,"take": false}
         ];
+
         $scope.active = 0;
+        $scope.addedEvent = false;
         $scope.isActive = function (id) {
             return $scope.active === id;
         };
@@ -330,6 +321,25 @@ angular
         $scope.showOption = false;
         $scope.toggle = function() {
             $scope.showOption = !$scope.showOption;
-        }
+        };
+
+
+        $scope.newEvent = { end: { dateTime: "2015-05-12T10:30:00-05:00" }
+            , start: { dateTime: "2015-05-12T10:00:00-05:00" }
+            , summary: "test"
+        };
+        $scope.addCalendarData = function(){
+            $scope.newEvent.summary = $scope.sugg[$scope.active-1].activity;
+            var request = gapi.client.calendar.events.insert({
+                'calendarId': 'primary',
+                'resource': $scope.newEvent
+            });
+            request.execute(function(resp) {
+                supersonic.logger.log('Event Added');
+                supersonic.logger.log(resp);
+            });
+            $scope.addedEvent = true;
+            $scope.showOption = !$scope.showOption;
+        };
 
     });
