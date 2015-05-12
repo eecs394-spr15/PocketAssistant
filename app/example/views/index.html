@@ -55,10 +55,19 @@
                 Schedule
                 <i class="icon super-clipboard"></i>
             </div>
+
             <div>
                 <div class="row suggestion" >
-                    <div ng-show="isActive(0)" class="col col-85"><i class="icon super-coffee"></i>{{"  "+"FREE TIME NOW"}}</div>
-                    <div ng-hide="isActive(0)" class="col col-85">{{sugg[active-1].activity}}</div>
+                    <div class="col col-70" ng-show="addedEvent">{{"11:00-12:30 "+newEvent.summary}}</div>
+                    <div class="col col-70" ng-hide="addedEvent">
+                        <div ng-show="isActive(0)"><i class="icon super-coffee"></i>{{"  "+"Free time: 11:00-12:30"}}</div>
+                        <div ng-hide="isActive(0)">{{"11:00-12:30 "+sugg[active-1].activity}}</div>
+                    </div>
+
+                    <button class="col col-15 button button-clear button-assertive addButton" ng-disabled="isActive(0) || addedEvent" ng-click="addCalendarData()">
+                        <div ng-hide="addedEvent">Add</div>
+                        <div ng-show="addedEvent">Added</div>
+                    </button>
                     <button class="col-col-15 button button-icon icon super-navicon" ng-click="toggle()"></button>
                 </div>
 
@@ -83,15 +92,7 @@
                         </div>
                     </div>
                 </div>
-
-
-
-                <!--<div class="row suggestion" >
-                    <div class="col col-50">{{sugg[suggId].activity+"?"}}</div>
-                    <button class="button icon button-clear super-heart col col-25" ng-disabled="sugg[suggId].take" ng-click="takeSugg()"></button>
-                    <button class="button button-clear icon super-arrow-right-a col col-25" ng-click="nextSugg()"></button>
-                </div>-->
             </div>
-
         </div>
     </div>
+</div>
