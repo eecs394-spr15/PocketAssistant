@@ -64,17 +64,14 @@ angular
             lastEvent = event;
         });*/
 
-        $scope.today=new Date();
         function initArray(){
             this.length=initArray.arguments.length;
             for(var i=0;i<this.length;i++)
                 this[i+1]=initArray.arguments[i]}
         var d=new initArray("Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday");
         $scope.month_names=['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        $scope.month = $scope.month_names[$scope.today.getMonth()];
-        $scope.date = $scope.today.getDate();
-        $scope.year =$scope.today.getFullYear();
-        $scope.day = d[$scope.today.getDay()+1];
+
+        //$scope.date = $scope.today.getDate();
 
         var clientId = '792909163379-01odbc9kccakdhrhpgognar3d8idug0q.apps.googleusercontent.com';
         var scopes = 'https://www.googleapis.com/auth/calendar';
@@ -112,18 +109,24 @@ angular
             gapi.client.load('calendar', 'v3', getCalendarData);
         }
 
-
+        $scope.datacount=1;
         function getCalendarData(){
             $scope.cal = true;
-            var today = new Date();
+            var today = new Date(new Date().getTime() + 24 * 60 * 60 * 1000 * $scope.datacount);
             today.setHours(0,0,0,0);
             today = today.toISOString();
 
-            var tomorrow = new Date()
+            var tomorrow = new Date(new Date().getTime() + 24 * 60 * 60 * 1000 * $scope.datacount)
             tomorrow.setHours(23,59,59,999);
             tomorrow = tomorrow.toISOString();
 
-
+            $scope.switch =  new Date(new Date().getTime() + 24 * 60 * 60 * 1000 * $scope.datacount);
+            $scope.date = $scope.switch.getDate()
+               // $scope.month_names=['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            $scope.month = $scope.month_names[$scope.switch.getMonth()];
+            //$scope.date = $scope.today.getDate();
+            $scope.year =$scope.switch.getFullYear();
+            $scope.day = d[$scope.switch.getDay()+1];
             var request = gapi.client.calendar.events.list({
                 'calendarId': 'primary',
                 'timeMin': today,
@@ -133,7 +136,6 @@ angular
                 'maxResults': 10,
                 'orderBy': 'startTime'
             });
-
             request.execute(function(resp) {
                 supersonic.logger.log('request executing');
                 supersonic.logger.log(resp);
@@ -142,15 +144,16 @@ angular
                 $scope.events = events;
             });
         }
-        $scope.datacount=0;
+
         $scope.nextdate = function(){
             $scope.datacount+=1;
+            getCalendarData()
         };
 
         $scope.prevdate = function(){
-           if ($scope.datacount > 0){
-                $scope.datacount -=1;
-        }};
+            $scope.datacount-=1;
+            getCalendarData()
+        };
 
         $scope.sugg = [
             {"id":1,"activity":'SPAC',"count":0,"take": false},
