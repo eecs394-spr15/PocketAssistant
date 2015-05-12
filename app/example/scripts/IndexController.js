@@ -121,32 +121,34 @@ angular
 
             var lastEvent;
             var firstEvent = true;
+            var index = 0;
 
             $scope.events.forEach(function (event) {
                 var now = event.start.dateTime;
-                var hour = parseInt(now.toString().substring(12, 13));
+                var hour = parseInt(now.toString().substring(11, 13));
                 var minute = parseInt(now.toString().substring(14, 16));
                 var effectiveTime = 60 * hour + minute;
 
                 if (firstEvent === true) {
                     lastEvent = event;
                     firstEvent = false;
-                    if (hour >= 5) {
+                    if (hour >= 9) {
                         //add code that inserts a suggestion here
-
-                        alert("here");
 
                         var suggestion = {};
                         //var source = {};
 
                         //source.title = "Test";
-                        suggestion.summary = "Test";
+                        suggestion.summary = "Early Test";
 
                         //suggestion.source = source;
 
                         var start = {};
 
-                        start.dateTime = "2015-5-11T9:00:00+0000";
+                        //var d = new Date(year, month, day, hours, minutes);
+                        //alert(d);
+
+                        start.dateTime = "2015-05-12T09:00:00-0500";
                         start.timeZone = "America/Chicago";
 
                         suggestion.start = start;
@@ -156,24 +158,27 @@ angular
                         var end = {};
 
                         end.dateTime = now;
-                        end.timeZone = "ET";
+                        end.timeZone = "America/Chicago";
 
                         suggestion.end = end;
 
-                        $scope.events.push(suggestion);
+                        //$scope.events.push(suggestion);
+                        $scope.events.splice(index, 0, suggestion);
                         $scope.$apply();
 
+                        index = index + 1;
                         lastEvent = suggestion;
                     }
-                    return;
+                    //lastEvent = event;
+                    //return;
                 }
 
                 var before = lastEvent.end.dateTime;
-                var lastHour = parseInt(before.toString().substring(12, 13));
+                var lastHour = parseInt(before.toString().substring(11, 13));
                 var lastMinute = parseInt(before.toString().substring(14, 16));
                 var effectiveLastTime = 60 * lastHour + lastMinute;
 
-                if (effectiveTime - effectiveLastTime >= 60 /*&& hour > 9 && hour < 18*/) {
+                if (effectiveTime - effectiveLastTime > 60 /*&& hour > 9 && hour < 18*/) {
                     //var i = 0;
                     //add code that inserts a suggestion here
 
@@ -197,27 +202,31 @@ angular
                     var end = {};
 
                     end.dateTime = now;
-                    end.timeZone = "ET";
+                    //alert(end.dateTime);
+                    end.timeZone = "America/Chicago";
 
                     suggestion.end = end;
 
                     $scope.events.push(suggestion);
+                    $scope.events.splice(index, 0, suggestion);
                     $scope.$apply();
-
-                    lastEvent = suggestion;
-                    return;
+                    index = index + 1;
                 }
 
                 lastEvent = event;
+                return;
             });
             //sortEvents();
+            return;
         }
 
         // sort json array by time
         function sortEvents() {
-            supersonic.logger.log(a.start.dateTime);
             $scope.events.sort(function (a, b) {
-                return parseInt(a.start.dateTime.toString().substring(12, 13)) - parseInt(b.start.dateTime.toString().substring(12, 13));
+                //alert(parseInt(a.start.dateTime.toString().substring(11, 13)) - parseInt(b.start.dateTime.toString().substring(11, 13)));
+                //alert(a.start.dateTime.toString().substring(11,13));
+                //alert(b.start.dateTime.toString().substring(12,13));
+                return parseInt(a.start.dateTime.toString().substring(11, 13)) - parseInt(b.start.dateTime.toString().substring(11, 13));
             });
         }
 
@@ -298,7 +307,7 @@ angular
                 var events = resp.items;
                 events.forEach(function(x){supersonic.logger.log(x)});
                 $scope.events = events;
-                //makeSuggestion();
+                makeSuggestion();
             });
         }
 
