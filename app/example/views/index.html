@@ -16,10 +16,10 @@
     <div ng-show="cal">
         <div class="date">
             <div class="date-content">
-                <i class="icon super-chevron-left"></i>
+                <i class="icon super-chevron-left" ng-click="prevdate()"></i>
                 <i class="icon super-calendar"></i>
                 {{day+", "+month+" "+date+", "+year}}
-                <i class="icon super-chevron-right"></i>
+                <i class="icon icon-right super-chevron-right" ng-click="nextdate()"></i>
             </div>
         </div>
 
@@ -87,7 +87,7 @@
                 <div>
                     <div ng-repeat="ev in events">
                         <div class="row event" ng-class="{'blue' : ev.colorId === '5', 'green': ev.colorId === Null}">
-                            <div class="col col-20 eventTime">{{ev.start.dateTime.toString().substring(12,16)}} - {{ev.end.dateTime.toString().substring(12,16)}}</div>
+                            <div class="col col-20 eventTime">{{ev.start.dateTime | date:"h:mm"}} - {{ev.end.dateTime | date:"h:mm"}}</div>
                             <div class="col col-80">&emsp;{{ev.summary}}</div>
                         </div>
                     </div>

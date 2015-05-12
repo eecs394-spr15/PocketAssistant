@@ -102,3 +102,7 @@
     -ms-flex: 0 0 70%;
     flex: 0 0 70%;
     max-width: 70%; }
+
+.eventTime{
+    font-size:14px;
+}
