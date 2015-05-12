@@ -16,10 +16,10 @@
     <div ng-show="cal">
         <div class="date">
             <div class="date-content">
-                <i class="icon super-chevron-left"></i>
+                <i class="icon super-chevron-left" ng-click="prevdate()"></i>
                 <i class="icon super-calendar"></i>
                 {{day+", "+month+" "+date+", "+year}}
-                <i class="icon super-chevron-right"></i>
+                <i class="icon icon-right super-chevron-right" ng-click="nextdate()"></i>
             </div>
         </div>
 
