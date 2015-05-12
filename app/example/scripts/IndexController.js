@@ -132,6 +132,15 @@ angular
                 $scope.events = events;
             });
         }
+        $scope.datacount=0;
+        $scope.nextdate = function(){
+            $scope.datacount+=1;
+        };
+
+        $scope.prevdate = function(){
+           if ($scope.datacount > 0){
+                $scope.datacount -=1;
+        }};
 
         $scope.sugg = [
             {"id":1,"activity":'SPAC',"count":0,"take": false},
