@@ -170,28 +170,34 @@ angular
             gapi.client.load('calendar', 'v3', getCalendarData);
         }
 
-        $scope.datacount=1;
+        function initArray(){
+            this.length=initArray.arguments.length;
+            for(var i=0;i<this.length;i++)
+                this[i+1]=initArray.arguments[i]
+        }
+
+        var d=new initArray("Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday");
+        $scope.month_names=['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        $scope.datacount=0;
+
         function getCalendarData(){
             $scope.cal = true;
-            var today = new Date(new Date().getTime() + 24 * 60 * 60 * 1000 * $scope.datacount);
-            today.setHours(0,0,0,0);
-            today = today.toISOString();
-
-            var tomorrow = new Date(new Date().getTime() + 24 * 60 * 60 * 1000 * $scope.datacount)
-            tomorrow.setHours(23,59,59,999);
-            tomorrow = tomorrow.toISOString();
+            $scope.today = new Date(new Date().getTime() + 24 * 60 * 60 * 1000 * $scope.datacount);
+            $scope.today.setHours(0,0,0,0);
+            $scope.today = $scope.today.toISOString();
+            $scope.tomorrow = new Date(new Date().getTime() + 24 * 60 * 60 * 1000 * $scope.datacount);
+            $scope.tomorrow.setHours(23,59,59,999);
+            $scope.tomorrow = $scope.tomorrow.toISOString();
 
             $scope.switch =  new Date(new Date().getTime() + 24 * 60 * 60 * 1000 * $scope.datacount);
-            $scope.date = $scope.switch.getDate()
-               // $scope.month_names=['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            $scope.date = $scope.switch.getDate();
             $scope.month = $scope.month_names[$scope.switch.getMonth()];
-            //$scope.date = $scope.today.getDate();
             $scope.year =$scope.switch.getFullYear();
             $scope.day = d[$scope.switch.getDay()+1];
             var request = gapi.client.calendar.events.list({
                 'calendarId': 'primary',
-                'timeMin': today,
-                'timeMax' : tomorrow,
+                'timeMin': $scope.today,
+                'timeMax' : $scope.tomorrow,
                 'showDeleted': false,
                 'singleEvents': true,
                 'maxResults': 10,
@@ -209,12 +215,12 @@ angular
         }
 
         $scope.nextdate = function(){
-            $scope.datacount+=1;
+            $scope.datacount += 1;
             getCalendarData()
         };
 
         $scope.prevdate = function(){
-            $scope.datacount-=1;
+            $scope.datacount -= 1;
             getCalendarData()
         };
 
@@ -226,6 +232,7 @@ angular
 
         $scope.active = 0;
         $scope.addedEvent = false;
+        $scope.showOption = false;
         $scope.isActive = function (id) {
             return $scope.active === id;
         };
@@ -233,19 +240,18 @@ angular
         $scope.setActive= function(id) {
             $scope.active = id;
         };
-        $scope.nextSugg = function() {
-        };
 
-        $scope.showOption = false;
         $scope.toggle = function() {
             $scope.showOption = !$scope.showOption;
         };
 
-
-        $scope.newEvent = { end: { dateTime: "2015-05-12T10:30:00-05:00" }
-            , start: { dateTime: "2015-05-12T10:00:00-05:00" }
-            , summary: "test"
+        $scope.newEvent = {
+            end: { dateTime: "2015-05-12T12:30:00-05:00" },
+            start: { dateTime: "2015-05-12T11:00:00-05:00" },
+            summary: "test",
+            colorId: "1"
         };
+
         $scope.addCalendarData = function(){
             $scope.newEvent.summary = $scope.sugg[$scope.active-1].activity;
             var request = gapi.client.calendar.events.insert({
@@ -255,9 +261,9 @@ angular
             request.execute(function(resp) {
                 supersonic.logger.log('Event Added');
                 supersonic.logger.log(resp);
+                getCalendarData();
             });
             $scope.addedEvent = true;
             $scope.showOption = !$scope.showOption;
         };
-
     });
