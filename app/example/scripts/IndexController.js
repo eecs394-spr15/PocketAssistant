@@ -38,62 +38,6 @@ angular
 
         // this code determines if the user has a block of free time
         function makeSuggestion() {
-            /*alert("here");
-            var suggestion = {};
-            //var source = {};
-        /*var lastEvent;
-         var firstEvent = true;
-         $scope.events.forEach(function(event) {
-         var now = event.start.dateTime;
-         var hour = parseInt(now.toString().substring(10,12));
-         var minute = parseInt(now.toString().substring(13,15));
-         var effectiveTime = 60 * hour + minute;
-
-            //source.title = "Test";
-            suggestion.summary = "Test";
-         if(firstEvent == true) {
-         lastEvent = event;
-         firstEvent = false;
-         return;
-         }
-
-            //suggestion.source = source;
-         var before = lastEvent.end.dateTime;
-         var lastHour = parseInt(before.toString().substring(10,12));
-         var lastMinute = parseInt(before.toString().substring(13,15));
-         var effectiveLastTime = 60 * lastHour + lastMinute;
-
-            var start = {};
-         if(effectiveTime - effectiveLastTime >= 60 && hour > 9 && hour < 18) {
-         window.alert("good");
-         //add code that deals with this now
-         }
-
-            start.dateTime = "2015-05-11T20:00:00+0000";
-            start.timeZone = "America/Chicago";
-         lastEvent = event;
-         });*/
-
-            suggestion.start = start;
-
-            var end = {};
-
-            end.dateTime = "2015-05-11T21:00:00+0000";
-            end.timeZone = "America/Chicago";
-
-            suggestion.end = end;
-
-            suggestion.kind = "calendar#event";
-
-            alert("before");
-            supersonic.logger.log("before");
-            $scope.events.push(suggestion);
-            $scope.$apply();
-            supersonic.logger.log("after");
-            alert("end");
-            return;*/
-
-            //sortEvents();
 
             var lastEvent;
             var firstEvent = true;
@@ -108,21 +52,12 @@ angular
                 if (firstEvent === true) {
                     lastEvent = event;
                     firstEvent = false;
-                    if (hour >= 9) {
+                    if (hour >= 10) {
                         //add code that inserts a suggestion here
-
                         var suggestion = {};
-                        //var source = {};
-
-                        //source.title = "Test";
                         suggestion.summary = "Early Test";
 
-                        //suggestion.source = source;
-
                         var start = {};
-
-                        //var d = new Date(year, month, day, hours, minutes);
-                        //alert(d);
 
                         start.dateTime = "2015-05-12T09:00:00-0500";
                         start.timeZone = "America/Chicago";
@@ -138,15 +73,11 @@ angular
 
                         suggestion.end = end;
 
-                        //$scope.events.push(suggestion);
                         $scope.events.splice(index, 0, suggestion);
                         $scope.$apply();
 
-                        index = index + 1;
                         lastEvent = suggestion;
                     }
-                    //lastEvent = event;
-                    //return;
                 }
 
                 var before = lastEvent.end.dateTime;
@@ -154,17 +85,11 @@ angular
                 var lastMinute = parseInt(before.toString().substring(14, 16));
                 var effectiveLastTime = 60 * lastHour + lastMinute;
 
-                if (effectiveTime - effectiveLastTime > 60 /*&& hour > 9 && hour < 18*/) {
-                    //var i = 0;
+                if (effectiveTime - effectiveLastTime >= 30) {
                     //add code that inserts a suggestion here
-
                     var suggestion = {};
-                    //var source = {};
 
-                    //source.title = "Test";
                     suggestion.summary = "Test";
-
-                    //suggestion.source = source;
 
                     var start = {};
 
@@ -178,33 +103,26 @@ angular
                     var end = {};
 
                     end.dateTime = now;
-                    //alert(end.dateTime);
                     end.timeZone = "America/Chicago";
 
                     suggestion.end = end;
 
-                    $scope.events.push(suggestion);
                     $scope.events.splice(index, 0, suggestion);
                     $scope.$apply();
-                    index = index + 1;
                 }
-
+                index = index + 1;
                 lastEvent = event;
                 return;
             });
-            //sortEvents();
             return;
         }
 
         // sort json array by time
-        function sortEvents() {
+        /*function sortEvents() {
             $scope.events.sort(function (a, b) {
-                //alert(parseInt(a.start.dateTime.toString().substring(11, 13)) - parseInt(b.start.dateTime.toString().substring(11, 13)));
-                //alert(a.start.dateTime.toString().substring(11,13));
-                //alert(b.start.dateTime.toString().substring(12,13));
                 return parseInt(a.start.dateTime.toString().substring(11, 13)) - parseInt(b.start.dateTime.toString().substring(11, 13));
             });
-        }
+        }*/
 
         today=new Date();
         $scope.today=new Date();
@@ -286,6 +204,7 @@ angular
                 var events = resp.items;
                 events.forEach(function(x){supersonic.logger.log(x)});
                 $scope.events = events;
+                makeSuggestion();
                 makeSuggestion();
             });
         }
