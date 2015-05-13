@@ -35,89 +35,6 @@ angular
             }
         ];
 
-        // this code determines if the user has a block of free time
-        function makeSuggestion() {
-
-            var lastEvent;
-            var firstEvent = true;
-            var index = 0;
-
-            $scope.events.forEach(function (event) {
-                var now = event.start.dateTime;
-                var hour = parseInt(now.toString().substring(11, 13));
-                var minute = parseInt(now.toString().substring(14, 16));
-                var effectiveTime = 60 * hour + minute;
-
-                if (firstEvent === true) {
-                    lastEvent = event;
-                    firstEvent = false;
-                    if (hour >= 10) {
-                        //add code that inserts a suggestion here
-                        var suggestion = {};
-                        suggestion.summary = "Free time";
-                        suggestion.colorId = "1";
-
-                        var start = {};
-
-                        start.dateTime = "2015-05-12T09:00:00-0500";
-                        start.timeZone = "America/Chicago";
-
-                        suggestion.start = start;
-
-                        suggestion.kind = "calendar#event";
-
-                        var end = {};
-
-                        end.dateTime = now;
-                        end.timeZone = "America/Chicago";
-
-                        suggestion.end = end;
-
-                        $scope.events.splice(index, 0, suggestion);
-                        $scope.$apply();
-
-                        lastEvent = suggestion;
-                    }
-                }
-
-                var before = lastEvent.end.dateTime;
-                var lastHour = parseInt(before.toString().substring(11, 13));
-                var lastMinute = parseInt(before.toString().substring(14, 16));
-                var effectiveLastTime = 60 * lastHour + lastMinute;
-
-                if (effectiveTime - effectiveLastTime >= 30) {
-                    //add code that inserts a suggestion here
-                    var suggestion = {};
-
-                    suggestion.summary = "Free time";
-                    suggestion.colorId = "1";
-
-                    var start = {};
-
-                    start.dateTime = before;
-                    start.timeZone = "America/Chicago";
-
-                    suggestion.start = start;
-
-                    suggestion.kind = "calendar#event";
-
-                    var end = {};
-
-                    end.dateTime = now;
-                    end.timeZone = "America/Chicago";
-
-                    suggestion.end = end;
-
-                    $scope.events.splice(index, 0, suggestion);
-                    $scope.$apply();
-                }
-                index = index + 1;
-                lastEvent = event;
-                return;
-            });
-            return;
-        }
-
         var clientId = '792909163379-01odbc9kccakdhrhpgognar3d8idug0q.apps.googleusercontent.com';
         var scopes = 'https://www.googleapis.com/auth/calendar';
         var apiKey = 'AIzaSyAZkvW_yVrdUVEjrO7_DwFq2NidEkSEAoE';
@@ -172,7 +89,6 @@ angular
             $scope.tomorrow = new Date(new Date().getTime() + 24 * 60 * 60 * 1000 * $scope.datacount);
             $scope.tomorrow.setHours(23,59,59,999);
             $scope.tomorrow = $scope.tomorrow.toISOString();
-
             $scope.switch =  new Date(new Date().getTime() + 24 * 60 * 60 * 1000 * $scope.datacount);
             $scope.date = $scope.switch.getDate();
             $scope.month = $scope.month_names[$scope.switch.getMonth()];
@@ -208,36 +124,122 @@ angular
             getCalendarData()
         };
 
+        // this code determines if the user has a block of free time
+        function makeSuggestion() {
+            var lastEvent;
+            var isFirstEvent = true;
+            var index = 0;
+
+            $scope.events.forEach(function (event) {
+                var now = event.start.dateTime;
+                var hour = parseInt(now.toString().substring(11, 13));
+                var minute = parseInt(now.toString().substring(14, 16));
+                var effectiveTime = 60 * hour + minute;
+
+                if (isFirstEvent === true) {
+                    lastEvent = event;
+                    isFirstEvent = false;
+                    if (hour >= 10) {
+                        //add code that inserts a suggestion here
+                        var suggestion = {};
+                        suggestion.summary = "Free time";
+                        suggestion.colorId = "0";
+                        suggestion.addedEvent = false;
+                        suggestion.showOption = false;
+                        suggestion.active = 0;
+
+                        var start = {};
+                        start.dateTime = "2015-05-12T09:00:00-0500";
+                        //start.dateTime = new date();
+                        //start.dateTime.setHours(09,00,00);
+                        //start.dateTime.setDate($scope.switch.getDate());
+                        suggestion.start = start;
+                        var end = {};
+                        end.dateTime = now;
+                        suggestion.end = end;
+
+                        $scope.events.splice(index, 0, suggestion);
+                        $scope.$apply();
+                        lastEvent = suggestion;
+                    }
+                }
+
+                var lastEnd = lastEvent.end.dateTime;
+                var lastHour = parseInt(lastEnd.toString().substring(11, 13));
+                var lastMinute = parseInt(lastEnd.toString().substring(14, 16));
+                var effectiveLastTime = 60 * lastHour + lastMinute;
+
+                if (effectiveTime - effectiveLastTime >= 30) {
+                    //add code that inserts a suggestion here
+                    var suggestion = {};
+                    suggestion.summary = "Free time";
+                    suggestion.colorId = "0";
+                    suggestion.addedEvent = false;
+                    suggestion.showOption = false;
+                    suggestion.active = 0;
+
+                    var start = {};
+                    start.dateTime = lastEnd;
+                    suggestion.start = start;
+                    var end = {};
+                    end.dateTime = now;
+                    suggestion.end = end;
+
+                    $scope.events.splice(index, 0, suggestion);
+                    $scope.$apply();
+                }
+                index = index + 1;
+                lastEvent = event;
+            });
+
+            //suggestion after the last event on calendar
+            var ThelastEvent = $scope.events[$scope.events.length-1];
+            var lastEventEnd = ThelastEvent.end.dateTime;
+            var lastEventEndHour = parseInt(lastEventEnd.toString().substring(11, 13));
+            if (lastEventEndHour < 22) {
+                var suggestion = {};
+                suggestion.summary = "Free time";
+                suggestion.colorId = "0";
+                suggestion.addedEvent = false;
+                suggestion.showOption = false;
+                suggestion.active = 0;
+
+                var start = {};
+                start.dateTime = lastEventEnd;
+                suggestion.start = start;
+                var end = {};
+                end.dateTime = "2015-05-13T23:00:00-0500";
+                suggestion.end = end;
+                $scope.events.splice($scope.events.length, 0, suggestion);
+                $scope.$apply();
+            }
+        }
+
         $scope.sugg = [
             {"id":1,"activity":'SPAC',"count":0,"take": false},
             {"id":2,"activity":'Meal',"count":0,"take": false},
             {"id":3,"activity":'Walk',"count":0,"take": false}
         ];
 
-        $scope.active = 0;
-        $scope.addedEvent = false;
-        $scope.showOption = false;
-        $scope.isActive = function (id) {
-            return $scope.active === id;
+        $scope.isActive = function (ev,id) {
+            return ev.active === id;
         };
 
-        $scope.setActive= function(id) {
-            $scope.active = id;
+        $scope.setActive= function(ev,id) {
+            ev.active = id;
         };
 
-        $scope.toggle = function() {
-            $scope.showOption = !$scope.showOption;
+        $scope.toggle = function(ev) {
+            ev.showOption = !ev.showOption;
         };
 
-        $scope.newEvent = {
-            end: { dateTime: "2015-05-12T12:30:00-05:00" },
-            start: { dateTime: "2015-05-12T11:00:00-05:00" },
-            summary: "test",
-            colorId: "2"
-        };
 
-        $scope.addCalendarData = function(){
-            $scope.newEvent.summary = $scope.sugg[$scope.active-1].activity;
+        $scope.addCalendarData = function(ev){
+            $scope.newEvent = {};
+            $scope.newEvent.summary = $scope.sugg[ev.active-1].activity;
+            $scope.newEvent.start = ev.start;
+            $scope.newEvent.end = ev.end;
+            $scope.newEvent.colorId = "2";
             var request = gapi.client.calendar.events.insert({
                 'calendarId': 'primary',
                 'resource': $scope.newEvent
@@ -247,7 +249,7 @@ angular
                 supersonic.logger.log(resp);
                 getCalendarData();
             });
-            $scope.addedEvent = true;
-            $scope.showOption = !$scope.showOption;
+            ev.addedEvent = true;
+            ev.showOption = !ev.showOption;
         };
     });

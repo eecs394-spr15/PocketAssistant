@@ -56,40 +56,42 @@
                 <i class="icon super-clipboard"></i>
             </div>
 
-            <div ng-hide="addedEvent">
-                <div class="row suggestion" >
-                    <div class="col col-70">
-                        <div ng-show="isActive(0)"><i class="icon super-coffee"></i>{{"  "+"Free time: 11:00-12:30"}}</div>
-                        <div ng-hide="isActive(0)">{{"11:00-12:30 "+sugg[active-1].activity}}</div>
-                    </div>
-                    <button class="col col-15 button button-clear button-assertive addButton" ng-disabled="isActive(0) || addedEvent" ng-click="addCalendarData()">
-                        <div>Add</div>
-                    </button>
-                    <button class="col-col-15 button button-icon icon super-navicon" ng-click="toggle()"></button>
-                </div>
-
-                <div ng-show="showOption">
-                    <div ng-repeat="suggestion in sugg">
-                        <div class="sugglist row" ng-class="{active: isActive(suggestion.id)}" ng-click="setActive(suggestion.id)">
-                            <div class="col col-90">{{suggestion.activity}}</div>
-                            <i class="col col-10 icon super-checkmark"></i>
-                        </div>
-                    </div>
-                    <div class="sugglist row" ng-class="{active: isActive(0)}" ng-click="setActive(0)">
-                        <div class="col col-90">None of the above</div>
-                        <i class="col col-10 icon super-checkmark"></i>
-                    </div>
-                </div>
-            </div>
-
             <div>
                 <div ng-repeat="ev in events">
-                    <div class="row event" ng-class="{'blue' : ev.colorId === '5','grey': ev.colorId === '1' ,'pink': ev.colorId === '2','green': ev.colorId === Null}">
+                    <div ng-hide="ev.colorId === '0'" class="row event" ng-class="{'blue' : ev.colorId === '5' ,'grey': ev.colorId === '1','pink': ev.colorId === '2','green': ev.colorId === Null}">
                         <div class="col col-20 eventTime">{{ev.start.dateTime | date:"h:mm"}} - {{ev.end.dateTime | date:"h:mm"}}</div>
                         <div class="col col-80">&emsp;{{ev.summary}}</div>
                     </div>
+                    <div ng-show="ev.colorId === '0'">
+                        <div ng-hide="ev.addedEvent">
+                            <div class="row suggestion" >
+                                <div class="col col-70">
+                                    <div ng-show="isActive(ev,0)"><i class="icon super-coffee"></i>&emsp;{{ev.start.dateTime | date:"h:mm"}} - {{ev.end.dateTime | date:"h:mm"}}</div>
+                                    <div ng-hide="isActive(ev,0)">{{ev.start.dateTime | date:"h:mm"}} - {{ev.end.dateTime | date:"h:mm"}}{{sugg[ev.active-1].activity}}</div>
+                                </div>
+                                <button class="col col-15 button button-clear button-assertive addButton" ng-disabled="isActive(ev,0) || ev.addedEvent" ng-click="addCalendarData(ev)">
+                                    <div>Add</div>
+                                </button>
+                                <button class="col-col-15 button button-icon icon super-navicon" ng-click="toggle(ev)"></button>
+                            </div>
+
+                            <div ng-show="ev.showOption">
+                                <div ng-repeat="suggestion in sugg">
+                                    <div class="sugglist row" ng-class="{active: isActive(ev,suggestion.id)}" ng-click="setActive(ev,suggestion.id)">
+                                        <div class="col col-90">{{suggestion.activity}}</div>
+                                        <i class="col col-10 icon super-checkmark"></i>
+                                    </div>
+                                </div>
+                                <div class="sugglist row" ng-class="{active: isActive(ev,0)}" ng-click="setActive(ev,0)">
+                                    <div class="col col-90">None of the above</div>
+                                    <i class="col col-10 icon super-checkmark"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
+
         </div>
     </div>
 </div>
