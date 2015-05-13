@@ -56,17 +56,14 @@
                 <i class="icon super-clipboard"></i>
             </div>
 
-            <div>
+            <div ng-hide="addedEvent">
                 <div class="row suggestion" >
-                    <div class="col col-70" ng-show="addedEvent">{{"11:00-12:30 "+newEvent.summary}}</div>
-                    <div class="col col-70" ng-hide="addedEvent">
+                    <div class="col col-70">
                         <div ng-show="isActive(0)"><i class="icon super-coffee"></i>{{"  "+"Free time: 11:00-12:30"}}</div>
                         <div ng-hide="isActive(0)">{{"11:00-12:30 "+sugg[active-1].activity}}</div>
                     </div>
-
                     <button class="col col-15 button button-clear button-assertive addButton" ng-disabled="isActive(0) || addedEvent" ng-click="addCalendarData()">
-                        <div ng-hide="addedEvent">Add</div>
-                        <div ng-show="addedEvent">Added</div>
+                        <div>Add</div>
                     </button>
                     <button class="col-col-15 button button-icon icon super-navicon" ng-click="toggle()"></button>
                 </div>
@@ -83,13 +80,13 @@
                         <i class="col col-10 icon super-checkmark"></i>
                     </div>
                 </div>
+            </div>
 
-                <div>
-                    <div ng-repeat="ev in events">
-                        <div class="row event" ng-class="{'blue' : ev.colorId === '5', 'green': ev.colorId === Null}">
-                            <div class="col col-20 eventTime">{{ev.start.dateTime | date:"h:mm"}} - {{ev.end.dateTime | date:"h:mm"}}</div>
-                            <div class="col col-80">&emsp;{{ev.summary}}</div>
-                        </div>
+            <div>
+                <div ng-repeat="ev in events">
+                    <div class="row event" ng-class="{'blue' : ev.colorId === '5','grey': ev.colorId === '1' ,'green': ev.colorId === Null}">
+                        <div class="col col-20 eventTime">{{ev.start.dateTime | date:"h:mm"}} - {{ev.end.dateTime | date:"h:mm"}}</div>
+                        <div class="col col-80">&emsp;{{ev.summary}}</div>
                     </div>
                 </div>
             </div>
