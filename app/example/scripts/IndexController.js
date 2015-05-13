@@ -35,7 +35,6 @@ angular
             }
         ];
 
-
         // this code determines if the user has a block of free time
         function makeSuggestion() {
 
