@@ -54,7 +54,8 @@ angular
                     if (hour >= 10) {
                         //add code that inserts a suggestion here
                         var suggestion = {};
-                        suggestion.summary = "Early Test";
+                        suggestion.summary = "Free time";
+                        suggestion.colorId = "1";
 
                         var start = {};
 
@@ -88,7 +89,8 @@ angular
                     //add code that inserts a suggestion here
                     var suggestion = {};
 
-                    suggestion.summary = "Test";
+                    suggestion.summary = "Free time";
+                    suggestion.colorId = "1";
 
                     var start = {};
 
@@ -115,24 +117,6 @@ angular
             });
             return;
         }
-
-        // sort json array by time
-        /*function sortEvents() {
-            $scope.events.sort(function (a, b) {
-                return parseInt(a.start.dateTime.toString().substring(11, 13)) - parseInt(b.start.dateTime.toString().substring(11, 13));
-            });
-        }*/
-
-        today=new Date();
-        $scope.today=new Date();
-        function initArray(){
-            this.length=initArray.arguments.length;
-            for(var i=0;i<this.length;i++)
-                this[i+1]=initArray.arguments[i]}
-        var d=new initArray("Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday");
-        $scope.month_names=['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
-        //$scope.date = $scope.today.getDate();
 
         var clientId = '792909163379-01odbc9kccakdhrhpgognar3d8idug0q.apps.googleusercontent.com';
         var scopes = 'https://www.googleapis.com/auth/calendar';
@@ -249,7 +233,7 @@ angular
             end: { dateTime: "2015-05-12T12:30:00-05:00" },
             start: { dateTime: "2015-05-12T11:00:00-05:00" },
             summary: "test",
-            colorId: "1"
+            colorId: "2"
         };
 
         $scope.addCalendarData = function(){
