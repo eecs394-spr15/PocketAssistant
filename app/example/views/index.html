@@ -84,7 +84,7 @@
 
             <div>
                 <div ng-repeat="ev in events">
-                    <div class="row event" ng-class="{'blue' : ev.colorId === '5','grey': ev.colorId === '1' ,'green': ev.colorId === Null}">
+                    <div class="row event" ng-class="{'blue' : ev.colorId === '5','grey': ev.colorId === '1' ,'pink': ev.colorId === '2','green': ev.colorId === Null}">
                         <div class="col col-20 eventTime">{{ev.start.dateTime | date:"h:mm"}} - {{ev.end.dateTime | date:"h:mm"}}</div>
                         <div class="col col-80">&emsp;{{ev.summary}}</div>
                     </div>

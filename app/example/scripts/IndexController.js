@@ -35,6 +35,89 @@ angular
             }
         ];
 
+        // this code determines if the user has a block of free time
+        function makeSuggestion() {
+
+            var lastEvent;
+            var firstEvent = true;
+            var index = 0;
+
+            $scope.events.forEach(function (event) {
+                var now = event.start.dateTime;
+                var hour = parseInt(now.toString().substring(11, 13));
+                var minute = parseInt(now.toString().substring(14, 16));
+                var effectiveTime = 60 * hour + minute;
+
+                if (firstEvent === true) {
+                    lastEvent = event;
+                    firstEvent = false;
+                    if (hour >= 10) {
+                        //add code that inserts a suggestion here
+                        var suggestion = {};
+                        suggestion.summary = "Free time";
+                        suggestion.colorId = "1";
+
+                        var start = {};
+
+                        start.dateTime = "2015-05-12T09:00:00-0500";
+                        start.timeZone = "America/Chicago";
+
+                        suggestion.start = start;
+
+                        suggestion.kind = "calendar#event";
+
+                        var end = {};
+
+                        end.dateTime = now;
+                        end.timeZone = "America/Chicago";
+
+                        suggestion.end = end;
+
+                        $scope.events.splice(index, 0, suggestion);
+                        $scope.$apply();
+
+                        lastEvent = suggestion;
+                    }
+                }
+
+                var before = lastEvent.end.dateTime;
+                var lastHour = parseInt(before.toString().substring(11, 13));
+                var lastMinute = parseInt(before.toString().substring(14, 16));
+                var effectiveLastTime = 60 * lastHour + lastMinute;
+
+                if (effectiveTime - effectiveLastTime >= 30) {
+                    //add code that inserts a suggestion here
+                    var suggestion = {};
+
+                    suggestion.summary = "Free time";
+                    suggestion.colorId = "1";
+
+                    var start = {};
+
+                    start.dateTime = before;
+                    start.timeZone = "America/Chicago";
+
+                    suggestion.start = start;
+
+                    suggestion.kind = "calendar#event";
+
+                    var end = {};
+
+                    end.dateTime = now;
+                    end.timeZone = "America/Chicago";
+
+                    suggestion.end = end;
+
+                    $scope.events.splice(index, 0, suggestion);
+                    $scope.$apply();
+                }
+                index = index + 1;
+                lastEvent = event;
+                return;
+            });
+            return;
+        }
+
         var clientId = '792909163379-01odbc9kccakdhrhpgognar3d8idug0q.apps.googleusercontent.com';
         var scopes = 'https://www.googleapis.com/auth/calendar';
         var apiKey = 'AIzaSyAZkvW_yVrdUVEjrO7_DwFq2NidEkSEAoE';
@@ -110,6 +193,8 @@ angular
                 var events = resp.items;
                 events.forEach(function(x){supersonic.logger.log(x)});
                 $scope.events = events;
+                makeSuggestion();
+                makeSuggestion();
             });
         }
 
@@ -148,7 +233,7 @@ angular
             end: { dateTime: "2015-05-12T12:30:00-05:00" },
             start: { dateTime: "2015-05-12T11:00:00-05:00" },
             summary: "test",
-            colorId: "1"
+            colorId: "2"
         };
 
         $scope.addCalendarData = function(){
