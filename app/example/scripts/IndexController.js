@@ -136,27 +136,25 @@ angular
                 var minute = parseInt(now.toString().substring(14, 16));
                 var effectiveTime = 60 * hour + minute;
 
-                if (isFirstEvent === true) {
+                if (isFirstEvent == true) {
                     lastEvent = event;
                     isFirstEvent = false;
-                    if (hour >= 10) {
+                    if (hour > 9) {
                         //add code that inserts a suggestion here
                         var suggestion = {};
                         suggestion.summary = "Free time";
                         suggestion.colorId = "0";
                         suggestion.addedEvent = false;
                         suggestion.showOption = false;
-                        suggestion.active = 0;
+                        suggestion.active = -1;
 
-                        var start = {};
-                        start.dateTime = "2015-05-12T09:00:00-0500";
-                        //start.dateTime = new date();
-                        //start.dateTime.setHours(09,00,00);
-                        //start.dateTime.setDate($scope.switch.getDate());
-                        suggestion.start = start;
                         var end = {};
                         end.dateTime = now;
                         suggestion.end = end;
+
+                        var start = {};
+                        start.dateTime = end.dateTime.substr(0,11)+"09:00:00-05:00";
+                        suggestion.start = start;
 
                         $scope.events.splice(index, 0, suggestion);
                         $scope.$apply();
@@ -176,7 +174,7 @@ angular
                     suggestion.colorId = "0";
                     suggestion.addedEvent = false;
                     suggestion.showOption = false;
-                    suggestion.active = 0;
+                    suggestion.active = -1;
 
                     var start = {};
                     start.dateTime = lastEnd;
@@ -196,19 +194,20 @@ angular
             var ThelastEvent = $scope.events[$scope.events.length-1];
             var lastEventEnd = ThelastEvent.end.dateTime;
             var lastEventEndHour = parseInt(lastEventEnd.toString().substring(11, 13));
-            if (lastEventEndHour < 22) {
+            if (lastEventEndHour < 21) {
                 var suggestion = {};
                 suggestion.summary = "Free time";
                 suggestion.colorId = "0";
                 suggestion.addedEvent = false;
                 suggestion.showOption = false;
-                suggestion.active = 0;
+                suggestion.active = -1;
 
                 var start = {};
                 start.dateTime = lastEventEnd;
                 suggestion.start = start;
+
                 var end = {};
-                end.dateTime = "2015-05-13T23:00:00-0500";
+                end.dateTime = start.dateTime.substr(0,11)+"21:00:00-05:00";
                 suggestion.end = end;
                 $scope.events.splice($scope.events.length, 0, suggestion);
                 $scope.$apply();
@@ -216,6 +215,7 @@ angular
         }
 
         $scope.sugg = [
+            {"id":0,"activity":'Free Time',"count":0,"take": false},
             {"id":1,"activity":'SPAC',"count":0,"take": false},
             {"id":2,"activity":'Meal',"count":0,"take": false},
             {"id":3,"activity":'Walk',"count":0,"take": false}
@@ -233,10 +233,9 @@ angular
             ev.showOption = !ev.showOption;
         };
 
-
         $scope.addCalendarData = function(ev){
             $scope.newEvent = {};
-            $scope.newEvent.summary = $scope.sugg[ev.active-1].activity;
+            $scope.newEvent.summary = $scope.sugg[ev.active].activity;
             $scope.newEvent.start = ev.start;
             $scope.newEvent.end = ev.end;
             $scope.newEvent.colorId = "2";
