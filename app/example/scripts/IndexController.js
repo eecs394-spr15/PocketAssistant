@@ -4,34 +4,12 @@ angular
 
         $scope.reminders = [
             {
-                "source": {
-                    "title": "394 midterm"
-                },
-                "start": {
-                    "date": 2015-5-12,
-                    "dateTime": "2015-5-12T12:00:00+0000",
-                    "timeZone": "ET"
-                },
-                "end": {
-                    "date": 2015-5-12,
-                    "dateTime": "2015-5-12T13:00:00+0000",
-                    "timeZone": "ET"
-                }
+                "title": "394 midterm",
+                "numDays": "3"
             },
             {
-                "source": {
-                    "title": "395 midterm"
-                },
-                "start": {
-                    "date": 2015-5-13,
-                    "dateTime": "2015-5-13T12:00:00+0000",
-                    "timeZone": "ET"
-                },
-                "end": {
-                    "date": 2015-5-13,
-                    "dateTime": "2015-5-13T13:00:00+0000",
-                    "timeZone": "ET"
-                }
+                "title": "395 midterm",
+                "numDays": "2"
             }
         ];
 
@@ -250,5 +228,40 @@ angular
             });
             ev.addedEvent = true;
             ev.showOption = !ev.showOption;
+        };
+
+        $scope.titleInput = "";
+        $scope.numDays = "";
+        $scope.addReminder = function() {
+
+            var reminder = {};
+            reminder.title = $scope.titleInput;
+
+            /*var start = {};
+            //var d = new Date("2015-05-14T21:00:00-05:00");
+            var d = new Date($scope.today);
+            d.setHours(parseInt($scope.startInput));
+            //d.setDate($scope.today);
+            start.dateTime = d;
+            reminder.start = start;
+
+            var end = {};
+            //end.dateTime = new Date("2015-05-14T21:00:00-05:00");
+            d.setHours(parseInt($scope.endInput));
+            end.dateTime = d;
+            //end.dateTime = end.dateTime.substr(0,11) + $scope.endInput + end.dateTime.substr(14);
+            reminder.end = end;*/
+
+            reminder.numDays = $scope.numDays;
+
+            $scope.reminders.push(reminder);
+            $scope.$apply();
+            sortReminders();
+        };
+
+        function sortReminders() {
+            $scope.reminders.sort(function (a, b) {
+                return parseInt(a.numDays) - parseInt(b.numDays);
+            });
         };
     });
