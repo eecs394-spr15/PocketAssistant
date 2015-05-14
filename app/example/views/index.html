@@ -66,13 +66,13 @@
                         <div ng-hide="ev.addedEvent">
                             <div class="row suggestion" >
                                 <div class="col col-70">
-                                    <div ng-show="isActive(ev,0)"><i class="icon super-coffee"></i>&emsp;{{ev.start.dateTime | date:"h:mm"}} - {{ev.end.dateTime | date:"h:mm"}}</div>
-                                    <div ng-hide="isActive(ev,0)">{{ev.start.dateTime | date:"h:mm"}} - {{ev.end.dateTime | date:"h:mm"}}{{sugg[ev.active-1].activity}}</div>
+                                    <div ng-show="isActive(ev,-1)"><i class="icon super-coffee"></i>&emsp;{{ev.start.dateTime | date:"h:mm"}} - {{ev.end.dateTime | date:"h:mm"}}</div>
+                                    <div ng-hide="isActive(ev,-1)">{{ev.start.dateTime | date:"h:mm"}}-{{ev.end.dateTime | date:"h:mm"}}&emsp;{{sugg[ev.active].activity}}</div>
                                 </div>
-                                <button class="col col-15 button button-clear button-assertive addButton" ng-disabled="isActive(ev,0) || ev.addedEvent" ng-click="addCalendarData(ev)">
+                                <button class="col col-15 button button-clear button-assertive addButton" ng-disabled="isActive(ev,-1) || ev.addedEvent" ng-click="addCalendarData(ev)">
                                     <div>Add</div>
                                 </button>
-                                <button class="col-col-15 button button-icon icon super-navicon" ng-click="toggle(ev)"></button>
+                                <button class="col col-15 button button-icon icon super-navicon" ng-click="toggle(ev)"></button>
                             </div>
 
                             <div ng-show="ev.showOption">
@@ -81,10 +81,6 @@
                                         <div class="col col-90">{{suggestion.activity}}</div>
                                         <i class="col col-10 icon super-checkmark"></i>
                                     </div>
-                                </div>
-                                <div class="sugglist row" ng-class="{active: isActive(ev,0)}" ng-click="setActive(ev,0)">
-                                    <div class="col col-90">None of the above</div>
-                                    <i class="col col-10 icon super-checkmark"></i>
                                 </div>
                             </div>
                         </div>
