@@ -73,7 +73,7 @@ angular
         // blue:1  green:2  turquoise:7
 
         $scope.colorArray = [{title: 'Blue', id: '1'}, {title: 'Bold Blue', id: '9'},
-            {title: 'Red', id:'4'}, {title: 'Bold Red', id: '11'},{title: 'None', id: 'Null'},
+            {title: 'Red', id:'4'}, {title: 'Bold Red', id: '11'},{title: 'None', id: ''},
             {title: 'Green', id: '2'}, {title: 'Bold Green', id: '10'},
             {title: 'Grey', id: '8'}, {title: 'Yellow', id: '5'}, {title: 'Orange', id: '6'},
             {title: 'Turquoise', id: '7'}, {title: 'Purple', id: '3'}];
