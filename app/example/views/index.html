@@ -10,7 +10,7 @@
     </super-navbar>
 
     <div ng-hide="cal">
-        <button id="authorize-button" class="button button-block button-stable" ng-click="handleClientLoad();">Authorize</button>
+        <button id="authorize-button" class="button button-block button-stable" ng-click="handleClientLoad()">Authorize</button>
     </div>
 
     <div ng-show="cal">
@@ -58,10 +58,10 @@
 
             <div>
                 <div ng-repeat="ev in events">
-                    <div ng-hide="ev.colorId === '0'" class="row event" ng-class="{'blue' : ev.colorId === '5' ,'grey': ev.colorId === '1','pink': ev.colorId === '2','green': ev.colorId === Null}">
-                        <div class="col col-20 eventTime">{{ev.start.dateTime | date:"h:mm"}} - {{ev.end.dateTime | date:"h:mm"}}</div>
+                    <super-navigate view-id="example#edit?id={{ev.id}}" ng-hide="ev.colorId === '0'" class="row event" ng-class="{'blue' : ev.colorId >= '5' ,'pink': ev.colorId >= '1','grey': ev.colorId === '1','green': ev.colorId === Null}">
+                        <div class="col col-20 eventTime" ng-class="'#ffc900'">{{ev.start.dateTime | date:"h:mm"}} - {{ev.end.dateTime | date:"h:mm"}}</div>
                         <div class="col col-80">&emsp;{{ev.summary}}</div>
-                    </div>
+                    </super-navigate>
                     <div ng-show="ev.colorId === '0'">
                         <div ng-hide="ev.addedEvent">
                             <div class="row suggestion" >
@@ -86,8 +86,8 @@
                         </div>
                     </div>
                 </div>
-            </div>
 
+            </div>
         </div>
     </div>
 </div>
