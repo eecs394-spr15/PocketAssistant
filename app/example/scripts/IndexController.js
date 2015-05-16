@@ -265,9 +265,4 @@ angular
                 return parseInt(a.numDays) - parseInt(b.numDays);
             });
         };
-
-        supersonic.ui.views.current.whenVisible(function(){
-            if($scope.authorized){
-                getCalendarData();}
-        })
     });
