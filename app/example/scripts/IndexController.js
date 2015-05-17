@@ -108,6 +108,32 @@ angular
             var isFirstEvent = true;
             var index = 0;
             var iterLength = $scope.events.length;
+
+            if(iterLength == 0) {
+                var suggestion = {};
+                suggestion.summary = "Free time";
+                suggestion.colorId = "0";
+                suggestion.addedEvent = false;
+                suggestion.showOption = false;
+                suggestion.active = -1;
+
+                var start = {};
+                var s = new Date($scope.today);
+                s.setHours(9);
+                start.dateTime = s;
+                suggestion.start = start;
+
+                var end = {};
+                var d = new Date(start.dateTime);
+                d.setHours(d.getHours()+1);
+                end.dateTime = d;
+                suggestion.end = end;
+
+                $scope.events.splice(index, 0, suggestion);
+                $scope.$apply();
+                iterLength = iterLength + 1;
+            }
+
             var event = $scope.events[0];
 
             while(index < iterLength) {
