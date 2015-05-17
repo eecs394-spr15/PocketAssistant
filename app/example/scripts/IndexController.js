@@ -16,7 +16,7 @@ angular
         var clientId = '792909163379-01odbc9kccakdhrhpgognar3d8idug0q.apps.googleusercontent.com';
         var scopes = 'https://www.googleapis.com/auth/calendar';
         var apiKey = 'AIzaSyAZkvW_yVrdUVEjrO7_DwFq2NidEkSEAoE';
-
+        $scope.authorized=0;
         $scope.handleClientLoad = function() {
             supersonic.logger.log('enter');
             // Step 2: Reference the API key
@@ -47,6 +47,7 @@ angular
 
         function makeApiCall() {
             gapi.client.load('calendar', 'v3', getCalendarData);
+            $scope.authorized=1;
         }
 
         function initArray(){
