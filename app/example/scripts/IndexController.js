@@ -89,7 +89,6 @@ angular
                 events.forEach(function(x){supersonic.logger.log(x)});
                 $scope.events = events;
                 makeSuggestion();
-                makeSuggestion();
             });
         }
 
@@ -108,17 +107,45 @@ angular
             var lastEvent;
             var isFirstEvent = true;
             var index = 0;
+            var iterLength = $scope.events.length;
 
-            $scope.events.forEach(function (event) {
-                var now = event.start.dateTime;
-                var hour = parseInt(now.toString().substring(11, 13));
-                var minute = parseInt(now.toString().substring(14, 16));
+            if(iterLength == 0) {
+                var suggestion = {};
+                suggestion.summary = "Free time";
+                suggestion.colorId = "0";
+                suggestion.addedEvent = false;
+                suggestion.showOption = false;
+                suggestion.active = -1;
+
+                var start = {};
+                var s = new Date($scope.today);
+                s.setHours(9);
+                start.dateTime = s;
+                suggestion.start = start;
+
+                var end = {};
+                var d = new Date(start.dateTime);
+                d.setHours(d.getHours()+1);
+                end.dateTime = d;
+                suggestion.end = end;
+
+                $scope.events.splice(index, 0, suggestion);
+                $scope.$apply();
+                iterLength = iterLength + 1;
+            }
+
+            var event = $scope.events[0];
+
+            while(index < iterLength) {
+                var now = new Date(event.start.dateTime);
+                var hour = now.getHours();
+                var minute = now.getMinutes();
                 var effectiveTime = 60 * hour + minute;
 
                 if (isFirstEvent == true) {
                     lastEvent = event;
                     isFirstEvent = false;
-                    if (hour > 9) {
+                    if (hour > 10) {
                         //add code that inserts a suggestion here
                         var suggestion = {};
                         suggestion.summary = "Free time";
@@ -127,53 +154,71 @@ angular
                         suggestion.showOption = false;
                         suggestion.active = -1;
 
-                        var end = {};
-                        end.dateTime = now;
-                        suggestion.end = end;
-
                         var start = {};
-                        start.dateTime = end.dateTime.substr(0,11)+"09:00:00-05:00";
+                        var s = new Date(now);
+                        s.setHours(9);
+                        start.dateTime = s;
                         suggestion.start = start;
+
+                        var end = {};
+                        var d = new Date(start.dateTime);
+                        d.setHours(d.getHours()+1);
+                        end.dateTime = d;
+                        suggestion.end = end;
 
                         $scope.events.splice(index, 0, suggestion);
                         $scope.$apply();
+                        index = index + 1;
+                        iterLength = iterLength + 1;
                         lastEvent = suggestion;
                     }
                 }
 
-                var lastEnd = lastEvent.end.dateTime;
-                var lastHour = parseInt(lastEnd.toString().substring(11, 13));
-                var lastMinute = parseInt(lastEnd.toString().substring(14, 16));
+                var lastEnd = new Date(lastEvent.end.dateTime);
+                var lastHour = lastEnd.getHours();
+                var lastMinute = lastEnd.getMinutes();
                 var effectiveLastTime = 60 * lastHour + lastMinute;
 
-                if (effectiveTime - effectiveLastTime >= 30) {
+                while(effectiveTime - effectiveLastTime >= 60) {
                     //add code that inserts a suggestion here
-                    var suggestion = {};
-                    suggestion.summary = "Free time";
-                    suggestion.colorId = "0";
-                    suggestion.addedEvent = false;
-                    suggestion.showOption = false;
-                    suggestion.active = -1;
 
-                    var start = {};
-                    start.dateTime = lastEnd;
-                    suggestion.start = start;
-                    var end = {};
-                    end.dateTime = now;
-                    suggestion.end = end;
+                        var suggestion = {};
+                        suggestion.summary = "Free time";
+                        suggestion.colorId = "0";
+                        suggestion.addedEvent = false;
+                        suggestion.showOption = false;
+                        suggestion.active = -1;
 
-                    $scope.events.splice(index, 0, suggestion);
-                    $scope.$apply();
+                        var start = {};
+                        start.dateTime = lastEnd;
+                        suggestion.start = start;
+                        var end = {};
+                        d = new Date(start.dateTime);
+                        d.setHours(d.getHours() + 1);
+                        end.dateTime = d;
+                        suggestion.end = end;
+
+                        if(lastHour >= 9 && lastHour < 18) {
+                            $scope.events.splice(index, 0, suggestion);
+                            $scope.$apply();
+                            index = index + 1;
+                            iterLength = iterLength + 1;
+                        }
+                        lastEnd = suggestion.end.dateTime;
+                        lastHour = lastEnd.getHours();
+                        lastMinute = lastEnd.getMinutes();
+                        effectiveLastTime = 60 * lastHour + lastMinute;
                 }
                 index = index + 1;
                 lastEvent = event;
-            });
+                event = $scope.events[index];
+            };
 
             //suggestion after the last event on calendar
-            var ThelastEvent = $scope.events[$scope.events.length-1];
-            var lastEventEnd = ThelastEvent.end.dateTime;
-            var lastEventEndHour = parseInt(lastEventEnd.toString().substring(11, 13));
-            if (lastEventEndHour < 21) {
+            var theLastEvent = $scope.events[$scope.events.length-1];
+            var lastEventEnd = new Date(theLastEvent.end.dateTime);
+            var lastEventEndHour = lastEventEnd.getHours();
+            while (lastEventEndHour < 18) {
                 var suggestion = {};
                 suggestion.summary = "Free time";
                 suggestion.colorId = "0";
@@ -186,12 +231,28 @@ angular
                 suggestion.start = start;
 
                 var end = {};
-                end.dateTime = start.dateTime.substr(0,11)+"21:00:00-05:00";
+                d = new Date(start.dateTime);
+                d.setHours(d.getHours()+1);
+                end.dateTime = d;
                 suggestion.end = end;
                 $scope.events.splice($scope.events.length, 0, suggestion);
                 $scope.$apply();
+
+                lastEventEnd = suggestion.end.dateTime;
+                lastEventEndHour = lastEventEnd.getHours();
             }
+
+            sortEvents();
+
         }
+
+        function sortEvents() {
+            $scope.events.sort(function (a, b) {
+                a = new Date(a);
+                b = new Date(b);
+                return parseInt(b.getHours()) - parseInt(a.getHours());
+            });
+        };
 
         $scope.sugg = [
             {"id":0,"activity":'Free Time',"count":0,"take": false},
