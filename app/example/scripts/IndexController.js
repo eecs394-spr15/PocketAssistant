@@ -49,29 +49,26 @@ angular
             gapi.client.load('calendar', 'v3', getCalendarData);
         }
 
-        function initArray(){
-            this.length=initArray.arguments.length;
-            for(var i=0;i<this.length;i++)
-                this[i+1]=initArray.arguments[i]
+        var days=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+        var months=['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        var dayCount=0;
+
+        function getFutureDay(numDays){
+            return (24*60*60*1000*numDays);
         }
 
-        var d=new initArray("Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday");
-        $scope.month_names=['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        $scope.datacount=0;
-
         function getCalendarData(){
-            $scope.cal = true;
-            $scope.today = new Date(new Date().getTime() + 24 * 60 * 60 * 1000 * $scope.datacount);
-            $scope.today.setHours(0,0,0,0);
-            $scope.today = $scope.today.toISOString();
-            $scope.tomorrow = new Date(new Date().getTime() + 24 * 60 * 60 * 1000 * $scope.datacount);
-            $scope.tomorrow.setHours(23,59,59,999);
-            $scope.tomorrow = $scope.tomorrow.toISOString();
-            $scope.switch =  new Date(new Date().getTime() + 24 * 60 * 60 * 1000 * $scope.datacount);
-            $scope.date = $scope.switch.getDate();
-            $scope.month = $scope.month_names[$scope.switch.getMonth()];
-            $scope.year =$scope.switch.getFullYear();
-            $scope.day = d[$scope.switch.getDay()+1];
+
+            //limit our query to events occurring today
+            var currDate = new Date(Date.now() + getFutureDay(dayCount));
+            $scope.today = currDate.setHours(0,0,0,0).toISOString();
+
+            $scope.tomorrow = currDate.setHours(23,59,59,999).toISOString();
+
+            $scope.date = currDate.getDate();
+            $scope.month = $scope.months[currDate.getMonth()];
+            $scope.year = currDate.getFullYear();
+            $scope.day = days[currDate.getDay()+1];
             var request = gapi.client.calendar.events.list({
                 'calendarId': 'primary',
                 'timeMin': $scope.today,
@@ -83,6 +80,8 @@ angular
             });
             request.execute(function(resp) {
                 supersonic.logger.log('request executing');
+                //When Google Calendar Data is loaded, display it
+                $scope.cal = true;
                 supersonic.logger.log(resp);
                 var events = resp.items;
                 events.forEach(function(x){supersonic.logger.log(x)});
@@ -93,12 +92,12 @@ angular
         }
 
         $scope.nextdate = function(){
-            $scope.datacount += 1;
+            $scope.dayCount += 1;
             getCalendarData()
         };
 
         $scope.prevdate = function(){
-            $scope.datacount -= 1;
+            $scope.dayCount -= 1;
             getCalendarData()
         };
 
