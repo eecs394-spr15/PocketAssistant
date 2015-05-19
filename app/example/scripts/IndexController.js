@@ -61,14 +61,16 @@ angular
 
             //limit our query to events occurring today
             var currDate = new Date(Date.now() + getFutureDay(dayCount));
-            $scope.today = currDate.setHours(0,0,0,0).toISOString();
-
-            $scope.tomorrow = currDate.setHours(23,59,59,999).toISOString();
+            currDate.setHours(0,0,0,0);
+            $scope.today = currDate.toISOString();
+            currDate.setHours(23,59,59,999);
+            $scope.tomorrow = currDate.toISOString();
 
             $scope.date = currDate.getDate();
-            $scope.month = $scope.months[currDate.getMonth()];
+
+           /* $scope.month = $scope.months[currDate.getMonth()];
             $scope.year = currDate.getFullYear();
-            $scope.day = days[currDate.getDay()+1];
+            $scope.day = days[currDate.getDay()+1];*/
             var request = gapi.client.calendar.events.list({
                 'calendarId': 'primary',
                 'timeMin': $scope.today,
@@ -92,12 +94,12 @@ angular
         }
 
         $scope.nextdate = function(){
-            $scope.dayCount += 1;
+            dayCount += 1;
             getCalendarData()
         };
 
         $scope.prevdate = function(){
-            $scope.dayCount -= 1;
+            dayCount -= 1;
             getCalendarData()
         };
 
