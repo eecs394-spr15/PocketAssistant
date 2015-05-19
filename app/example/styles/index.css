@@ -121,6 +121,11 @@
     flex: 0 0 70%;
     max-width: 70%;
 }
+.hideReminder{
+    float: right;
+    margin-bottom: 4px;
+}
+
 .column-icon
 {
     text-align:center;
