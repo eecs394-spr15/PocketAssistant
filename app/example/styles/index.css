@@ -121,4 +121,30 @@
     flex: 0 0 70%;
     max-width: 70%;
 }
+.column-icon
+{
+    text-align:center;
+    font-size:25px;
+}
+.area{
+    font-size:18px;
+    height:55px;
+    padding-top:10px;
+    font-family:Times;
+}
+
+input[type="text"]
+{
+    font-family:Times;
+}
+.undo{
+    color:white;
+    color:lawngreen;
+    font-family:Times;
+    font-size:28px;
+    position:absolute;
+    left:81%;
+    top:-10px;
+}
+
 

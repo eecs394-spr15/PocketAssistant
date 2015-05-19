@@ -9,10 +9,13 @@
         <super-navbar-title>
             Edit your event
         </super-navbar-title>
+        <super-navbar-button side="right" class="icon super-ios7-undo undo" ng-click="undoButton()">
+            Undo<i class="icon icon-right super-ios7-undo undo"></i>
+        </super-navbar-button>
     </super-navbar>
 
     <div ng-hide="cal">
-        <button id="authorize-button" class="button button-block button-stable" ng-click="handleClientLoad();">Authorize</button>
+        <button id="authorize-button" class="button button-block button-stable" ng-click="handleClientLoad()">Authorize</button>
     </div>
 
     <div  ng-show="cal">
@@ -22,8 +25,7 @@
             <input style="font-size:22px" type="text" ng-model="updateData.summary">
         </div>
     </div>
-        <HR width="96%" color=#987cb9 SIZE=10 />
-
+        <HR width="96%" color=#987cb9 SIZE=10/>
     <div class="row area">
         <i class="col col-20 column-icon icon super-ios7-clock-outline"></i>
         <div class="col">All day event?</div>
@@ -42,14 +44,14 @@
         <i class="col col-20 column-icon icon super-ios7-star-outline"></i>
         <div style="padding-top:3%" class="col col-20">Start:</div>
         <div class="col">
-                <input type="text" ng-model="updateData.start.dateTime">
+                <input style="font-size:18px" type="text" ng-model="updateData.start.dateTime">
         </div>
     </div>
         <div class="row area">
             <i class="col col-20 column-icon"></i>
             <div style="padding-top:3%" class="col col-20">End:</div>
             <div class="col">
-                <input type="text" ng-model="updateData.end.dateTime">
+                <input style="font-size:18px" type="text" ng-model="updateData.end.dateTime">
             </div>
         </div>
         <div style="padding-left:16%"><HR width="90%" color=#987cb9 SIZE=10 /></div>
@@ -63,22 +65,24 @@
     </div>
         <div style="padding-left:16%"><HR width="90%" color=#987cb9 SIZE=10 /></div>
 
-    <div class="row area">
-        <i class="col col-20 column-icon icon super-aperture"></i>
-        <div class="col">
-            <label class="item item-input item-select">
-                <div>Color:</div>
-                <select ng-model="colorSelect" item item-input item-select>
-                    <option>None</option><option selected>Current</option>
+        <div class="row area">
+            <i class="col col-20 column-icon icon super-aperture"></i>
+            <label style="border:none" class="item item-input item-select col">
+                <div  style="font-size:18px" class="input-label">
+                    Color:
+                </div>
+                <select style="font-size:18px;font-family:times">
+                    <option selected>Current</option><option>None</option>
+                    <option>Turquoise</option>
                     <option>Blue</option><option>Bold Blue</option>
                     <option>Green</option><option>Bold Green</option>
                     <option>Red</option><option>Bold Red</option>
                     <option>Orange</option><option>Yellow</option>
-                    <option>Grey</option><option>Purple</option><option>Turquoise</option>
+                    <option>Grey</option><option>Purple</option>
                 </select>
             </label>
+
         </div>
-    </div>
         <div style="padding-left:16%"><HR width="90%" color=#987cb9 SIZE=10 /></div>
     <div view-id="example#index" class="row area">
         <button  class="button button-calm col col-50" ng-click="update()">Update</button>

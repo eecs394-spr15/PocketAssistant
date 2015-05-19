@@ -3,16 +3,18 @@
     text-align:center;
     font-size:25px;
 }
-
-
 .area{
     font-size:18px;
     height:55px;
     padding-top:10px;
-    font-family:Comic Sans;
+    font-family:Times;
 }
 
 input[type="text"]
 {
-    font-family:Comic Sans;
+    font-family:Times;
+}
+.undo{
+    color:white;
+    font-family:Times;
 }

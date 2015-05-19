@@ -44,13 +44,23 @@ angular
             $scope.requestevent.execute(function(resp){
                 supersonic.logger.log(resp);
                 $scope.re = resp;
+                $scope.start = $scope.re.start.dateTime;
+                $scope.end = $scope.re.end.dateTime;
                 $scope.updateData = $scope.re;
+                $scope.updateData.start.dateTime = $scope.re.start.dateTime.substring(11,16);
+                $scope.updateData.end.dateTime = $scope.re.end.dateTime.substring(11,16);
+                $scope.endTime=$scope.end.substring(0,11)+$scope.updateData.end.dateTime+$scope.end.substr(16);
+                $scope.startTime=$scope.start.substring(0,11)+$scope.updateData.start.dateTime+$scope.start.substr(16);
             });
         };
+        //$scope.endTime=$scope.end.substring(0,11)+$scope.updateData.end.dateTime+$scope.end.substr(16);
+        //$scope.startTime=$scope.start.substring(0,11)+$scope.updateData.start.dateTime+$scope.start.substr(16);
 
         $scope.updateEvent = function(){
             findColor($scope.colorArray);
             $scope.re = $scope.updateData;
+            $scope.re.end.dateTime = $scope.end.substring(0,11)+$scope.updateData.end.dateTime+$scope.end.substr(16);
+            $scope.re.start.dateTime = $scope.start.substring(0,11)+$scope.updateData.start.dateTime+$scope.start.substr(16);
             $scope.requestevent = gapi.client.calendar.events.update(
                 {'calendarId':'primary', 'eventId': $scope.re.id,'resource':$scope.re});
             $scope.requestevent.execute(function(resp){
@@ -78,24 +88,26 @@ angular
             {title: 'Grey', id: '8'}, {title: 'Yellow', id: '5'}, {title: 'Orange', id: '6'},
             {title: 'Turquoise', id: '7'}, {title: 'Purple', id: '3'}];
 
-        $scope.colorSelect=1;
 
+
+        $scope.colorSelect=1;
         function findColor(x){
             for(var i in x){
                 if($scope.colorSelect == x[i].title){
                     $scope.updateData.colorId = x[i].id;}}
         };
-
         $scope.delete=function(){
             supersonic.ui.dialog.alert("You Delete the event!");
             $scope.deleteEvent();
             supersonic.ui.layers.pop();
         };
-
         $scope.update=function(){
             supersonic.ui.dialog.alert("Update successfully!");
             $scope.updateEvent();
             supersonic.ui.layers.pop();
+        };
+        $scope.undoButton = function(){
+            $scope.getEvent()
         };
     })
 
