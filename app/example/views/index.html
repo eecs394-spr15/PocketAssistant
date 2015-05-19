@@ -23,6 +23,10 @@
             </div>
         </div>
 
+        <div class="title">
+            Reminders
+            <i class="icon super-clipboard"></i>
+        </div>
         <div class="row suggestion" >
             <div class="col col-20">
                 <h6>name:</h6>
@@ -60,15 +64,15 @@
             <div>
                 <div ng-repeat="ev in events">
                     <super-navigate view-id="example#edit?id={{ev.id}}" ng-hide="ev.colorId === '0'" class="row event" ng-class="{'pink': ev.colorId >= '3','blue' : ev.colorId === '2' ,'grey': ev.colorId === '1','green': ev.colorId === Null}">
-                        <div class="col col-20 eventTime" ng-class="'#ffc900'">{{ev.start.dateTime | date:"h:mm"}} - {{ev.end.dateTime | date:"h:mm"}}</div>
+                        <div class="col col-20 eventTime" ng-class="'#ffc900'">{{ev.start.dateTime | date:"HH:mm"}} - {{ev.end.dateTime | date:"HH:mm"}}</div>
                         <div class="col col-80">&emsp;{{ev.summary}}</div>
                     </super-navigate>
                     <div ng-show="ev.colorId === '0'">
                         <div ng-hide="ev.addedEvent">
                             <div class="row suggestion" >
                                 <div class="col col-70">
-                                    <div ng-show="isActive(ev,-1)"><i class="icon super-coffee"></i>&emsp;{{ev.start.dateTime | date:"h:mm"}} - {{ev.end.dateTime | date:"h:mm"}}</div>
-                                    <div ng-hide="isActive(ev,-1)">{{ev.start.dateTime | date:"h:mm"}}-{{ev.end.dateTime | date:"h:mm"}}&emsp;{{sugg[ev.active].activity}}</div>
+                                    <div ng-show="isActive(ev,-1)"><i class="icon super-coffee"></i>&emsp;{{ev.start.dateTime | date:"HH:mm"}} - {{ev.end.dateTime | date:"HH:mm"}}</div>
+                                    <div ng-hide="isActive(ev,-1)">{{ev.start.dateTime | date:"HH:mm"}}-{{ev.end.dateTime | date:"HH:mm"}}&emsp;{{sugg[ev.active].activity}}</div>
                                 </div>
                                 <button class="col col-15 button button-clear button-assertive addButton" ng-disabled="isActive(ev,-1) || ev.addedEvent" ng-click="addCalendarData(ev)">
                                     <div>Add</div>
@@ -78,9 +82,19 @@
 
                             <div ng-show="ev.showOption">
                                 <div ng-repeat="suggestion in sugg">
-                                    <div class="sugglist row" ng-class="{active: isActive(ev,suggestion.id)}" ng-click="setActive(ev,suggestion.id)">
-                                        <div class="col col-90">{{suggestion.activity}}</div>
-                                        <i class="col col-10 icon super-checkmark"></i>
+                                    <div ng-class="{active: isActive(ev,suggestion.id)}" ng-click="setActive(ev,suggestion.id)">
+                                        <div ng-hide="greaterThanHour(ev)">
+                                            <div ng-show="isNotHourLong(suggestion)" class="sugglist row">
+                                                <div class="col col-90">{{suggestion.activity}}</div>
+                                                <i class="col col-10 icon super-checkmark"></i>
+                                            </div>
+                                        </div>
+                                        <div ng-show="greaterThanHour(ev)">
+                                            <div ng-hide="isNotHourLong(suggestion)" class="sugglist row">
+                                                <div class="col col-90">{{suggestion.activity}}</div>
+                                                <i class="col col-10 icon super-checkmark"></i>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
