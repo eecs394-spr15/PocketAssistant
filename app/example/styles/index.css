@@ -121,9 +121,9 @@
     flex: 0 0 70%;
     max-width: 70%;
 }
-.showOrHide{
-    float:right;
-    margin-bottom: 5px;
+.hideReminder{
+    float: right;
+    margin-bottom: 4px;
 }
 
 

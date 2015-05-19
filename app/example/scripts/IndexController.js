@@ -12,7 +12,7 @@ angular
                 "numDays": "2"
             }
         ];
-
+        $scope.numOfReminders = 2;
         var clientId = '792909163379-01odbc9kccakdhrhpgognar3d8idug0q.apps.googleusercontent.com';
         var scopes = 'https://www.googleapis.com/auth/calendar';
         var apiKey = 'AIzaSyAZkvW_yVrdUVEjrO7_DwFq2NidEkSEAoE';
@@ -102,11 +102,20 @@ angular
             getCalendarData()
         };
         $scope.hideReminder = false;
+        $scope.chevron = "super-chevron-up";
+        $scope.showOrHide = "Hide Reminders";
         $scope.switchButton = function(){
-            if ($scope.hideReminder == false)
+            if ($scope.hideReminder == false) {
                 $scope.hideReminder = true;
-            else
+                $scope.chevron = "super-chevron-down"
+                $scope.showOrHide = "Show Reminders";
+            }
+
+            else {
                 $scope.hideReminder = false;
+                $scope.chevron = "super-chevron-up";
+                $scope.showOrHide = "Hide Reminders";
+            }
         };
 
         // this code determines if the user has a block of free time
@@ -345,10 +354,23 @@ angular
         $scope.titleInput = "";
         $scope.numDays = "";
         $scope.addReminder = function() {
-
-            var reminder = {};
-            reminder.title = $scope.titleInput;
-
+            if (($scope.titleInput == "") || ($scope.numDays == "")){
+                alert("Name or Time is empty!")
+            }
+            else{
+                if ((isNaN($scope.numDays))==true) {
+                    alert("You must enter a number for the Time!")
+                }
+                else{
+                    var reminder = {};
+                    reminder.title = $scope.titleInput;
+                    reminder.numDays = $scope.numDays;
+                    $scope.numOfReminders += 1;
+                    $scope.reminders.push(reminder);
+                    $scope.$apply();
+                    sortReminders();
+                }
+            }
             /*var start = {};
             //var d = new Date("2015-05-14T21:00:00-05:00");
             var d = new Date($scope.today);
@@ -363,12 +385,6 @@ angular
             end.dateTime = d;
             //end.dateTime = end.dateTime.substr(0,11) + $scope.endInput + end.dateTime.substr(14);
             reminder.end = end;*/
-
-            reminder.numDays = $scope.numDays;
-
-            $scope.reminders.push(reminder);
-            $scope.$apply();
-            sortReminders();
         };
 
         function sortReminders() {
