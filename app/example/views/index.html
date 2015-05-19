@@ -22,43 +22,48 @@
                 <i class="icon icon-right super-chevron-right" ng-click="nextdate()"></i>
             </div>
         </div>
-
+        <div ng-hide="hideReminder">
         <div class="title">
             Reminders
             <i class="icon super-clipboard"></i>
+            <button type="button" class="showOrHide button button-clear button-outline button-positive button-small"ng-click="switchButton()">Hide Reminders</button>
         </div>
-        <div class="row suggestion" >
-            <div class="col col-20">
-                <h6>name:</h6>
-            </div>
-            <div class="col col-20">
-                <input type="text" class="form-control" ng-model="titleInput">
-            </div>
-            <div class="col col-15">
-                <h6>in:</h6>
-            </div>
-            <div class="col col-15">
-                <input type="text" class="form-control" ng-model="numDays">
-            </div>
-            <div class="col col-10">
-                <button class="clearButton" ng-click="addReminder()">
-                    <div>Add</div>
-                </button>
-            </div>
-        </div>
-
-        <div ng-repeat="re in reminders">
+        <div id="demo">
             <div class="row suggestion" >
-                <div class="col col-70">
-                    {{re.title}} in {{re.numDays}} days
+                <div class="col col-20">
+                    <h6>name:</h6>
+                </div>
+                <div class="col col-20">
+                    <input type="text" class="form-control" ng-model="titleInput">
+                </div>
+                <div class="col col-15">
+                    <h6>in:</h6>
+                </div>
+                <div class="col col-15">
+                    <input type="text" class="form-control" ng-model="numDays">
+                </div>
+                <div class="col col-10">
+                    <button class="clearButton" ng-click="addReminder()">
+                        <div>Add</div>
+                    </button>
                 </div>
             </div>
+
+            <div ng-repeat="re in reminders">
+                <div class="row suggestion" >
+                    <div class="col col-70">
+                        {{re.title}} in {{re.numDays}} days
+                    </div>
+                </div>
+            </div>
+        </div>
         </div>
 
         <div>
             <div class="title">
                 Schedule
                 <i class="icon super-clipboard"></i>
+                <button ng-show="hideReminder" type="button" class="showOrHide button button-clear button-outline button-positive button-small"ng-click="switchButton()">Show Reminders</button>
             </div>
 
             <div>
@@ -106,3 +111,5 @@
         </div>
     </div>
 </div>
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+<script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>

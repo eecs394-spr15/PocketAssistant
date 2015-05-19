@@ -101,6 +101,13 @@ angular
             $scope.datacount -= 1;
             getCalendarData()
         };
+        $scope.hideReminder = false;
+        $scope.switchButton = function(){
+            if ($scope.hideReminder == false)
+                $scope.hideReminder = true;
+            else
+                $scope.hideReminder = false;
+        };
 
         // this code determines if the user has a block of free time
         function makeSuggestion() {
