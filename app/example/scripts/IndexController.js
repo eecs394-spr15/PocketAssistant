@@ -50,8 +50,6 @@ angular
             $scope.authorized=1;
         }
 
-        var days=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
-        var months=['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         var dayCount=0;
 
         function getFutureDay(numDays){
@@ -69,9 +67,6 @@ angular
 
             $scope.date = currDate.getDate();
 
-           /* $scope.month = $scope.months[currDate.getMonth()];
-            $scope.year = currDate.getFullYear();
-            $scope.day = days[currDate.getDay()+1];*/
             var request = gapi.client.calendar.events.list({
                 'calendarId': 'primary',
                 'timeMin': $scope.today,
@@ -82,13 +77,9 @@ angular
                 'orderBy': 'startTime'
             });
             request.execute(function(resp) {
-                supersonic.logger.log('request executing');
                 //When Google Calendar Data is loaded, display it
                 $scope.cal = true;
-                supersonic.logger.log(resp);
-                var events = resp.items;
-                events.forEach(function(x){supersonic.logger.log(x)});
-                $scope.events = events;
+                $scope.events = resp.items;
                 makeSuggestion();
             });
         }
@@ -105,11 +96,14 @@ angular
 
         // this code determines if the user has a block of free time
         function makeSuggestion() {
+
+            //declaring some stuff
             var lastEvent;
             var isFirstEvent = true;
             var index = 0;
             var iterLength = $scope.events.length;
 
+            //this will manually insert a suggestion at 9 am if there are no events
             if(iterLength == 0) {
                 var suggestion = {};
                 suggestion.summary = "Free time";
@@ -135,19 +129,28 @@ angular
                 iterLength = iterLength + 1;
             }
 
+            //first event
             var event = $scope.events[0];
 
+            //index starts at 0, iterLength is the number of events in the list
             while(index < iterLength) {
+
+                // gets hour, minute, and "effective time" in order to compare events
                 var now = new Date(event.start.dateTime);
                 var hour = now.getHours();
                 var minute = now.getMinutes();
                 var effectiveTime = 60 * hour + minute;
 
+                //if this is the first event
                 if (isFirstEvent == true) {
                     lastEvent = event;
+
                     isFirstEvent = false;
+
+                    //if its after 10 for the first events start time
+                    //insert an event at 9
                     if (hour > 10) {
-                        //add code that inserts a suggestion here
+                        //make a suggestion object
                         var suggestion = {};
                         suggestion.summary = "Free time";
                         suggestion.colorId = "0";
@@ -156,20 +159,26 @@ angular
                         suggestion.active = -1;
                         suggestion.greaterThanHour = true;
 
+                        //get the date
                         var start = {};
                         var s = new Date(now);
+                        //set start time to 9
                         s.setHours(9);
                         start.dateTime = s;
                         suggestion.start = start;
 
+                        //set endtime to 10
                         var end = {};
                         var d = new Date(start.dateTime);
                         d.setHours(d.getHours()+1);
                         end.dateTime = d;
                         suggestion.end = end;
 
+                        //add 'suggestion' at index in array, shifting rest of things (second parameter specifies this behavior)
                         $scope.events.splice(index, 0, suggestion);
                         $scope.$apply();
+
+
                         index = index + 1;
                         iterLength = iterLength + 1;
                         lastEvent = suggestion;
@@ -179,8 +188,10 @@ angular
                 var lastEnd = new Date(lastEvent.end.dateTime);
                 var lastHour = lastEnd.getHours();
                 var lastMinute = lastEnd.getMinutes();
+                //get time of previous event for comparison purposes
                 var effectiveLastTime = 60 * lastHour + lastMinute;
 
+                //add suggestions in 1 hour blocks until next real event
                 while(effectiveTime - effectiveLastTime >= 60) {
                     //add code that inserts a suggestion here
 
@@ -212,6 +223,8 @@ angular
                         lastMinute = lastEnd.getMinutes();
                         effectiveLastTime = 60 * lastHour + lastMinute;
                 }
+
+                //add a 30 minute event if there isn't a full hour left until the next one
                 if(effectiveTime - effectiveLastTime >= 30) {
                     //add code that inserts a suggestion here
 
@@ -277,6 +290,7 @@ angular
                 lastEventEndHour = lastEventEnd.getHours();
             }
 
+            //doesn't work
             sortEvents();
 
         }
@@ -328,8 +342,6 @@ angular
                 'resource': $scope.newEvent
             });
             request.execute(function(resp) {
-                supersonic.logger.log('Event Added');
-                supersonic.logger.log(resp);
                 getCalendarData();
             });
             ev.addedEvent = true;
