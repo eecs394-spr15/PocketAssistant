@@ -289,14 +289,15 @@ angular
         };
 
         $scope.sugg = [
-            {"id":0,"activity":'Free Time',"count":0,"take": false,"hourLong":true},
-            {"id":1,"activity":'SPAC',"count":0,"take": false,"hourLong":true},
-            {"id":2,"activity":'Meal',"count":0,"take": false,"hourLong":true},
-            {"id":3,"activity":'Walk',"count":0,"take": false,"hourLong":false}
+            {"id":0,"activity":'SPAC',"count":0,"take": false,"hourLong":true},
+            {"id":1,"activity":'Meal',"count":0,"take": false,"hourLong":true},
+            {"id":2,"activity":'Walk',"count":0,"take": false,"hourLong":false},
+            {"id":3,"activity":'Free Time',"count":0,"take": false,"hourLong":true},
+            {"id":4,"activity":'Free Time',"count":0,"take": false,"hourLong":false}
         ];
 
-        $scope.isHourLong = function (suggestion) {
-            return suggestion.hourLong;
+        $scope.isNotHourLong = function (suggestion) {
+            return !suggestion.hourLong;
         };
 
         $scope.greaterThanHour = function (ev) {

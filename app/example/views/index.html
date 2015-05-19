@@ -84,13 +84,13 @@
                                 <div ng-repeat="suggestion in sugg">
                                     <div ng-class="{active: isActive(ev,suggestion.id)}" ng-click="setActive(ev,suggestion.id)">
                                         <div ng-hide="greaterThanHour(ev)">
-                                            <div ng-show="isHourLong(suggestion)" class="sugglist row">
+                                            <div ng-show="isNotHourLong(suggestion)" class="sugglist row">
                                                 <div class="col col-90">{{suggestion.activity}}</div>
                                                 <i class="col col-10 icon super-checkmark"></i>
                                             </div>
                                         </div>
                                         <div ng-show="greaterThanHour(ev)">
-                                            <div ng-hide="isHourLong(suggestion)" class="sugglist row">
+                                            <div ng-hide="isNotHourLong(suggestion)" class="sugglist row">
                                                 <div class="col col-90">{{suggestion.activity}}</div>
                                                 <i class="col col-10 icon super-checkmark"></i>
                                             </div>
