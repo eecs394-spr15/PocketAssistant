@@ -106,7 +106,7 @@ angular
             if(iterLength == 0) {
                 var suggestion = {};
                 suggestion.summary = "Free time";
-                suggestion.colorId = "8";
+                suggestion.colorId = "0";
                 suggestion.addedEvent = false;
                 suggestion.showOption = false;
                 suggestion.active = -1;
@@ -143,7 +143,7 @@ angular
                         //add code that inserts a suggestion here
                         var suggestion = {};
                         suggestion.summary = "Free time";
-                        suggestion.colorId = "8";
+                        suggestion.colorId = "0";
                         suggestion.addedEvent = false;
                         suggestion.showOption = false;
                         suggestion.active = -1;
@@ -176,10 +176,10 @@ angular
 
                 while(effectiveTime - effectiveLastTime >= 60) {
                     //add code that inserts a suggestion here
-                    if(lastHour >= 9 && lastHour < 18) {
+
                         var suggestion = {};
                         suggestion.summary = "Free time";
-                        suggestion.colorId = "8";
+                        suggestion.colorId = "0";
                         suggestion.addedEvent = false;
                         suggestion.showOption = false;
                         suggestion.active = -1;
@@ -194,45 +194,47 @@ angular
                         end.dateTime = d;
                         suggestion.end = end;
 
-                        $scope.events.splice(index, 0, suggestion);
-                        $scope.$apply();
-                        index = index + 1;
-                        iterLength = iterLength + 1;
-
+                        if(lastHour >= 9 && lastHour < 18) {
+                            $scope.events.splice(index, 0, suggestion);
+                            $scope.$apply();
+                            index = index + 1;
+                            iterLength = iterLength + 1;
+                        }
                         lastEnd = suggestion.end.dateTime;
                         lastHour = lastEnd.getHours();
                         lastMinute = lastEnd.getMinutes();
                         effectiveLastTime = 60 * lastHour + lastMinute;
-                    }
                 }
                 if(effectiveTime - effectiveLastTime >= 30) {
                     //add code that inserts a suggestion here
-                    if(lastHour >= 9 && lastHour < 18) {
-                        var suggestion = {};
-                        suggestion.summary = "Free time";
-                        suggestion.colorId = "8";
-                        suggestion.addedEvent = false;
-                        suggestion.showOption = false;
-                        suggestion.active = -1;
-                        suggestion.greaterThanHour = false;
 
-                        var start = {};
-                        start.dateTime = lastEnd;
-                        suggestion.start = start;
-                        var end = {};
-                        d = new Date(start.dateTime);
-                        d.setMinutes(d.getMinutes() + 30);
-                        end.dateTime = d;
-                        suggestion.end = end;
+                    var suggestion = {};
+                    suggestion.summary = "Free time";
+                    suggestion.colorId = "0";
+                    suggestion.addedEvent = false;
+                    suggestion.showOption = false;
+                    suggestion.active = -1;
+                    suggestion.greaterThanHour = false;
+
+                    var start = {};
+                    start.dateTime = lastEnd;
+                    suggestion.start = start;
+                    var end = {};
+                    d = new Date(start.dateTime);
+                    d.setMinutes(d.getMinutes() + 30);
+                    end.dateTime = d;
+                    suggestion.end = end;
+
+                    if(lastHour >= 9 && lastHour < 18) {
                         $scope.events.splice(index, 0, suggestion);
                         $scope.$apply();
                         index = index + 1;
                         iterLength = iterLength + 1;
-                        lastEnd = suggestion.end.dateTime;
-                        lastHour = lastEnd.getHours();
-                        lastMinute = lastEnd.getMinutes();
-                        effectiveLastTime = 60 * lastHour + lastMinute;
                     }
+                    lastEnd = suggestion.end.dateTime;
+                    lastHour = lastEnd.getHours();
+                    lastMinute = lastEnd.getMinutes();
+                    effectiveLastTime = 60 * lastHour + lastMinute;
                 }
                 index = index + 1;
                 lastEvent = event;
@@ -246,7 +248,7 @@ angular
             while (lastEventEndHour < 18) {
                 var suggestion = {};
                 suggestion.summary = "Free time";
-                suggestion.colorId = "8";
+                suggestion.colorId = "0";
                 suggestion.addedEvent = false;
                 suggestion.showOption = false;
                 suggestion.active = -1;
@@ -301,7 +303,7 @@ angular
             $scope.newEvent.summary = $scope.sugg[ev.active].activity;
             $scope.newEvent.start = ev.start;
             $scope.newEvent.end = ev.end;
-            $scope.newEvent.colorId = "12";
+            $scope.newEvent.colorId = "11";
             var request = gapi.client.calendar.events.insert({
                 'calendarId': 'primary',
                 'resource': $scope.newEvent
@@ -382,6 +384,8 @@ angular
                 $scope.updateData = $scope.re;
                 $scope.updateData.start.dateTime = $scope.re.start.dateTime.substring(11,16);
                 $scope.updateData.end.dateTime = $scope.re.end.dateTime.substring(11,16);
+                $scope.endTime=$scope.end.substring(0,11)+$scope.updateData.end.dateTime+$scope.end.substr(16);
+                $scope.startTime=$scope.start.substring(0,11)+$scope.updateData.start.dateTime+$scope.start.substr(16);
             });
         };
 

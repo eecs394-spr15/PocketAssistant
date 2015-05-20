@@ -23,100 +23,96 @@
                     <i class="icon icon-right super-chevron-right" ng-click="nextdate()"></i>
                 </div>
             </div>
-            <div>
-                <div class="title">
-                    Reminders
-                    <i class="icon super-clipboard"></i>
-                    <button type="button" class="hideReminder button button-clear button-outline button-small button-stable button-positive" ng-click="switchButton()">
-                        {{showOrHide}} <span ng-class="chevron"></span>
-                    </button>
+
+            <div class="title">
+                Reminders
+                <i class="icon super-clipboard"></i>
+                <button type="button" class="hideReminder button button-clear button-outline button-small button-stable button-positive" ng-click="switchButton()">
+                    {{showOrHide}} <span ng-class="chevron"></span>
+                </button>
+            </div>
+            <div class="row suggestion" ng-show = "hideReminder">
+                <div class="col col-70">
+                    <h5>{{numOfReminders}} Reminders!</h5>
                 </div>
-                <div class="row suggestion" ng-show = "hideReminder">
-                    <div class="col col-70">
-                        <h5>{{numOfReminders}} Reminders!</h5>
+            </div>
+            <div ng-hide = "hideReminder">
+                <div class="row suggestion">
+                    <div class="col col-20">
+                        <h6>Name:</h6>
+                    </div>
+                    <div class="col col-20">
+                        <input type="text" class="form-control" ng-model="titleInput">
+                    </div>
+                    <div class="col col-15">
+                        <h6>in:</h6>
+                    </div>
+                    <div class="col col-15">
+                        <input type="text" class="form-control" ng-model="numDays">
+                    </div>
+                    <div class="col col-10">
+                        <button class="clearButton" ng-click="addReminder()">
+                            <div>Add</div>
+                        </button>
                     </div>
                 </div>
-                <div ng-hide = "hideReminder">
-                    <div class="row suggestion">
-                        <div class="col col-20">
-                            <h6>Name:</h6>
+
+                <div ng-repeat="re in reminders">
+                    <div class="row suggestion" >
+                        <div class="col col-70">
+                            {{re.title}} in {{re.numDays}} days
                         </div>
-                        <div class="col col-20">
-                            <input type="text" class="form-control" ng-model="titleInput">
-                        </div>
-                        <div class="col col-15">
-                            <h6>in:</h6>
-                        </div>
-                        <div class="col col-15">
-                            <input type="text" class="form-control" ng-model="numDays">
-                        </div>
-                        <div class="col col-10">
-                            <button class="clearButton" ng-click="addReminder()">
+                    </div>
+                </div>
+            </div>
+
+            <div class="title">
+                Schedule
+                <i class="icon super-clipboard"></i>
+            </div>
+
+            <div ng-repeat="ev in events">
+
+                <div ng-hide="ev.colorId === '0'" class="row event" ng-class="{'blue': ev.colorId === '1','green': ev.colorId === '2' ,'purple': ev.colorId === '3','red': ev.colorId === '4','yellow': ev.colorId === '5','orange': ev.colorId === '6','turquoise': ev.colorId === '7','grey': ev.colorId === '8','boldBlue': ev.colorId === '9', 'boldGreen': ev.colorId === '10','pink': ev.colorId === '11','NoId': ev.colorId === Null}">
+                    <div class="col col-20 eventTime" ng-class="'#ffc900'">{{ev.start.dateTime | date:"HH:mm"}} - {{ev.end.dateTime | date:"HH:mm"}}</div>
+                    <div class="col col">&emsp;{{ev.summary}}</div>
+                    <div class="col col-10 icon super-edit" ng-click="getEvent(ev)"></div>
+                </div>
+
+                <div ng-show="ev.colorId === '0'">
+                    <div ng-hide="ev.addedEvent">
+                        <div class="row suggestion" ng-class="{'currentEvent': ev.current}">
+                            <div class="col col-70">
+                                <div ng-show="isActive(ev,-1)"><i class="icon super-coffee"></i>&emsp;{{ev.start.dateTime | date:"HH:mm"}} - {{ev.end.dateTime | date:"HH:mm"}}</div>
+                                <div ng-hide="isActive(ev,-1)">{{ev.start.dateTime | date:"HH:mm"}}-{{ev.end.dateTime | date:"HH:mm"}}&emsp;{{sugg[ev.active].activity}}</div>
+                            </div>
+                            <button class="col col-15 button button-clear button-assertive addButton" ng-disabled="isActive(ev,-1) || ev.addedEvent" ng-click="addCalendarData(ev)">
                                 <div>Add</div>
                             </button>
-                        </div>
-                    </div>
-
-                    <div ng-repeat="re in reminders">
-                        <div class="row suggestion" >
-                            <div class="col col-70">
-                                {{re.title}} in {{re.numDays}} days
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div>
-                <div class="title">
-                    Schedule
-                    <i class="icon super-clipboard"></i>
-                </div>
-
-                <div>
-                    <div ng-repeat="ev in events">
-                        <div ng-hide="ev.colorId === '0'" class="row event" ng-class="{'blue': ev.colorId === '1','green': ev.colorId === '2' ,'purple': ev.colorId === '3','red': ev.colorId === '4','yellow': ev.colorId === '5','orange': ev.colorId === '6','turquoise': ev.colorId === '7','grey': ev.colorId === '8','boldBlue': ev.colorId === '9', 'boldGreen': ev.colorId === '10','boldRed': ev.colorId === '11','pink': ev.colorId === '12','NoId': ev.colorId === Null}">
-                            <div class="col col-20 eventTime" ng-class="'#ffc900'">{{ev.start.dateTime | date:"h:mm"}} - {{ev.end.dateTime | date:"h:mm"}}</div>
-                            <div class="col col">&emsp;{{ev.summary}}</div>
-                            <div class="col col-10 icon super-edit" ng-click="getEvent(ev)"></div>
+                            <button class="col col-15 button button-icon icon super-navicon" ng-click="toggle(ev)"></button>
                         </div>
 
-                        <div ng-show="ev.colorId === '0'">
-                            <div ng-hide="ev.addedEvent">
-                                <div class="row suggestion" ng-class="{'currentEvent': ev.current}">
-                                    <div class="col col-70">
-                                        <div ng-show="isActive(ev,-1)"><i class="icon super-coffee"></i>&emsp;{{ev.start.dateTime | date:"HH:mm"}} - {{ev.end.dateTime | date:"HH:mm"}}</div>
-                                        <div ng-hide="isActive(ev,-1)">{{ev.start.dateTime | date:"HH:mm"}}-{{ev.end.dateTime | date:"HH:mm"}}&emsp;{{sugg[ev.active].activity}}</div>
+                        <div ng-show="ev.showOption">
+                            <div ng-repeat="suggestion in sugg">
+                                <div ng-if="greaterThanHour(ev)">
+                                    <div ng-show="!isNotHourLong(suggestion)" class="sugglist row" ng-class="{active: isActive(ev,suggestion.id)}" ng-click="setActive(ev,suggestion.id)">
+                                        <div class="col col-90">{{suggestion.activity}}</div>
+                                        <i class="col col-10 icon super-checkmark"></i>
                                     </div>
-                                    <button class="col col-15 button button-clear button-assertive addButton" ng-disabled="isActive(ev,-1) || ev.addedEvent" ng-click="addCalendarData(ev)">
-                                        <div>Add</div>
-                                    </button>
-                                    <button class="col col-15 button button-icon icon super-navicon" ng-click="toggle(ev)"></button>
                                 </div>
-
-                                <div ng-show="ev.showOption">
-                                    <div ng-repeat="suggestion in sugg">
-                                        <div ng-class="{active: isActive(ev,suggestion.id)}" ng-click="setActive(ev,suggestion.id)">
-                                            <div ng-hide="greaterThanHour(ev)">
-                                                <div ng-show="isNotHourLong(suggestion)" class="sugglist row">
-                                                    <div class="col col-90">{{suggestion.activity}}</div>
-                                                    <i class="col col-10 icon super-checkmark"></i>
-                                                </div>
-                                            </div>
-                                            <div ng-show="greaterThanHour(ev)">
-                                                <div ng-hide="isNotHourLong(suggestion)" class="sugglist row">
-                                                    <div class="col col-90">{{suggestion.activity}}</div>
-                                                    <i class="col col-10 icon super-checkmark"></i>
-                                                </div>
-                                            </div>
-                                        </div>
+                                <div ng-if="!greaterThanHour(ev)">
+                                    <div ng-show="isNotHourLong(suggestion)" class="sugglist row" ng-class="{active: isActive(ev,suggestion.id)}" ng-click="setActive(ev,suggestion.id)">
+                                        <div class="col col-90">{{suggestion.activity}}</div>
+                                        <i class="col col-10 icon super-checkmark"></i>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
             </div>
+
         </div>
     </div>
 
