@@ -276,7 +276,8 @@ angular
             {"id":1,"activity":'Meal',"count":0,"take": false,"hourLong":true},
             {"id":2,"activity":'Walk',"count":0,"take": false,"hourLong":false},
             {"id":3,"activity":'Free Time',"count":0,"take": false,"hourLong":true},
-            {"id":4,"activity":'Free Time',"count":0,"take": false,"hourLong":false}];
+            {"id":4,"activity":'Free Time',"count":0,"take": false,"hourLong":false}
+        ];
 
         $scope.isNotHourLong = function (sug) {
             return !sug.hourLong;
@@ -384,8 +385,6 @@ angular
                 $scope.updateData = $scope.re;
                 $scope.updateData.start.dateTime = $scope.re.start.dateTime.substring(11,16);
                 $scope.updateData.end.dateTime = $scope.re.end.dateTime.substring(11,16);
-                $scope.endTime=$scope.end.substring(0,11)+$scope.updateData.end.dateTime+$scope.end.substr(16);
-                $scope.startTime=$scope.start.substring(0,11)+$scope.updateData.start.dateTime+$scope.start.substr(16);
             });
         };
 
@@ -443,7 +442,6 @@ angular
                 supersonic.logger.log('delete event');
                 supersonic.logger.log(resp)});
         };
-
         $scope.undoButton = function(){
             $scope.getEvent($scope.re);
         };
