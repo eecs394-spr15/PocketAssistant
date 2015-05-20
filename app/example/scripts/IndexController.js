@@ -1,6 +1,18 @@
 angular
     .module('example')
     .controller('IndexController', function($scope, supersonic) {
+
+        $scope.reminders = [
+            {
+                "title": "394 midterm",
+                "numDays": "3"
+            },
+            {
+                "title": "395 midterm",
+                "numDays": "2"
+            }
+        ];
+        $scope.numOfReminders = 2;
         var clientId = '792909163379-01odbc9kccakdhrhpgognar3d8idug0q.apps.googleusercontent.com';
         var scopes = 'https://www.googleapis.com/auth/calendar';
         var apiKey = 'AIzaSyAZkvW_yVrdUVEjrO7_DwFq2NidEkSEAoE';
@@ -22,8 +34,8 @@ angular
             var authorizeButton = document.getElementById('authorize-button');
             if (authResult && !authResult.error) {
                 authorizeButton.style.visibility = 'hidden';
-                supersonic.logger.log(authResult);
-                supersonic.logger.log('authResult');
+                supersonic.logger.log(authResult)
+                supersonic.logger.log('authResult')
                 //supersonic.logger.log(authorizeButton)
                 makeApiCall();
             } else {
@@ -43,6 +55,14 @@ angular
             $scope.authorized=1;
         }
 
+        function initArray(){
+            this.length=initArray.arguments.length;
+            for(var i=0;i<this.length;i++)
+                this[i+1]=initArray.arguments[i]
+        }
+
+        var d=new initArray("Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday");
+        $scope.month_names=['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         $scope.datacount=0;
 
         function getCalendarData(){
@@ -77,15 +97,6 @@ angular
             });
         }
 
-        function initArray(){
-            this.length=initArray.arguments.length;
-            for(var i=0;i<this.length;i++)
-                this[i+1]=initArray.arguments[i]
-        }
-
-        var d=new initArray("Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday");
-        $scope.month_names=['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
         $scope.nextdate = function(){
             $scope.datacount += 1;
             getCalendarData()
@@ -94,6 +105,22 @@ angular
         $scope.prevdate = function(){
             $scope.datacount -= 1;
             getCalendarData()
+        };
+        $scope.hideReminder = false;
+        $scope.chevron = "super-chevron-up";
+        $scope.showOrHide = "Hide Reminders";
+        $scope.switchButton = function(){
+            if ($scope.hideReminder == false) {
+                $scope.hideReminder = true;
+                $scope.chevron = "super-chevron-down"
+                $scope.showOrHide = "Show Reminders";
+            }
+
+            else {
+                $scope.hideReminder = false;
+                $scope.chevron = "super-chevron-up";
+                $scope.showOrHide = "Hide Reminders";
+            }
         };
 
         // this code determines if the user has a block of free time
@@ -106,7 +133,7 @@ angular
             if(iterLength == 0) {
                 var suggestion = {};
                 suggestion.summary = "Free time";
-                suggestion.colorId = "8";
+                suggestion.colorId = "0";
                 suggestion.addedEvent = false;
                 suggestion.showOption = false;
                 suggestion.active = -1;
@@ -128,7 +155,7 @@ angular
                 iterLength = iterLength + 1;
             }
 
-            var event = $scope.events[index];
+            var event = $scope.events[0];
 
             while(index < iterLength) {
                 var now = new Date(event.start.dateTime);
@@ -143,7 +170,7 @@ angular
                         //add code that inserts a suggestion here
                         var suggestion = {};
                         suggestion.summary = "Free time";
-                        suggestion.colorId = "8";
+                        suggestion.colorId = "0";
                         suggestion.addedEvent = false;
                         suggestion.showOption = false;
                         suggestion.active = -1;
@@ -176,10 +203,10 @@ angular
 
                 while(effectiveTime - effectiveLastTime >= 60) {
                     //add code that inserts a suggestion here
-                    if(lastHour >= 9 && lastHour < 18) {
+
                         var suggestion = {};
                         suggestion.summary = "Free time";
-                        suggestion.colorId = "8";
+                        suggestion.colorId = "0";
                         suggestion.addedEvent = false;
                         suggestion.showOption = false;
                         suggestion.active = -1;
@@ -194,50 +221,52 @@ angular
                         end.dateTime = d;
                         suggestion.end = end;
 
-                        $scope.events.splice(index, 0, suggestion);
-                        $scope.$apply();
-                        index = index + 1;
-                        iterLength = iterLength + 1;
-
+                        if(lastHour >= 9 && lastHour < 18) {
+                            $scope.events.splice(index, 0, suggestion);
+                            $scope.$apply();
+                            index = index + 1;
+                            iterLength = iterLength + 1;
+                        }
                         lastEnd = suggestion.end.dateTime;
                         lastHour = lastEnd.getHours();
                         lastMinute = lastEnd.getMinutes();
                         effectiveLastTime = 60 * lastHour + lastMinute;
-                    }
                 }
                 if(effectiveTime - effectiveLastTime >= 30) {
                     //add code that inserts a suggestion here
-                    if(lastHour >= 9 && lastHour < 18) {
-                        var suggestion = {};
-                        suggestion.summary = "Free time";
-                        suggestion.colorId = "8";
-                        suggestion.addedEvent = false;
-                        suggestion.showOption = false;
-                        suggestion.active = -1;
-                        suggestion.greaterThanHour = false;
 
-                        var start = {};
-                        start.dateTime = lastEnd;
-                        suggestion.start = start;
-                        var end = {};
-                        d = new Date(start.dateTime);
-                        d.setMinutes(d.getMinutes() + 30);
-                        end.dateTime = d;
-                        suggestion.end = end;
+                    var suggestion = {};
+                    suggestion.summary = "Free time";
+                    suggestion.colorId = "0";
+                    suggestion.addedEvent = false;
+                    suggestion.showOption = false;
+                    suggestion.active = -1;
+                    suggestion.greaterThanHour = false;
+
+                    var start = {};
+                    start.dateTime = lastEnd;
+                    suggestion.start = start;
+                    var end = {};
+                    d = new Date(start.dateTime);
+                    d.setMinutes(d.getMinutes() + 30);
+                    end.dateTime = d;
+                    suggestion.end = end;
+
+                    if(lastHour >= 9 && lastHour < 18) {
                         $scope.events.splice(index, 0, suggestion);
                         $scope.$apply();
                         index = index + 1;
                         iterLength = iterLength + 1;
-                        lastEnd = suggestion.end.dateTime;
-                        lastHour = lastEnd.getHours();
-                        lastMinute = lastEnd.getMinutes();
-                        effectiveLastTime = 60 * lastHour + lastMinute;
                     }
+                    lastEnd = suggestion.end.dateTime;
+                    lastHour = lastEnd.getHours();
+                    lastMinute = lastEnd.getMinutes();
+                    effectiveLastTime = 60 * lastHour + lastMinute;
                 }
                 index = index + 1;
                 lastEvent = event;
                 event = $scope.events[index];
-            }
+            };
 
             //suggestion after the last event on calendar
             var theLastEvent = $scope.events[$scope.events.length-1];
@@ -246,7 +275,7 @@ angular
             while (lastEventEndHour < 18) {
                 var suggestion = {};
                 suggestion.summary = "Free time";
-                suggestion.colorId = "8";
+                suggestion.colorId = "0";
                 suggestion.addedEvent = false;
                 suggestion.showOption = false;
                 suggestion.active = -1;
@@ -267,17 +296,29 @@ angular
                 lastEventEnd = suggestion.end.dateTime;
                 lastEventEndHour = lastEventEnd.getHours();
             }
+
+            sortEvents();
+
         }
+
+        function sortEvents() {
+            $scope.events.sort(function (a, b) {
+                a = new Date(a);
+                b = new Date(b);
+                return parseInt(b.getHours()) - parseInt(a.getHours());
+            });
+        };
 
         $scope.sugg = [
             {"id":0,"activity":'SPAC',"count":0,"take": false,"hourLong":true},
             {"id":1,"activity":'Meal',"count":0,"take": false,"hourLong":true},
             {"id":2,"activity":'Walk',"count":0,"take": false,"hourLong":false},
             {"id":3,"activity":'Free Time',"count":0,"take": false,"hourLong":true},
-            {"id":4,"activity":'Free Time',"count":0,"take": false,"hourLong":false}];
+            {"id":4,"activity":'Free Time',"count":0,"take": false,"hourLong":false}
+        ];
 
-        $scope.isNotHourLong = function (sug) {
-            return !sug.hourLong;
+        $scope.isNotHourLong = function (suggestion) {
+            return !suggestion.hourLong;
         };
 
         $scope.greaterThanHour = function (ev) {
@@ -301,7 +342,7 @@ angular
             $scope.newEvent.summary = $scope.sugg[ev.active].activity;
             $scope.newEvent.start = ev.start;
             $scope.newEvent.end = ev.end;
-            $scope.newEvent.colorId = "12";
+            $scope.newEvent.colorId = "2";
             var request = gapi.client.calendar.events.insert({
                 'calendarId': 'primary',
                 'resource': $scope.newEvent
@@ -315,32 +356,6 @@ angular
             ev.showOption = !ev.showOption;
         };
 
-        $scope.reminders = [
-            {
-                "title": "394 midterm",
-                "numDays": "3"
-            },
-            {
-                "title": "395 midterm",
-                "numDays": "2"
-            }
-        ];
-        $scope.numOfReminders = 2;
-        $scope.hideReminder = false;
-        $scope.chevron = "super-chevron-up";
-        $scope.showOrHide = "Hide Reminders";
-        $scope.switchButton = function(){
-            if ($scope.hideReminder == false) {
-                $scope.hideReminder = true;
-                $scope.chevron = "super-chevron-down";
-                $scope.showOrHide = "Show Reminders";
-            }
-            else {
-                $scope.hideReminder = false;
-                $scope.chevron = "super-chevron-up";
-                $scope.showOrHide = "Hide Reminders";
-            }
-        };
         $scope.titleInput = "";
         $scope.numDays = "";
         $scope.addReminder = function() {
@@ -361,18 +376,46 @@ angular
                     sortReminders();
                 }
             }
+            /*var start = {};
+            //var d = new Date("2015-05-14T21:00:00-05:00");
+            var d = new Date($scope.today);
+            d.setHours(parseInt($scope.startInput));
+            //d.setDate($scope.today);
+            start.dateTime = d;
+            reminder.start = start;
+
+            var end = {};
+            //end.dateTime = new Date("2015-05-14T21:00:00-05:00");
+            d.setHours(parseInt($scope.endInput));
+            end.dateTime = d;
+            //end.dateTime = end.dateTime.substr(0,11) + $scope.endInput + end.dateTime.substr(14);
+            reminder.end = end;*/
+
+            var reminder = {};
+            reminder.title = $scope.titleInput;
+            reminder.numDays = $scope.numDays;
+            $scope.reminders.push(reminder);
+            $scope.$apply();
+            sortReminders();
         };
 
         function sortReminders() {
             $scope.reminders.sort(function (a, b) {
                 return parseInt(a.numDays) - parseInt(b.numDays);
             });
-        }
+        };
 
-        $scope.getEvent = function(ev) {
+        $scope.editEvent= function(a){
             $scope.titleName = {name:'Edit your event',button:'Undo',back:'back'};
             $scope.mainPage = false;
-            $scope.evid= ev.id;
+            $scope.re=a;
+            $scope.updateData=$scope.re;
+        }
+
+        $scope.getEvent = function(a) {
+            $scope.titleName = {name:'Edit your event',button:'Undo',back:'back'};
+            $scope.mainPage = false;
+            $scope.evid= a.id
             $scope.requestEvent = gapi.client.calendar.events.get({'calendarId':'primary', 'eventId': $scope.evid});
             $scope.requestEvent.execute(function(resp){
                 supersonic.logger.log(resp);
@@ -382,15 +425,9 @@ angular
                 $scope.updateData = $scope.re;
                 $scope.updateData.start.dateTime = $scope.re.start.dateTime.substring(11,16);
                 $scope.updateData.end.dateTime = $scope.re.end.dateTime.substring(11,16);
+                $scope.endTime=$scope.end.substring(0,11)+$scope.updateData.end.dateTime+$scope.end.substr(16);
+                $scope.startTime=$scope.start.substring(0,11)+$scope.updateData.start.dateTime+$scope.start.substr(16);
             });
-        };
-
-        $scope.update=function(){
-            supersonic.ui.dialog.alert("Update successfully!");
-            $scope.updateEvent();
-            $scope.mainPage=true;
-            $scope.titleName = {name:'Pocket Assistant',button:'',back:''};
-            getCalendarData();
         };
 
         $scope.updateEvent = function(){
@@ -403,26 +440,33 @@ angular
             $scope.requestevent.execute(function(resp){
                 supersonic.logger.log('update event');
                 supersonic.logger.log(resp)});
-        };
+
+            };
+        $scope.deleteEvent = function(){
+            $scope.requestevent = gapi.client.calendar.events.delete(
+                {'calendarId':'primary', 'eventId': $scope.re.id});
+            $scope.requestevent.execute(function(resp){
+                supersonic.logger.log('delete event');
+                supersonic.logger.log(resp)});
+            };
 
         //colorid representation:
         // bold read:11   bold green:10   blod blue:9   grey:8
         // yellow:5   orange:6   red:4  purple:3
         // blue:1  green:2  turquoise:7
-        $scope.colorArray = [{title: 'Blue', id: '1'}, {title: 'Green', id: '2'}, {title: 'Purple', id: '3'},
-            {title: 'Red', id:'4'}, {title: 'Yellow', id: '5'}, {title: 'Orange', id: '6'},
-            {title: 'Turquoise', id: '7'}, {title: 'Grey', id: '8'},
-            {title: 'Bold Blue', id: '9'},{title: 'Bold Green', id: '10'},{title: 'Bold Red', id: '11'}
-             ];
+
+        $scope.colorArray = [{title: 'Blue', id: '1'}, {title: 'Bold Blue', id: '9'},
+            {title: 'Red', id:'4'}, {title: 'Bold Red', id: '11'},
+            {title: 'Green', id: '2'}, {title: 'Bold Green', id: '10'},
+            {title: 'Grey', id: '8'}, {title: 'Yellow', id: '5'}, {title: 'Orange', id: '6'},
+            {title: 'Turquoise', id: '7'}, {title: 'Purple', id: '3'}];
         $scope.colorSelect=1;
 
-        function findColor(array){
-            for(var i in array){
-                if($scope.colorSelect == array[i].title){
-                    $scope.updateData.colorId = array[i].id;
-                }
-            }
-        }
+        function findColor(x){
+            for(var i in x){
+                if($scope.colorSelect == x[i].title){
+                    $scope.updateData.colorId = x[i].id;}}
+        };
 
         $scope.delete=function(){
             supersonic.ui.dialog.alert("You Delete the event!");
@@ -432,19 +476,23 @@ angular
             getCalendarData();
         };
 
-        $scope.deleteEvent = function(){
-            $scope.requestevent = gapi.client.calendar.events.delete(
-                {'calendarId':'primary', 'eventId': $scope.re.id});
-            $scope.requestevent.execute(function(resp){
-                supersonic.logger.log('delete event');
-                supersonic.logger.log(resp)});
+        $scope.update=function(){
+            supersonic.ui.dialog.alert("Update successfully!");
+            $scope.updateEvent();
+            $scope.mainPage=true;
+            $scope.titleName = {name:'Pocket Assistant',button:'',back:''};
+            getCalendarData();
         };
-
         $scope.undoButton = function(){
             $scope.getEvent($scope.re);
         };
         $scope.backButton = function(){
             $scope.mainPage=true;
             $scope.titleName = {name:'Pocket Assistant',button:'',back:''};
-        };
+        }
+        $scope.abc=1
+        $scope.getColor=function(){
+            findColor($scope.colorArray);
+            $scope.abc+=1;
+        }
     });
