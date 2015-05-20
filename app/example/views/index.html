@@ -3,109 +3,111 @@
     <link rel="stylesheet" href="styles/index.css">
 
     <super-navbar >
-        <super-navbar-title ng-bind="titleName.name">
-        </super-navbar-title>
+        <super-navbar-title ng-bind="titleName.name"></super-navbar-title>
         <super-navbar-button side="right" ng-bind="titleName.button" ng-click="undoButton()"></super-navbar-button>
         <super-navbar-button side="left" ng-bind="titleName.back" ng-click="backButton()"></super-navbar-button>
     </super-navbar>
 
     <div ng-show="mainPage">
 
-    <div ng-hide="cal">
-        <button id="authorize-button" class="button button-block button-stable" ng-click="handleClientLoad()">Authorize</button>
-    </div>
+        <div ng-hide="cal">
+            <button id="authorize-button" class="button button-block button-stable" ng-click="handleClientLoad()">Authorize</button>
+        </div>
 
-    <div ng-show="cal">
-        <div class="date">
-            <div class="date-content">
-                <i class="icon super-chevron-left" ng-click="prevdate()"></i>
-                <i class="icon super-calendar"></i>
-                {{day+", "+month+" "+date+", "+year}}
-                <i class="icon icon-right super-chevron-right" ng-click="nextdate()"></i>
-            </div>
-        </div>
-        <div>
-        <div class="title">
-            Reminders
-            <i class="icon super-clipboard"></i>
-            <button type="button" class="hideReminder button button-clear button-outline button-small button-stable button-positive" ng-click="switchButton()">
-            {{showOrHide}} <span ng-class="chevron"></span></button>
-        </div>
-            <div class="row suggestion" ng-show = "hideReminder">
-                <div class="col col-70">
-                    <h5>{{numOfReminders}} Reminders!</h5>
+        <div ng-show="cal">
+            <div class="date">
+                <div class="date-content">
+                    <i class="icon super-chevron-left" ng-click="prevdate()"></i>
+                    <i class="icon super-calendar"></i>
+                    {{day+", "+month+" "+date+", "+year}}
+                    <i class="icon icon-right super-chevron-right" ng-click="nextdate()"></i>
                 </div>
             </div>
-        <div ng-hide = "hideReminder">
-            <div class="row suggestion">
-                <div class="col col-20">
-                    <h6>Name:</h6>
-                </div>
-                <div class="col col-20">
-                    <input type="text" class="form-control" ng-model="titleInput">
-                </div>
-                <div class="col col-15">
-                    <h6>in:</h6>
-                </div>
-                <div class="col col-15">
-                    <input type="text" class="form-control" ng-model="numDays">
-                </div>
-                <div class="col col-10">
-                    <button class="clearButton" ng-click="addReminder()">
-                        <div>Add</div>
+            <div>
+                <div class="title">
+                    Reminders
+                    <i class="icon super-clipboard"></i>
+                    <button type="button" class="hideReminder button button-clear button-outline button-small button-stable button-positive" ng-click="switchButton()">
+                        {{showOrHide}} <span ng-class="chevron"></span>
                     </button>
                 </div>
-            </div>
-
-            <div ng-repeat="re in reminders">
-                <div class="row suggestion" >
+                <div class="row suggestion" ng-show = "hideReminder">
                     <div class="col col-70">
-                        {{re.title}} in {{re.numDays}} days
+                        <h5>{{numOfReminders}} Reminders!</h5>
+                    </div>
+                </div>
+                <div ng-hide = "hideReminder">
+                    <div class="row suggestion">
+                        <div class="col col-20">
+                            <h6>Name:</h6>
+                        </div>
+                        <div class="col col-20">
+                            <input type="text" class="form-control" ng-model="titleInput">
+                        </div>
+                        <div class="col col-15">
+                            <h6>in:</h6>
+                        </div>
+                        <div class="col col-15">
+                            <input type="text" class="form-control" ng-model="numDays">
+                        </div>
+                        <div class="col col-10">
+                            <button class="clearButton" ng-click="addReminder()">
+                                <div>Add</div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div ng-repeat="re in reminders">
+                        <div class="row suggestion" >
+                            <div class="col col-70">
+                                {{re.title}} in {{re.numDays}} days
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        </div>
-
-        <div>
-            <div class="title">
-                Schedule
-                <i class="icon super-clipboard"></i>
-            </div>
 
             <div>
-                <div ng-repeat="ev in events">
-                    <div ng-hide="ev.colorId === '0'" class="row event" ng-class="{'pink': ev.colorId >= '3','blue' : ev.colorId === '2' ,'grey': ev.colorId === '1','green': ev.colorId === Null}">
-                        <div class="col col-20 eventTime" ng-class="'#ffc900'">{{ev.start.dateTime | date:"h:mm"}} - {{ev.end.dateTime | date:"h:mm"}}</div>
-                        <div class="col col">&emsp;{{ev.summary}}</div>
-                    <div class="col col-10 icon super-edit" style="font-size:18px;padding-top:4%" ng-click="getEvent(ev)"></div>
+                <div class="title">
+                    Schedule
+                    <i class="icon super-clipboard"></i>
                 </div>
-                    <div ng-show="ev.colorId === '0'">
-                        <div ng-hide="ev.addedEvent">
-                            <div class="row suggestion" >
-                                <div class="col col-70">
-                                    <div ng-show="isActive(ev,-1)"><i class="icon super-coffee"></i>&emsp;{{ev.start.dateTime | date:"HH:mm"}} - {{ev.end.dateTime | date:"HH:mm"}}</div>
-                                    <div ng-hide="isActive(ev,-1)">{{ev.start.dateTime | date:"HH:mm"}}-{{ev.end.dateTime | date:"HH:mm"}}&emsp;{{sugg[ev.active].activity}}</div>
-                                </div>
-                                <button class="col col-15 button button-clear button-assertive addButton" ng-disabled="isActive(ev,-1) || ev.addedEvent" ng-click="addCalendarData(ev)">
-                                    <div>Add</div>
-                                </button>
-                                <button class="col col-15 button button-icon icon super-navicon" ng-click="toggle(ev)"></button>
-                            </div>
 
-                            <div ng-show="ev.showOption">
-                                <div ng-repeat="suggestion in sugg">
-                                    <div ng-class="{active: isActive(ev,suggestion.id)}" ng-click="setActive(ev,suggestion.id)">
-                                        <div ng-hide="greaterThanHour(ev)">
-                                            <div ng-show="isNotHourLong(suggestion)" class="sugglist row">
-                                                <div class="col col-90">{{suggestion.activity}}</div>
-                                                <i class="col col-10 icon super-checkmark"></i>
+                <div>
+                    <div ng-repeat="ev in events">
+                        <div ng-hide="ev.colorId === '0'" class="row event" ng-class="{'blue': ev.colorId === '1','green': ev.colorId === '2' ,'purple': ev.colorId === '3','red': ev.colorId === '4','yellow': ev.colorId === '5','orange': ev.colorId === '6','turquoise': ev.colorId === '7','grey': ev.colorId === '8','boldBlue': ev.colorId === '9', 'boldGreen': ev.colorId === '10','boldRed': ev.colorId === '11','pink': ev.colorId === '12','NoId': ev.colorId === Null}">
+                            <div class="col col-20 eventTime" ng-class="'#ffc900'">{{ev.start.dateTime | date:"h:mm"}} - {{ev.end.dateTime | date:"h:mm"}}</div>
+                            <div class="col col">&emsp;{{ev.summary}}</div>
+                            <div class="col col-10 icon super-edit" ng-click="getEvent(ev)"></div>
+                        </div>
+
+                        <div ng-show="ev.colorId === '0'">
+                            <div ng-hide="ev.addedEvent">
+                                <div class="row suggestion" ng-class="{'currentEvent': ev.current}">
+                                    <div class="col col-70">
+                                        <div ng-show="isActive(ev,-1)"><i class="icon super-coffee"></i>&emsp;{{ev.start.dateTime | date:"HH:mm"}} - {{ev.end.dateTime | date:"HH:mm"}}</div>
+                                        <div ng-hide="isActive(ev,-1)">{{ev.start.dateTime | date:"HH:mm"}}-{{ev.end.dateTime | date:"HH:mm"}}&emsp;{{sugg[ev.active].activity}}</div>
+                                    </div>
+                                    <button class="col col-15 button button-clear button-assertive addButton" ng-disabled="isActive(ev,-1) || ev.addedEvent" ng-click="addCalendarData(ev)">
+                                        <div>Add</div>
+                                    </button>
+                                    <button class="col col-15 button button-icon icon super-navicon" ng-click="toggle(ev)"></button>
+                                </div>
+
+                                <div ng-show="ev.showOption">
+                                    <div ng-repeat="suggestion in sugg">
+                                        <div ng-class="{active: isActive(ev,suggestion.id)}" ng-click="setActive(ev,suggestion.id)">
+                                            <div ng-hide="greaterThanHour(ev)">
+                                                <div ng-show="isNotHourLong(suggestion)" class="sugglist row">
+                                                    <div class="col col-90">{{suggestion.activity}}</div>
+                                                    <i class="col col-10 icon super-checkmark"></i>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div ng-show="greaterThanHour(ev)">
-                                            <div ng-hide="isNotHourLong(suggestion)" class="sugglist row">
-                                                <div class="col col-90">{{suggestion.activity}}</div>
-                                                <i class="col col-10 icon super-checkmark"></i>
+                                            <div ng-show="greaterThanHour(ev)">
+                                                <div ng-hide="isNotHourLong(suggestion)" class="sugglist row">
+                                                    <div class="col col-90">{{suggestion.activity}}</div>
+                                                    <i class="col col-10 icon super-checkmark"></i>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -114,81 +116,79 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
-    </div>
     </div>
 
     <div ng-hide="mainPage">
-            <div class="row area">
-                <div class="col title">
-                    <input style="font-size:22px" type="text" ng-model="updateData.summary">
-                </div>
-            </div>
-            <HR width="96%" color=#987cb9 SIZE=10/>
-            <div class="row area">
-                <i class="col col-20 column-icon icon super-ios7-clock-outline"></i>
-                <div class="col">All day event?</div>
-                <div class="col col-20">
-                    <label class="toggle toggle-assertive">
-                        <input type="checkbox" ng-model="dayEvent">
-                        <div class="track">
-                            <div class="handle"></div>
-                        </div>
-                    </label>
-                </div>
-            </div>
-            <div style="padding-left:16%"><HR width="90%" color=#987cb9 SIZE=10 /></div>
-
-            <div class="row area">
-                <i class="col col-20 column-icon icon super-ios7-star-outline"></i>
-                <div style="padding-top:3%" class="col col-20">Start:</div>
-                <div class="col">
-                    <input style="font-size:18px" type="text" ng-model="updateData.start.dateTime">
-                </div>
-            </div>
-            <div class="row area">
-                <i class="col col-20 column-icon"></i>
-                <div style="padding-top:3%" class="col col-20">End:</div>
-                <div class="col">
-                    <input style="font-size:18px" type="text" ng-model="updateData.end.dateTime">
-                </div>
-            </div>
-            <div style="padding-left:16%"><HR width="90%" color=#987cb9 SIZE=10 /></div>
-
-            <div class="row area">
-                <i class="col col-20 column-icon icon super-ios7-location-outline"></i>
-                <div class="col">
-                    <input style="font-size:18px" type="text" ng-show="re.location!=Null" ng-model="updateData.location">
-                    <input style="font-size:18px" type="text" ng-show="re.location==Null" ng-model="updateData.location" placeholder="Add location">
-                </div>
-            </div>
-            <div style="padding-left:16%"><HR width="90%" color=#987cb9 SIZE=10 /></div>
-
-            <div class="row area">
-                <i class="col col-20 column-icon icon super-aperture"></i>
-                <label style="border:none" class="item item-input item-select col">
-                    <div  style="font-size:18px" class="input-label">
-                        Color:
-                    </div>
-                    <select style="font-size:18px;font-family:times" ng-model="colorSelect">
-                        <option selected>Current</option>
-                        <option>Turquoise</option>
-                        <option>Blue</option><option>Bold Blue</option>
-                        <option>Green</option><option>Bold Green</option>
-                        <option>Red</option><option>Bold Red</option>
-                        <option>Orange</option><option>Yellow</option>
-                        <option>Grey</option><option>Purple</option>
-                    </select>
-                </label>
-
-            </div>
-            <div style="padding-left:16%"><HR width="90%" color=#987cb9 SIZE=10 /></div>
-            <div class="row area">
-                <button  class="button button-calm col col-50" ng-click="update()">Update</button>
-                <button  class="button button-stable col col-50" ng-click="delete()">Delete</button>
+        <div class="row area">
+            <div class="col title">
+                <input style="font-size:22px" type="text" ng-model="updateData.summary">
             </div>
         </div>
+        <HR width="96%" color=#987cb9 SIZE=10/>
+        <div class="row area">
+            <i class="col col-20 column-icon icon super-ios7-clock-outline"></i>
+            <div class="col">All day event?</div>
+            <div class="col col-20">
+                <label class="toggle toggle-assertive">
+                    <input type="checkbox" ng-model="dayEvent">
+                    <div class="track">
+                        <div class="handle"></div>
+                    </div>
+                </label>
+            </div>
+        </div>
+        <div style="padding-left:16%"><HR width="90%" color=#987cb9 SIZE=10 /></div>
+
+        <div class="row area">
+            <i class="col col-20 column-icon icon super-ios7-star-outline"></i>
+            <div style="padding-top:3%" class="col col-20">Start:</div>
+            <div class="col">
+                <input style="font-size:18px" type="text" ng-model="updateData.start.dateTime">
+            </div>
+        </div>
+        <div class="row area">
+            <i class="col col-20 column-icon"></i>
+            <div style="padding-top:3%" class="col col-20">End:</div>
+            <div class="col">
+                <input style="font-size:18px" type="text" ng-model="updateData.end.dateTime">
+            </div>
+        </div>
+        <div style="padding-left:16%"><HR width="90%" color=#987cb9 SIZE=10 /></div>
+
+        <div class="row area">
+            <i class="col col-20 column-icon icon super-ios7-location-outline"></i>
+            <div class="col">
+                <input style="font-size:18px" type="text" ng-hide="re.location == Null" ng-model="updateData.location">
+                <input style="font-size:18px" type="text" ng-show="re.location == Null" ng-model="updateData.location" placeholder="Add location">
+            </div>
+        </div>
+        <div style="padding-left:16%"><HR width="90%" color=#987cb9 SIZE=10 /></div>
+
+        <div class="row area">
+            <i class="col col-20 column-icon icon super-aperture"></i>
+            <label style="border:none" class="item item-input item-select col">
+                <div  style="font-size:18px" class="input-label">
+                    Color:
+                </div>
+                <select style="font-size:18px;font-family:times" ng-model="colorSelect">
+                    <option selected>Current</option>
+                    <option>Turquoise</option>
+                    <option>Blue</option><option>Bold Blue</option>
+                    <option>Green</option><option>Bold Green</option>
+                    <option>Red</option><option>Bold Red</option>
+                    <option>Orange</option><option>Yellow</option>
+                    <option>Grey</option><option>Purple</option>
+                </select>
+            </label>
+
+        </div>
+        <div style="padding-left:16%"><HR width="90%" color=#987cb9 SIZE=10 /></div>
+        <div class="row area">
+            <button  class="button button-calm col col-50" ng-click="update()">Update</button>
+            <button  class="button button-stable col col-50" ng-click="delete()">Delete</button>
+        </div>
     </div>
+</div>
 
