@@ -74,6 +74,8 @@ angular
                 events.forEach(function(x){supersonic.logger.log(x)});
                 $scope.events = events;
                 makeSuggestion();
+                checkCurrent();
+                checkConflict();
             });
         }
 
@@ -139,7 +141,7 @@ angular
                 if (isFirstEvent == true) {
                     lastEvent = event;
                     isFirstEvent = false;
-                    if (hour > 10) {
+                    if (hour >= 10) {
                         //add code that inserts a suggestion here
                         var suggestion = {};
                         suggestion.summary = "Free time";
@@ -177,33 +179,33 @@ angular
                 while(effectiveTime - effectiveLastTime >= 60) {
                     //add code that inserts a suggestion here
 
-                        var suggestion = {};
-                        suggestion.summary = "Free time";
-                        suggestion.colorId = "0";
-                        suggestion.addedEvent = false;
-                        suggestion.showOption = false;
-                        suggestion.active = -1;
-                        suggestion.greaterThanHour = true;
+                    var suggestion = {};
+                    suggestion.summary = "Free time";
+                    suggestion.colorId = "0";
+                    suggestion.addedEvent = false;
+                    suggestion.showOption = false;
+                    suggestion.active = -1;
+                    suggestion.greaterThanHour = true;
 
-                        var start = {};
-                        start.dateTime = lastEnd;
-                        suggestion.start = start;
-                        var end = {};
-                        d = new Date(start.dateTime);
-                        d.setHours(d.getHours() + 1);
-                        end.dateTime = d;
-                        suggestion.end = end;
+                    var start = {};
+                    start.dateTime = lastEnd;
+                    suggestion.start = start;
+                    var end = {};
+                    d = new Date(start.dateTime);
+                    d.setHours(d.getHours() + 1);
+                    end.dateTime = d;
+                    suggestion.end = end;
 
-                        if(lastHour >= 9 && lastHour < 18) {
-                            $scope.events.splice(index, 0, suggestion);
-                            $scope.$apply();
-                            index = index + 1;
-                            iterLength = iterLength + 1;
-                        }
-                        lastEnd = suggestion.end.dateTime;
-                        lastHour = lastEnd.getHours();
-                        lastMinute = lastEnd.getMinutes();
-                        effectiveLastTime = 60 * lastHour + lastMinute;
+                    if(lastHour >= 9 && lastHour < 18) {
+                        $scope.events.splice(index, 0, suggestion);
+                        $scope.$apply();
+                        index = index + 1;
+                        iterLength = iterLength + 1;
+                    }
+                    lastEnd = suggestion.end.dateTime;
+                    lastHour = lastEnd.getHours();
+                    lastMinute = lastEnd.getMinutes();
+                    effectiveLastTime = 60 * lastHour + lastMinute;
                 }
                 if(effectiveTime - effectiveLastTime >= 30) {
                     //add code that inserts a suggestion here
@@ -257,17 +259,56 @@ angular
                 var start = {};
                 start.dateTime = lastEventEnd;
                 suggestion.start = start;
-
                 var end = {};
                 d = new Date(start.dateTime);
                 d.setHours(d.getHours()+1);
                 end.dateTime = d;
                 suggestion.end = end;
+
                 $scope.events.splice($scope.events.length, 0, suggestion);
                 $scope.$apply();
-
                 lastEventEnd = suggestion.end.dateTime;
                 lastEventEndHour = lastEventEnd.getHours();
+            }
+
+        }
+
+        function checkCurrent() {
+            var i = 0;
+            var ev;
+            var thisStart;
+            var thisEnd;
+            var currentTime = new Date();
+            while (i < $scope.events.length){
+                ev = $scope.events[i];
+                ev.current = false;
+                thisStart = new Date(ev.start.dateTime);
+                thisEnd = new Date(ev.end.dateTime);
+                if (currentTime.getTime() >= thisStart.getTime() && currentTime.getTime() <= thisEnd.getTime()) {
+                    ev.current = true;
+                }
+                i += 1;
+            }
+        }
+
+        function checkConflict() {
+
+            var i = 1;
+            var ev;
+            var eventA = $scope.events[0];
+            eventA.conflict = 0;
+            while (i < $scope.events.length) {
+
+                ev = $scope.events[i];
+                ev.conflict = 0;
+                var thatEnd = new Date(eventA.end.dateTime);
+                var thisStart = new Date(ev.start.dateTime);
+                if (thatEnd.getTime() > thisStart.getTime()) {
+                    ev.conflict = 2;
+                    eventA.conflict = 1;
+                }
+                eventA = ev;
+                i += 1;
             }
         }
 
@@ -416,7 +457,7 @@ angular
             {title: 'Red', id:'4'}, {title: 'Yellow', id: '5'}, {title: 'Orange', id: '6'},
             {title: 'Turquoise', id: '7'}, {title: 'Grey', id: '8'},
             {title: 'Bold Blue', id: '9'},{title: 'Bold Green', id: '10'},{title: 'Bold Red', id: '11'}
-             ];
+        ];
         $scope.colorSelect=1;
 
         function findColor(array){
