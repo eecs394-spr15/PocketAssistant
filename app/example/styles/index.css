@@ -127,9 +127,21 @@
     float: right;
     color: black;
 }
-.conflict
+.conflict1
 {
-    border: 3px solid #06090a;
+    border-top: 3px solid #06090a;
+    border-left: 3px solid #06090a;
+    border-right: 3px solid #06090a;
+    position: relative;
+    top: 5px;
+}
+.conflict2
+{
+    border-bottom: 3px solid #06090a;
+    border-left: 3px solid #06090a;
+    border-right: 3px solid #06090a;
+    position: relative;
+    top: -5px;
 }
 .suggestion
 {
@@ -184,11 +196,23 @@
     flex: 0 0 70%;
     max-width: 70%;
 }
-.hideReminder{
+.ReminderChevron{
     float: right;
-    margin-bottom: 4px;
+    position: relative;
+    margin-top: -15px;
 }
-
+.numOfReminder
+{
+    color: grey;
+    background-color: #c9ffc7;
+    padding:5px 5px 5px 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+.numOfReminder p
+{
+    font-style:  italic;
+}
 .column-icon
 {
     text-align:center;

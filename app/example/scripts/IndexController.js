@@ -48,7 +48,7 @@ angular
         }
 
         function getCalendarData(){
-            supersonic.logger.log('getting calendar data')
+            supersonic.logger.log('getting calendar data');
             //limit our query to events occurring today
             var currDate = new Date(Date.now() + getFutureDay(dayCount));
             currDate.setHours(0,0,0,0);
@@ -72,6 +72,8 @@ angular
                 $scope.cal = true;
                 $scope.events = resp.items;
                 makeSuggestion();
+                checkCurrent();
+                checkConflict();
             });
         }
 
@@ -103,9 +105,8 @@ angular
             $scope.events.splice(i, 0, suggestion)
         }
 
-
         function makeSuggestion() {
-            supersonic.logger.log('making suggestions')
+            supersonic.logger.log('making suggestions');
             //this will manually insert a suggestion at 9 am if there are no events
             if($scope.events.length == 0) {
                 var today = new Date($scope.today);
@@ -117,7 +118,7 @@ angular
                 var nextETime = nextStart.getTime();
 
                 if(i==0){
-                    if(nextStart.getHours()>10){
+                    if(nextStart.getHours()>=10){
                         var t = new Date(nextStart);
                         addSuggestion(t.setHours(9,0,0,0), t.setHours(10,0,0,0), i, true);
                     }
@@ -126,7 +127,6 @@ angular
 
                 var prevEnd = new Date($scope.events[i-1].end.dateTime);
                 var prevETime = prevEnd.getTime();
-
 
                 while(nextETime - prevETime >= 3600000){
                     var currStart = new Date(prevETime);
@@ -138,10 +138,47 @@ angular
                 }
 
                 if(nextETime-prevETime >= 1800000){
-                    addSuggestion(prevEnd, prevEnd.setMinutes(prevEnd.getMinutes()+30),i,false);
+                    addSuggestion(prevEnd, nextStart,i,false);
                 }
             }
+        }
 
+        function checkCurrent() {
+            var i = 0;
+            var ev;
+            var thisStart;
+            var thisEnd;
+            var currentTime = new Date();
+            while (i < $scope.events.length){
+                ev = $scope.events[i];
+                ev.current = false;
+                thisStart = new Date(ev.start.dateTime);
+                thisEnd = new Date(ev.end.dateTime);
+                if (currentTime.getTime() >= thisStart.getTime() && currentTime.getTime() <= thisEnd.getTime()) {
+                    ev.current = true;
+                }
+                i += 1;
+            }
+        }
+
+        function checkConflict() {
+            var i = 1;
+            var ev;
+            var eventA = $scope.events[0];
+            eventA.conflict = 0;
+            while (i < $scope.events.length) {
+
+                ev = $scope.events[i];
+                ev.conflict = 0;
+                var thatEnd = new Date(eventA.end.dateTime);
+                var thisStart = new Date(ev.start.dateTime);
+                if (thatEnd.getTime() > thisStart.getTime()) {
+                    ev.conflict = 2;
+                    eventA.conflict = 1;
+                }
+                eventA = ev;
+                i += 1;
+            }
         }
 
         $scope.sugg = [
