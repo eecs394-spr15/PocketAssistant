@@ -81,6 +81,8 @@ angular
                 $scope.cal = true;
                 $scope.events = resp.items;
                 makeSuggestion();
+                supersonic.logger.log($scope.events);
+                $scope.$apply();
             });
         }
 
@@ -94,46 +96,69 @@ angular
             getCalendarData()
         };
 
-        // this code determines if the user has a block of free time
-        function makeSuggestion() {
+        //Add a suggestion to the events list at index i
+        function addSuggestion(startTime, endTime, i, isHourLong){
+            var suggestion = {};
+            suggestion.summary = "Free time";
+            suggestion.colorId = "0";
+            suggestion.addedEvent = false;
+            suggestion.showOption = false;
+            suggestion.active = -1;
+            suggestion.start = {dateTime:startTime};
+            suggestion.end = {dateTime:endTime};
 
-            //declaring some stuff
-            var lastEvent;
-            var isFirstEvent = true;
-            var index = 0;
-            var iterLength = $scope.events.length;
-
-            //this will manually insert a suggestion at 9 am if there are no events
-            if(iterLength == 0) {
-                var suggestion = {};
-                suggestion.summary = "Free time";
-                suggestion.colorId = "0";
-                suggestion.addedEvent = false;
-                suggestion.showOption = false;
-                suggestion.active = -1;
-
-                var start = {};
-                var s = new Date($scope.today);
-                s.setHours(9);
-                start.dateTime = s;
-                suggestion.start = start;
-
-                var end = {};
-                var d = new Date(start.dateTime);
-                d.setHours(d.getHours()+1);
-                end.dateTime = d;
-                suggestion.end = end;
-
-                $scope.events.splice(index, 0, suggestion);
-                $scope.$apply();
-                iterLength = iterLength + 1;
+            if(isHourLong){
+                suggestion.greaterThanHour = true;
             }
 
-            //first event
-            var event = $scope.events[0];
+            $scope.events.splice(i, 0, suggestion)
+        }
+
+
+        function makeSuggestion() {
+            //this will manually insert a suggestion at 9 am if there are no events
+            if($scope.events.length == 0) {
+                var today = new Date($scope.today);
+                addSuggestion(today.setHours(9), today.setHours(10), 0);
+            }
+
+            for(var i=0; i<$scope.events.length; i++){
+                supersonic.logger.log('adding before event: ' + i + $scope.events[i].summary);
+                var nextStart = new Date($scope.events[i].start.dateTime);
+                var nextETime = nextStart.getTime();
+                supersonic.logger.log('at time: ' + nextStart);
+
+                if(i==0){
+                    if(nextStart.getHours()>10){
+                        supersonic.logger.log('adding first event before 10');
+                        var t = new Date(nextStart);
+                        addSuggestion(t.setHours(9,0,0,0), t.setHours(10,0,0,0), i, true);
+                    }
+                    continue;
+                }
+
+                var prevEnd = new Date($scope.events[i-1].end.dateTime);
+                var prevETime = prevEnd.getTime();
+
+
+                while(nextETime - prevETime >= 3600000){
+                    supersonic.logger.log('adding event between '+ prevEnd +'and '+ nextStart);
+
+                    var currStart = new Date(prevETime);
+                    var currEnd = new Date(prevETime+3600000);
+                    addSuggestion(currStart,currEnd,i,true);
+                    i++;
+                    prevEnd = currEnd;
+                    prevETime = prevEnd.getTime();
+                }
+
+                if(nextETime-prevETime >= 1800000){
+                    addSuggestion(prevEnd, prevEnd.setMinutes(prevEnd.getMinutes()+30),i,false);
+                }
+            }
 
             //index starts at 0, iterLength is the number of events in the list
-            while(index < iterLength) {
+            /*while(index < iterLength) {
 
                 // gets hour, minute, and "effective time" in order to compare events
                 var now = new Date(event.start.dateTime);
@@ -291,7 +316,7 @@ angular
             }
 
             //doesn't work
-            sortEvents();
+            sortEvents();*/
 
         }
 
