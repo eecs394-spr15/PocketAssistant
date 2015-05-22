@@ -196,22 +196,9 @@
     flex: 0 0 70%;
     max-width: 70%;
 }
-.ReminderChevron{
+.hideReminder{
     float: right;
-    position: relative;
-    margin-top: -15px;
-}
-.numOfReminder
-{
-    color: grey;
-    background-color: #c9ffc7;
-    padding:5px 5px 5px 5px;
-    margin-top: 5px;
-    margin-bottom: 5px;
-}
-.numOfReminder p
-{
-    font-style:  italic;
+    margin-bottom: 4px;
 }
 .column-icon
 {

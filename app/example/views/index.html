@@ -71,9 +71,6 @@
                 <i class="icon super-clipboard"></i>
             </div>
 
-            <button ng-click="checkCurrent()">checkCurrent</button>
-            <button ng-click="checkConflict()">checkConflict</button>
-
             <div ng-repeat="ev in events">
 
                 <div ng-hide="ev.colorId === '0'" class="row event" ng-class="{'conflict2': ev.conflict === 2,'currentEvent':ev.current === true,'conflict1': ev.conflict === 1,'blue': ev.colorId === '1','green': ev.colorId === '2' ,'purple': ev.colorId === '3','red': ev.colorId === '4','yellow': ev.colorId === '5','orange': ev.colorId === '6','turquoise': ev.colorId === '7','grey': ev.colorId === '8','boldBlue': ev.colorId === '9', 'boldGreen': ev.colorId === '10','pink': ev.colorId === '11','NoId': ev.colorId === Null}">
