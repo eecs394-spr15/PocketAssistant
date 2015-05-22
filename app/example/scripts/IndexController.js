@@ -69,11 +69,12 @@ angular
             });
             request.execute(function(resp) {
                 supersonic.logger.log('request executing');
-                supersonic.logger.log(resp);
+                //supersonic.logger.log(resp);
                 var events = resp.items;
-                events.forEach(function(x){supersonic.logger.log(x)});
+                //events.forEach(function(x){supersonic.logger.log(x)});
                 $scope.events = events;
                 makeSuggestion();
+                getTaggedEvents();
             });
         }
 
@@ -328,7 +329,7 @@ angular
                 "numDays": "2"
             }
         ];
-        $scope.numOfReminders = 2;
+        $scope.numOfReminders = 1;
         $scope.hideReminder = false;
         $scope.chevron = "super-chevron-up";
         $scope.showOrHide = "Hide Reminders";
@@ -448,5 +449,43 @@ angular
         $scope.backButton = function(){
             $scope.mainPage=true;
             $scope.titleName = {name:'Pocket Assistant',button:'',back:''};
+        };
+
+        $scope.tags = ['test', 'midterm', 'project', 'final'];
+        $scope.countdown = [];
+
+        function getTaggedEvents() {
+            var todayDate = new Date();
+            var yyyy = todayDate.getFullYear();
+            var mm = todayDate.getMonth() + 1;
+            var dd = todayDate.getDate();
+
+            var eventList = gapi.client.calendar.events.list({
+                'calendarId': 'primary',
+                'timeMin': $scope.today,
+                'showDeleted': false,
+                'singleEvents': true,
+                'orderBy': 'startTime'
+            });
+            eventList.execute(function(resp) {
+                var events = resp.items;
+                for (var i in events) {
+                    for (var tag in $scope.tags) {
+                        if (events[i].summary.toLowerCase().indexOf($scope.tags[tag]) != -1) {
+                            var evDay = parseInt(events[i].start.dateTime.substr(8, 2));
+                            var evMonth = parseInt(events[i].start.dateTime.substr(5, 2));
+                            var evYear = parseInt(events[i].start.dateTime.substr(0, 4));
+                            var dayCount = Math.floor((365*evYear + evYear/4 - evYear/100 + evYear/400 + evDay + (153*evMonth+8)/5) - (365*yyyy + yyyy/4 - yyyy/100 + yyyy/400 + dd + (153*mm+8)/5));
+                            var metadata = {
+                                'title': events[i].summary,
+                                'daysUntil': dayCount
+                            }
+                            $scope.countdown.push(metadata);
+                        }
+                    }
+                }
+
+                supersonic.logger.log($scope.countdown);
+            });
         };
     });

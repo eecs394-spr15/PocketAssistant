@@ -2,7 +2,7 @@ angular.module('services',[])
     .factory('gCal',function(){
         var calFactory = {};
 
-        var calModel = {}
+        var calModel = {};
 
         calFactory.authorize = function() {
             var config = {
