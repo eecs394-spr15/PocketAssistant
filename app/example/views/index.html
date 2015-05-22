@@ -19,7 +19,7 @@
                 <div class="date-content">
                     <i class="icon super-chevron-left" ng-click="prevdate()"></i>
                     <i class="icon super-calendar"></i>
-                    {{day+", "+month+" "+date+", "+year}}
+                    {{today | date:"EEE, MMM dd, yyyy"}}
                     <i class="icon icon-right super-chevron-right" ng-click="nextdate()"></i>
                 </div>
             </div>

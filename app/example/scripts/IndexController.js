@@ -48,7 +48,7 @@ angular
         }
 
         function getCalendarData(){
-
+            supersonic.logger.log('getting calendar data')
             //limit our query to events occurring today
             var currDate = new Date(Date.now() + getFutureDay(dayCount));
             currDate.setHours(0,0,0,0);
@@ -105,6 +105,7 @@ angular
 
 
         function makeSuggestion() {
+            supersonic.logger.log('making suggestions')
             //this will manually insert a suggestion at 9 am if there are no events
             if($scope.events.length == 0) {
                 var today = new Date($scope.today);
