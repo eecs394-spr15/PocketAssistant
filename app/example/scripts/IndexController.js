@@ -451,16 +451,42 @@ angular
             $scope.titleName = {name:'Pocket Assistant',button:'',back:''};
         };
 
-        $scope.tags = ['test', 'midterm', 'project', 'final'];
-        $scope.countdown = [];
+        $scope.tags = ['midterm', 'project', 'final'];
 
         function getTaggedEvents() {
+            $scope.countdown = [];
             var todayDate = new Date();
             var yyyy = todayDate.getFullYear();
             var mm = todayDate.getMonth() + 1;
             var dd = todayDate.getDate();
 
-            var eventList = gapi.client.calendar.events.list({
+            for (var tag in $scope.tags) {
+                var eventList = gapi.client.calendar.events.list({
+                    'calendarId': 'primary',
+                    'timeMin': $scope.today,
+                    'q': $scope.tags[tag],
+                    'showDeleted': false,
+                    'singleEvents': true,
+                    'orderBy': 'startTime'
+                });
+                eventList.execute(function(resp) {
+                    var events = resp.items;
+                    for (var i in events) {
+                        var evDay = parseInt(events[i].start.dateTime.substr(8, 2));
+                        var evMonth = parseInt(events[i].start.dateTime.substr(5, 2));
+                        var evYear = parseInt(events[i].start.dateTime.substr(0, 4));
+                        var dayCount = Math.floor((365*evYear + evYear/4 - evYear/100 + evYear/400 + evDay + (153*evMonth+8)/5) - (365*yyyy + yyyy/4 - yyyy/100 + yyyy/400 + dd + (153*mm+8)/5));
+                        var metadata = {
+                            'title': events[i].summary,
+                            'daysUntil': dayCount
+                        }
+                        $scope.countdown.push(metadata);
+                    }
+
+                    supersonic.logger.log($scope.countdown);
+                });
+            }
+/*            var eventList = gapi.client.calendar.events.list({
                 'calendarId': 'primary',
                 'timeMin': $scope.today,
                 'showDeleted': false,
@@ -486,6 +512,19 @@ angular
                 }
 
                 supersonic.logger.log($scope.countdown);
-            });
+            })*/;
         };
+
+        $scope.addTag = function() {
+            var options = {
+                title: "Add a new tag",
+                buttonLabels: ["OK"],
+                defaultText: "Type tag word here"
+            };
+
+            supersonic.ui.dialog.prompt("New Custom Tag", options).then(function(result) {
+                $scope.tags.push(result.input);
+                supersonic.logger.log("User added new tag: " + result.input);
+            });
+        }
     });
