@@ -72,8 +72,6 @@ angular
                 $scope.cal = true;
                 $scope.events = resp.items;
                 makeSuggestion();
-                checkCurrent();
-                checkConflict();
             });
         }
 
@@ -105,6 +103,7 @@ angular
             $scope.events.splice(i, 0, suggestion)
         }
 
+
         function makeSuggestion() {
             supersonic.logger.log('making suggestions');
             //this will manually insert a suggestion at 9 am if there are no events
@@ -118,7 +117,7 @@ angular
                 var nextETime = nextStart.getTime();
 
                 if(i==0){
-                    if(nextStart.getHours()>=10){
+                    if(nextStart.getHours()>10){
                         var t = new Date(nextStart);
                         addSuggestion(t.setHours(9,0,0,0), t.setHours(10,0,0,0), i, true);
                     }
@@ -128,57 +127,35 @@ angular
                 var prevEnd = new Date($scope.events[i-1].end.dateTime);
                 var prevETime = prevEnd.getTime();
 
+
                 while(nextETime - prevETime >= 3600000){
                     var currStart = new Date(prevETime);
                     var currEnd = new Date(prevETime+3600000);
-                    addSuggestion(currStart,currEnd,i,true);
-                    i++;
-                    prevEnd = currEnd;
-                    prevETime = prevEnd.getTime();
+                    if (currEnd.getHours() <= 18){
+                        addSuggestion(currStart,currEnd,i,true);
+                        i++;
+                        prevEnd = currEnd;
+                        prevETime = prevEnd.getTime();
+                    }
+                    else
+                    {
+                        break;
+                    }
+
                 }
 
-                if(nextETime-prevETime >= 1800000){
+                if(nextStart.getHours() < 18 && nextETime-prevETime >= 1800000){
                     addSuggestion(prevEnd, nextStart,i,false);
                 }
             }
-        }
 
-        function checkCurrent() {
-            var i = 0;
-            var ev;
-            var thisStart;
-            var thisEnd;
-            var currentTime = new Date();
-            while (i < $scope.events.length){
-                ev = $scope.events[i];
-                ev.current = false;
-                thisStart = new Date(ev.start.dateTime);
-                thisEnd = new Date(ev.end.dateTime);
-                if (currentTime.getTime() >= thisStart.getTime() && currentTime.getTime() <= thisEnd.getTime()) {
-                    ev.current = true;
-                }
-                i += 1;
+            var lastEnd = new Date($scope.events[$scope.events.length-1].end.dateTime);
+            while(lastEnd.getHours() < 18){
+                var newEnd = new Date(lastEnd.getTime()+3600000);
+                addSuggestion(lastEnd,newEnd,$scope.events.length,true);
+                lastEnd=newEnd;
             }
-        }
 
-        function checkConflict() {
-            var i = 1;
-            var ev;
-            var eventA = $scope.events[0];
-            eventA.conflict = 0;
-            while (i < $scope.events.length) {
-
-                ev = $scope.events[i];
-                ev.conflict = 0;
-                var thatEnd = new Date(eventA.end.dateTime);
-                var thisStart = new Date(ev.start.dateTime);
-                if (thatEnd.getTime() > thisStart.getTime()) {
-                    ev.conflict = 2;
-                    eventA.conflict = 1;
-                }
-                eventA = ev;
-                i += 1;
-            }
         }
 
         $scope.sugg = [
