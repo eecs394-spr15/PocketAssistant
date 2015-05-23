@@ -39,6 +39,7 @@ angular
         }
 
         function makeApiCall() {
+            document.body.style.background="url()";
             gapi.client.load('calendar', 'v3', getCalendarData);
             $scope.authorized=1;
         }

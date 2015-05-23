@@ -1,3 +1,19 @@
+body{
+    background: url("/images/SplashScreen.jpg") no-repeat center center fixed;
+    background-size: cover;
+}
+#authorize-button{
+    position:absolute;
+    top:71%;
+    left:10.1%;
+    width:80%;
+    background:-webkit-gradient(radial, 165 0, 0, 244 -257, 465, from(#0053FF), to(#00CEFF));
+    border-radius: 42px;
+    font-family: lucida;
+    box-shadow:5px 5px 2.5px #000000;
+    color:white;
+}
+
 .date
 {
     background-color: #c9ffc7;
