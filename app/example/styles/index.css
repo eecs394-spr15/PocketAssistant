@@ -1,3 +1,16 @@
+body{
+    background: url("/images/SplashScreen.jpg") no-repeat center center fixed;
+    background-size: cover;
+}
+#authorize-button{
+    position:absolute;
+    top:71%;
+    left:10.1%;
+    width:80%;
+    border-radius: 42px;
+    font-family: Arial;
+}
+
 .date
 {
     background-color: #c9ffc7;
@@ -124,12 +137,23 @@
 }
 .now
 {
-    float: right;
     color: black;
 }
-.conflict
+.conflict1
 {
-    border: 3px solid #06090a;
+    border-top: 3px solid #06090a;
+    border-left: 3px solid #06090a;
+    border-right: 3px solid #06090a;
+    position: relative;
+    top: 5px;
+}
+.conflict2
+{
+    border-bottom: 3px solid #06090a;
+    border-left: 3px solid #06090a;
+    border-right: 3px solid #06090a;
+    position: relative;
+    top: -5px;
 }
 .suggestion
 {
@@ -188,7 +212,6 @@
     float: right;
     margin-bottom: 4px;
 }
-
 .column-icon
 {
     text-align:center;
