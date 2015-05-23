@@ -140,12 +140,23 @@ body{
 }
 .now
 {
-    float: right;
     color: black;
 }
-.conflict
+.conflict1
 {
-    border: 3px solid #06090a;
+    border-top: 3px solid #06090a;
+    border-left: 3px solid #06090a;
+    border-right: 3px solid #06090a;
+    position: relative;
+    top: 5px;
+}
+.conflict2
+{
+    border-bottom: 3px solid #06090a;
+    border-left: 3px solid #06090a;
+    border-right: 3px solid #06090a;
+    position: relative;
+    top: -5px;
 }
 .suggestion
 {
@@ -204,7 +215,6 @@ body{
     float: right;
     margin-bottom: 4px;
 }
-
 .column-icon
 {
     text-align:center;

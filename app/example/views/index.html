@@ -19,7 +19,7 @@
                 <div class="date-content">
                     <i class="icon super-chevron-left" ng-click="prevdate()"></i>
                     <i class="icon super-calendar"></i>
-                    {{day+", "+month+" "+date+", "+year}}
+                    {{today | date:"EEE, MMM dd, yyyy"}}
                     <i class="icon icon-right super-chevron-right" ng-click="nextdate()"></i>
                 </div>
             </div>
@@ -73,9 +73,9 @@
 
             <div ng-repeat="ev in events">
 
-                <div ng-hide="ev.colorId === '0'" class="row event" ng-class="{'blue': ev.colorId === '1','green': ev.colorId === '2' ,'purple': ev.colorId === '3','red': ev.colorId === '4','yellow': ev.colorId === '5','orange': ev.colorId === '6','turquoise': ev.colorId === '7','grey': ev.colorId === '8','boldBlue': ev.colorId === '9', 'boldGreen': ev.colorId === '10','pink': ev.colorId === '11','NoId': ev.colorId === Null}">
+                <div ng-hide="ev.colorId === '0'" class="row event" ng-class="{'conflict2': ev.conflict === 2,'currentEvent':ev.current === true,'conflict1': ev.conflict === 1,'blue': ev.colorId === '1','green': ev.colorId === '2' ,'purple': ev.colorId === '3','red': ev.colorId === '4','yellow': ev.colorId === '5','orange': ev.colorId === '6','turquoise': ev.colorId === '7','grey': ev.colorId === '8','boldBlue': ev.colorId === '9', 'boldGreen': ev.colorId === '10','pink': ev.colorId === '11','NoId': ev.colorId === Null}">
                     <div class="col col-20 eventTime" ng-class="'#ffc900'">{{ev.start.dateTime | date:"HH:mm"}} - {{ev.end.dateTime | date:"HH:mm"}}</div>
-                    <div class="col col">&emsp;{{ev.summary}}</div>
+                    <div class="col col-70">&emsp;{{ev.summary}}<span class="now" ng-show="ev.current">&emsp;Now!</span></div>
                     <div class="col col-10 icon super-edit" ng-click="getEvent(ev)"></div>
                 </div>
 
@@ -83,7 +83,7 @@
                     <div ng-hide="ev.addedEvent">
                         <div class="row suggestion" ng-class="{'currentEvent': ev.current}">
                             <div class="col col-70">
-                                <div ng-show="isActive(ev,-1)"><i class="icon super-coffee"></i>&emsp;{{ev.start.dateTime | date:"HH:mm"}} - {{ev.end.dateTime | date:"HH:mm"}}</div>
+                                <div ng-show="isActive(ev,-1)"><i class="icon super-coffee"></i>&emsp;{{ev.start.dateTime | date:"HH:mm"}} - {{ev.end.dateTime | date:"HH:mm"}}<span class="now" ng-show="ev.current">&emsp;Now!</span></div>
                                 <div ng-hide="isActive(ev,-1)">{{ev.start.dateTime | date:"HH:mm"}}-{{ev.end.dateTime | date:"HH:mm"}}&emsp;{{sugg[ev.active].activity}}</div>
                             </div>
                             <button class="col col-15 button button-clear button-assertive addButton" ng-disabled="isActive(ev,-1) || ev.addedEvent" ng-click="addCalendarData(ev)">
