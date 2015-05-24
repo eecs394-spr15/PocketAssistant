@@ -7,6 +7,7 @@ angular
         $scope.authorized = 0;
         $scope.mainPage = true;
         $scope.titleName = {name: 'Pocket Assistant', button: '', back: ''};
+        $scope.loading = false;
 
         $scope.handleClientLoad = function () {
             supersonic.logger.log('enter');
@@ -49,7 +50,8 @@ angular
         }
 
         function getCalendarData() {
-            supersonic.logger.log('getting calendar data');
+
+            $scope.loading = true;
             //limit our query to events occurring today
             var currDate = new Date(Date.now() + getFutureDay(dayCount));
             currDate.setHours(0, 0, 0, 0);
@@ -73,8 +75,11 @@ angular
                 $scope.cal = true;
                 $scope.events = resp.items;
                 makeSuggestion();
+                getTaggedEvents();
                 checkCurrent();
                 checkConflict();
+
+                $scope.loading = false;
             });
         }
 
@@ -258,7 +263,7 @@ angular
             ev.showOption = !ev.showOption;
         };
 
-        $scope.reminders = [
+/*        $scope.reminders = [
             {
                 "title": "394 midterm",
                 "numDays": "3"
@@ -267,8 +272,8 @@ angular
                 "title": "395 midterm",
                 "numDays": "2"
             }
-        ];
-        $scope.numOfReminders = 2;
+        ];*/
+
         $scope.hideReminder = false;
         $scope.chevron = "super-chevron-up";
         $scope.showOrHide = "Hide Reminders";
@@ -298,7 +303,7 @@ angular
                     var reminder = {};
                     reminder.title = $scope.titleInput;
                     reminder.numDays = $scope.numDays;
-                    $scope.numOfReminders += 1;
+                    //$scope.numOfReminders += 1;
                     $scope.reminders.push(reminder);
                     $scope.$apply();
                     sortReminders();
@@ -391,4 +396,54 @@ angular
             $scope.mainPage = true;
             $scope.titleName = {name: 'Pocket Assistant', button: '', back: ''};
         };
+
+        $scope.tags = [''];
+
+        function getTaggedEvents() {
+            $scope.countdown = [];
+            $scope.numOfReminders = 0;
+            var todayDate = new Date();
+            var yyyy = todayDate.getFullYear();
+            var mm = todayDate.getMonth() + 1;
+            var dd = todayDate.getDate();
+
+            var eventList = gapi.client.calendar.events.list({
+                'calendarId': 'primary',
+                'timeMin': $scope.today,
+                'q': 'reminder',
+                'showDeleted': false,
+                'singleEvents': true,
+                'orderBy': 'startTime'
+            });
+            eventList.execute(function(resp) {
+                var events = resp.items;
+                for (var i in events) {
+                    var evDay = parseInt(events[i].start.dateTime.substr(8, 2));
+                    var evMonth = parseInt(events[i].start.dateTime.substr(5, 2));
+                    var evYear = parseInt(events[i].start.dateTime.substr(0, 4));
+                    var dayCount = Math.floor((365*evYear + evYear/4 - evYear/100 + evYear/400 + evDay + (153*evMonth+8)/5) - (365*yyyy + yyyy/4 - yyyy/100 + yyyy/400 + dd + (153*mm+8)/5));
+                    var metadata = {
+                        'title': events[i].summary.substr(11),
+                        'daysUntil': dayCount
+                    }
+                    $scope.countdown.push(metadata);
+                    $scope.numOfReminders += 1;
+                }
+
+                supersonic.logger.log($scope.countdown);
+            });
+        };
+
+/*        $scope.addTag = function() {
+            var options = {
+                title: "Add a new tag",
+                buttonLabels: ["OK"],
+                defaultText: "Type tag word here"
+            };
+
+            supersonic.ui.dialog.prompt("New Custom Tag", options).then(function(result) {
+                $scope.tags.push(result.input);
+                supersonic.logger.log("User added new tag: " + result.input);
+            });
+        }*/
     });
