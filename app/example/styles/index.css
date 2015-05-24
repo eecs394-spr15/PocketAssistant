@@ -186,6 +186,11 @@ body{
     padding-top: 10px;
     border: 1px solid #b2b2b2
 }
+.addbar
+{
+    background-color: white;
+    border: 2px;
+}
 .active
 {
     background-color: #ff8e9b;
