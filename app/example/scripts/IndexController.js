@@ -56,7 +56,6 @@ angular
             $scope.today = currDate.toISOString();
             currDate.setHours(23, 59, 59, 999);
             $scope.tomorrow = currDate.toISOString();
-
             $scope.date = currDate.getDate();
 
             var request = gapi.client.calendar.events.list({
@@ -77,6 +76,30 @@ angular
                 checkConflict();
             });
         }
+
+
+
+        $scope.localTime1="2015-05-23T13:33:55.000Z";
+        $scope.localTime2="2015-05-23T23:33:55";
+        $scope.selectDate=function(){
+            var request = gapi.client.calendar.events.list({
+            'calendarId': 'primary',
+            'timeMin': $scope.today,
+            'timeMax': $scope.tomorrow,
+            'showDeleted': false,
+            'singleEvents': true,
+            'maxResults': 10,
+            'orderBy': 'startTime'
+        });
+        request.execute(function (resp) {
+            //When Google Calendar Data is loaded, display it
+            $scope.cal = true;
+            $scope.events = resp.items;
+            makeSuggestion();
+            checkCurrent();
+            checkConflict();
+        });}
+
 
         $scope.nextdate = function () {
             dayCount += 1;
@@ -347,11 +370,9 @@ angular
         function findColor(array) {
             for (var i in array) {
                 if ($scope.colorSelect == array[i].title) {
-                    $scope.updateData.colorId = array[i].id;
-                }
+                    $scope.updateData.colorId = array[i].id;}
             }
         }
-
         $scope.delete = function () {
             supersonic.ui.dialog.alert("You Delete the event!");
             $scope.deleteEvent();
@@ -369,10 +390,14 @@ angular
             });
         };
         $scope.undoButton = function () {
-            $scope.getEvent($scope.re);
+            if($scope.titleName.button!=''){
+                $scope.getEvent($scope.re);
+            }
         };
         $scope.backButton = function () {
+            if($scope.titleName.button!=''){
             $scope.mainPage = true;
-            $scope.titleName = {name: 'Pocket Assistant', button: '', back: ''};
+            $scope.titleName = {name: 'Pocket Assistant', button: '', back: ''}};
         };
+
     });

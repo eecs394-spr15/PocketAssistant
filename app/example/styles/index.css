@@ -215,6 +215,9 @@ body{
     float: right;
     margin-bottom: 4px;
 }
+.hline{
+    padding:0;
+}
 .column-icon
 {
     text-align:center;
