@@ -240,4 +240,6 @@ input[type="text"]
     top:-10px;
 }
 
-
+.loading{
+    padding: 20px;
+}

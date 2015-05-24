@@ -7,6 +7,7 @@ angular
         $scope.authorized = 0;
         $scope.mainPage = true;
         $scope.titleName = {name: 'Pocket Assistant', button: '', back: ''};
+        $scope.loading = false;
 
         $scope.handleClientLoad = function () {
             supersonic.logger.log('enter');
@@ -49,7 +50,8 @@ angular
         }
 
         function getCalendarData() {
-            supersonic.logger.log('getting calendar data');
+
+            $scope.loading = true;
             //limit our query to events occurring today
             var currDate = new Date(Date.now() + getFutureDay(dayCount));
             currDate.setHours(0, 0, 0, 0);
@@ -75,6 +77,8 @@ angular
                 makeSuggestion();
                 checkCurrent();
                 checkConflict();
+
+                $scope.loading = false;
             });
         }
 
