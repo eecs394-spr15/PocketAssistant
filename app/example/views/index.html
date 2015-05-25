@@ -6,6 +6,7 @@
         <super-navbar-title ng-bind="titleName.name"></super-navbar-title>
         <super-navbar-button side="right" ng-bind="titleName.button" ng-click="undoButton()"></super-navbar-button>
         <super-navbar-button side="left" ng-bind="titleName.back" ng-click="backButton()"></super-navbar-button>
+        <super-navbar-button side="right" ng-bind="titleName.addBut" ng-click="addButton()"></super-navbar-button>
     </super-navbar>
 
     <div ng-show="mainPage">
@@ -112,7 +113,7 @@
     <div ng-hide="mainPage">
         <div class="row area">
             <div class="col title">
-                <input style="font-size:22px" type="text" ng-model="updateData.summary">
+                <input style="font-size:22px" type="text" ng-model="updateData.summary" placeholder="Title">
             </div>
         </div>
         <HR width="96%" color=#987cb9 SIZE=10/>
@@ -120,7 +121,7 @@
             <i class="col col-20 column-icon icon super-ios7-clock-outline"></i>
             <div class="col">All day event?</div>
             <div class="col col-20">
-                <label class="toggle toggle-assertive">
+                <label class="toggle toggle-royal">
                     <input type="checkbox" ng-model="dayEvent">
                     <div class="track">
                         <div class="handle"></div>
@@ -135,7 +136,7 @@
             <i class="col col-20 column-icon icon super-ios7-clipboard-outline"></i>
             <div class="col">Set Reminder?</div>
             <div class="col col-20">
-                <label class="toggle toggle-assertive">
+                <label class="toggle toggle-royal">
                     <input type="checkbox" ng-model="eventTag" ng-true-value="true" ng-false-value="false">
                     <div class="track">
                         <div class="handle"></div>
@@ -150,14 +151,18 @@
             <i class="col col-20 column-icon icon super-ios7-star-outline"></i>
             <div style="padding-top:3%" class="col col-20">Start:</div>
             <div class="col">
-                <input style="font-size:18px" type="text" ng-model="updateData.start.dateTime">
+                <label class="item item-input">
+                    <input style="outline:none" type="datetime-local" ng-model="updateData.created" placeholder="Start Time">
+                </label>
             </div>
         </div>
         <div class="row area">
             <i class="col col-20 column-icon"></i>
             <div style="padding-top:3%" class="col col-20">End:</div>
             <div class="col">
-                <input style="font-size:18px" type="text" ng-model="updateData.end.dateTime">
+                <label class="item item-input">
+                    <input style="outline:none" type="datetime-local" ng-model="updateData.end.dateTime" placeholder="End Time">
+                </label>
             </div>
         </div>
         <div style="padding-left:16%"><HR width="90%" color=#987cb9 SIZE=10 /></div>
@@ -177,22 +182,22 @@
                 <div  style="font-size:18px" class="input-label">
                     Color:
                 </div>
-                <select style="font-size:18px;font-family:times" ng-model="colorSelect">
-                    <option selected>Current</option>
-                    <option>Turquoise</option>
-                    <option>Blue</option><option>Bold Blue</option>
-                    <option>Green</option><option>Bold Green</option>
-                    <option>Red</option><option>Bold Red</option>
-                    <option>Orange</option><option>Yellow</option>
-                    <option>Grey</option><option>Purple</option>
+                <select style="font-size:18px;font-family:times" ng-model="updateData.colorId">
+                    <option value="7">Turquoise</option>
+                    <option value="1">Blue</option><option value="9">Bold Blue</option>
+                    <option value="2">Green</option><option value="10">Bold Green</option>
+                    <option value="4">Red</option><option value="11">Bold Red</option>
+                    <option value="6">Orange</option><option value="5">Yellow</option>
+                    <option value="8">Grey</option><option value="3">Purple</option>
                 </select>
             </label>
 
         </div>
         <div style="padding-left:16%"><HR width="90%" color=#987cb9 SIZE=10 /></div>
         <div class="row area">
-            <button  class="button button-calm col col-50" ng-click="update()">Update</button>
-            <button  class="button button-stable col col-50" ng-click="delete()">Delete</button>
+            <button ng-hide="addPage" class="button button-calm col col-50" ng-click="update()">Update</button>
+            <button ng-hide="addPage" class="button button-stable col col-50" ng-click="delete()">Delete</button>
+            <button ng-show="addPage" class="button button-calm button-block" ng-click="addEvent()">Add Event</button>
         </div>
     </div>
 </div>
