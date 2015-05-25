@@ -173,8 +173,10 @@ body{
 }
 .addButton
 {
-    margin-top: -5px;
     font-size: 13px;
+    float: right;
+    margin-right:5px;
+    width:55px;
 }
 .sugglist
 {
@@ -183,6 +185,11 @@ body{
     padding-left: 10px;
     padding-top: 10px;
     border: 1px solid #b2b2b2
+}
+.addbar
+{
+    background-color: white;
+    border: 2px;
 }
 .active
 {

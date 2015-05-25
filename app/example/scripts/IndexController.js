@@ -127,8 +127,10 @@ angular
             supersonic.logger.log('making suggestions');
             //this will manually insert a suggestion at 9 am if there are no events
             if ($scope.events.length == 0) {
-                var today = new Date($scope.today);
-                addSuggestion(today.setHours(9), today.setHours(10), 0);
+                var t = new Date(new Date($scope.today));
+                var starttime= new Date(t.setHours(9));
+                var endtime= new Date(t.setHours(10));
+                addSuggestion(starttime, endtime,0,1);
             }
 
             for (var i = 0; i < $scope.events.length; i++) {
@@ -137,8 +139,10 @@ angular
 
                 if (i == 0) {
                     if (nextStart.getHours() >= 10) {
-                        var t = new Date(nextStart);
-                        addSuggestion(t.setHours(9, 0, 0, 0), t.setHours(10, 0, 0, 0), i, true);
+                        var t = new Date(new Date($scope.today));
+                        var starttime= new Date(t.setHours(9));
+                        var endtime= new Date(t.setHours(10));
+                        addSuggestion(starttime, endtime, i, 1);
                     }
                     continue;
                 }
@@ -149,28 +153,40 @@ angular
                 while (nextETime - prevETime >= 3600000) {
                     var currStart = new Date(prevETime);
                     var currEnd = new Date(prevETime + 3600000);
-                    if (currEnd.getHours() <= 18) {
-                        addSuggestion(currStart, currEnd, i, true);
-                        i++;
+                    if (currEnd.getHours() < 18) {
+                        addSuggestion(currStart, currEnd, i, 1);
+                        i += 1;
                         prevEnd = currEnd;
                         prevETime = prevEnd.getTime();
                     }
                     else {
                         break;
                     }
-
                 }
-
-                if (nextStart.getHours() < 18 && nextETime - prevETime >= 1800000) {
-                    addSuggestion(prevEnd, nextStart, i, false);
+                if (nextETime - prevETime >= 1800000){
+                    if (nextStart.getHours() < 18) {
+                        addSuggestion(prevEnd, nextStart, i, 0);
+                    }
+                    else {
+                        var t = new Date(nextStart.setHours(18));
+                        var currEnd= new Date(t.setMinutes(0));
+                        addSuggestion(prevEnd, currEnd, i, 0);
+                    }
                 }
             }
 
             var lastEnd = new Date($scope.events[$scope.events.length - 1].end.dateTime);
-            while (lastEnd.getHours() < 18) {
+            while (lastEnd.getHours() < 17 ) {
                 var newEnd = new Date(lastEnd.getTime() + 3600000);
-                addSuggestion(lastEnd, newEnd, $scope.events.length, true);
+                addSuggestion(lastEnd, newEnd, $scope.events.length, 1);
                 lastEnd = newEnd;
+            }
+
+            if (lastEnd.getHours() < 18)
+            {
+                var t = new Date(new Date($scope.today));
+                newEnd= new Date(t.setHours(18));
+                addSuggestion(lastEnd,newEnd, $scope.events.length, 0);
             }
         }
 
@@ -276,7 +292,6 @@ angular
         };
         $scope.titleInput = "";
         $scope.numDays = "";
-
         $scope.eventTag = false;
 
         $scope.getEvent = function (ev) {
@@ -412,7 +427,6 @@ angular
                     $scope.countdown.push(metadata);
                     $scope.numOfReminders += 1;
                 }
-
                 supersonic.logger.log($scope.countdown);
             });
         };
@@ -450,18 +464,5 @@ angular
                     supersonic.logger.log('reminder tag added');
                 });
             });
-        };
-
-/*        $scope.addTag = function() {
-            var options = {
-                title: "Add a new tag",
-                buttonLabels: ["OK"],
-                defaultText: "Type tag word here"
-            };
-
-            supersonic.ui.dialog.prompt("New Custom Tag", options).then(function(result) {
-                $scope.tags.push(result.input);
-                supersonic.logger.log("User added new tag: " + result.input);
-            });
-        }*/
+        }
     });
