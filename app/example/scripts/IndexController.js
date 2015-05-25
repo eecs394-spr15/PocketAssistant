@@ -76,25 +76,11 @@ angular
                 $scope.events = resp.items;
                 makeSuggestion();
                 getTaggedEvents();
-                substringReminders();
                 checkCurrent();
                 checkConflict();
 
                 $scope.loading = false;
             });
-        }
-
-        function substringReminders() {
-            $scope.allSubs = [];
-            for (var i in $scope.events) {
-                if ($scope.events[i].summary.substr(0, 10) == '[reminder]') {
-                    var subString = $scope.events[i].summary.substr(10);
-                }
-                else {
-                    var subString = $scope.events[i].summary;
-                }
-                $scope.allSubs.push(subString);
-            }
         }
 
         $scope.nextdate = function () {
@@ -105,6 +91,14 @@ angular
         $scope.prevdate = function () {
             dayCount -= 1;
             getCalendarData()
+        };
+
+        $scope.isReminder = function(ev){
+            return ev.summary.substr(0,10) == '[reminder]';
+        };
+
+        $scope.isUntitled = function(ev){
+            return ev.summary == null;
         };
 
         //Add a suggestion to the events list at index i
