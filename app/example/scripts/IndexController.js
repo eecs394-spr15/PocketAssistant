@@ -77,7 +77,6 @@ angular
                 substringReminders();
                 checkCurrent();
                 checkConflict();
-
                 $scope.loading = false;
             });
         }
@@ -88,7 +87,9 @@ angular
                 if ($scope.events[i].summary.substr(0, 10) == '[reminder]') {
                     var subString = $scope.events[i].summary.substr(10);
                 }
-                else { var subString = $scope.events[i].summary; }
+                else {
+                    var subString = $scope.events[i].summary;
+                }
                 $scope.allSubs.push(subString);
             }
         }
@@ -106,7 +107,7 @@ angular
         //Add a suggestion to the events list at index i
         function addSuggestion(startTime, endTime, i, isHourLong) {
             var suggestion = {};
-            suggestion.summary = "Free time";
+            suggestion.summary = "";
             suggestion.colorId = "0";
             suggestion.addedEvent = false;
             suggestion.showOption = false;
@@ -115,7 +116,6 @@ angular
             suggestion.end = {dateTime: endTime};
 
             if (isHourLong) {
-                suggestion.greaterThanHour = true;
                 suggestion.greaterThanHour = true;
             }
 
@@ -162,14 +162,19 @@ angular
                         break;
                     }
                 }
+
                 if (nextETime - prevETime >= 1800000){
                     if (nextStart.getHours() < 18) {
                         addSuggestion(prevEnd, nextStart, i, 0);
                     }
                     else {
-                        var t = new Date(nextStart.setHours(18));
-                        var currEnd= new Date(t.setMinutes(0));
-                        addSuggestion(prevEnd, currEnd, i, 0);
+                        var t = new Date(new Date($scope.today));
+                        var currEnd= new Date(t.setHours(18));
+                        var currETime=currEnd.getTime();
+                        if (currETime - prevETime >= 1800000){
+                            var currEnd= new Date(currETime);
+                            addSuggestion(prevEnd, currEnd, i, 0);
+                        }
                     }
                 }
             }
@@ -275,6 +280,7 @@ angular
             ev.addedEvent = true;
             ev.showOption = !ev.showOption;
         };
+
         $scope.hideReminder = false;
         $scope.chevron = "super-chevron-up";
         $scope.showOrHide = "Hide Reminders";
@@ -324,7 +330,6 @@ angular
         $scope.update = function () {
             supersonic.ui.dialog.confirm("Are you sure you want to update this event?", confirm).then(function(index) {
                 if (index == 0) {
-
                     $scope.updateEvent();
                 }
             });
@@ -335,10 +340,8 @@ angular
             $scope.requestevent = gapi.client.calendar.events.update(
                 {'calendarId': 'primary', 'eventId': $scope.re.id, 'resource': $scope.re});
             $scope.requestevent.execute(function (resp) {
-                supersonic.ui.dialog.alert("Event Updated!");
-                $scope.mainPage = true;
-                $scope.titleName = {name: 'Pocket Assistant', button: '', back: '', addBut:'Add'};
-                getCalendarData();
+                supersonic.logger.log('update event');
+                supersonic.logger.log(resp)
             });
 
             if ($scope.eventTag == true) {
@@ -354,12 +357,19 @@ angular
                 }
             }
         };
+        
+        function findColor(array) {
+            for (var i in array) {
+                if ($scope.colorSelect == array[i].title) {
+                    $scope.updateData.colorId = array[i].id;
+                }
+            }
+        };
 
         $scope.delete = function () {
             supersonic.ui.dialog.confirm("Are you sure you want to delete this event?", confirm).then(function(index) {
                 if (index == 0) {
                     $scope.deleteEvent();
-
                 }
             });
         };
@@ -406,6 +416,77 @@ angular
                 getCalendarData();
             });
         };
+
+        function getTaggedEvents() {
+            $scope.countdown = [];
+            $scope.numOfReminders = 0;
+            var todayDate = new Date();
+            var yyyy = todayDate.getFullYear();
+            var mm = todayDate.getMonth() + 1;
+            var dd = todayDate.getDate();
+
+            var eventList = gapi.client.calendar.events.list({
+                'calendarId': 'primary',
+                'timeMin': todayDate.toISOString(),
+                'q': '[reminder]',
+                'showDeleted': false,
+                'singleEvents': true,
+                'orderBy': 'startTime'
+            });
+            eventList.execute(function(resp) {
+                var events = resp.items;
+                for (var i in events) {
+                    var evDay = parseInt(events[i].start.dateTime.substr(8, 2));
+                    var evMonth = parseInt(events[i].start.dateTime.substr(5, 2));
+                    var evYear = parseInt(events[i].start.dateTime.substr(0, 4));
+                    var dayCount = Math.floor((365*evYear + evYear/4 - evYear/100 + evYear/400 + evDay + (153*evMonth+8)/5) - (365*yyyy + yyyy/4 - yyyy/100 + yyyy/400 + dd + (153*mm+8)/5));
+                    var metadata = {
+                        'title': events[i].summary.substr(10),
+                        'daysUntil': dayCount,
+                        'eventID': events[i].id,
+                        'tagValue': true
+                    };
+                    $scope.countdown.push(metadata);
+                    $scope.numOfReminders += 1;
+                }
+                supersonic.logger.log($scope.countdown);
+            });
+        };
+
+        $scope.removeReminder = function(id) {
+            supersonic.logger.log('removing');
+
+            $scope.reminderToRemove = gapi.client.calendar.events.get({'calendarId': 'primary', 'eventId': id}).execute(function (resp) {
+                supersonic.logger.log(resp);
+                resp.summary = resp.summary.substr(10);
+                for (var c in $scope.countdown) {
+                    if ($scope.countdown[c].eventID == id) {
+                        $scope.countdown[c].tagValue = false;
+                    }
+                }
+                gapi.client.calendar.events.update({'calendarId': 'primary', 'eventId': id, 'resource': resp}).execute(function () {
+                    supersonic.logger.log('reminder tag removed');
+                });
+            });
+        };
+
+        $scope.addReminderTag = function(id) {
+            supersonic.logger.log('adding reminder tag');
+
+            $scope.eventToTag = gapi.client.calendar.events.get({'calendarId': 'primary', 'eventId': id}).execute(function (resp) {
+                var remindertag = "[reminder]";
+                resp.summary = remindertag.concat(resp.summary);
+                for (var c in $scope.countdown) {
+                    if ($scope.countdown[c].eventID == id) {
+                        $scope.countdown[c].tagValue = true;
+                    }
+                }
+                gapi.client.calendar.events.update({'calendarId': 'primary', 'eventId': id, 'resource': resp}).execute(function () {
+                    supersonic.logger.log(resp.summary);
+                    supersonic.logger.log('reminder tag added');
+                });
+            });
+        }
 
         function getTaggedEvents() {
             $scope.countdown = [];
