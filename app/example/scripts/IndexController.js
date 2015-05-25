@@ -90,7 +90,9 @@ angular
                 if ($scope.events[i].summary.substr(0, 10) == '[reminder]') {
                     var subString = $scope.events[i].summary.substr(10);
                 }
-                else { var subString = $scope.events[i].summary; }
+                else {
+                    var subString = $scope.events[i].summary;
+                }
                 $scope.allSubs.push(subString);
             }
         }
@@ -108,7 +110,7 @@ angular
         //Add a suggestion to the events list at index i
         function addSuggestion(startTime, endTime, i, isHourLong) {
             var suggestion = {};
-            suggestion.summary = "Free time";
+            suggestion.summary = "";
             suggestion.colorId = "0";
             suggestion.addedEvent = false;
             suggestion.showOption = false;
@@ -163,14 +165,19 @@ angular
                         break;
                     }
                 }
+
                 if (nextETime - prevETime >= 1800000){
                     if (nextStart.getHours() < 18) {
                         addSuggestion(prevEnd, nextStart, i, 0);
                     }
                     else {
-                        var t = new Date(nextStart.setHours(18));
-                        var currEnd= new Date(t.setMinutes(0));
-                        addSuggestion(prevEnd, currEnd, i, 0);
+                        var t = new Date(new Date($scope.today));
+                        var currEnd= new Date(t.setHours(18));
+                        var currETime=currEnd.getTime();
+                        if (currETime - prevETime >= 1800000){
+                            var currEnd= new Date(currETime);
+                            addSuggestion(prevEnd, currEnd, i, 0);
+                        }
                     }
                 }
             }
