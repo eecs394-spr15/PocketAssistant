@@ -310,11 +310,17 @@ angular
             });
 
             for (var c in $scope.countdown) {
+                var isAreminder = false;
                 if ($scope.countdown[c].eventID == $scope.evid) {
                     supersonic.logger.log('determining tag value');
                     $scope.eventTag = $scope.countdown[c].tagValue;
+                    isAreminder = true;
+                }
+                if (!isAreminder) {
+                    $scope.eventTag = false;
                 }
             }
+
         };
 
         var confirm = {
@@ -403,7 +409,7 @@ angular
         $scope.addNewEvent = function(){
             $scope.newEvent = $scope.updateData;
             $scope.eventTag = false;
-            supersonic.logger.log($scope.updateData)
+            supersonic.logger.log($scope.updateData);
             var request = gapi.client.calendar.events.insert({
                 'calendarId': 'primary',
                 'resource': $scope.newEvent
@@ -423,7 +429,9 @@ angular
 
             $scope.eventToTag = gapi.client.calendar.events.get({'calendarId': 'primary', 'eventId': id}).execute(function (resp) {
                 var remindertag = "[reminder]";
-                resp.summary = remindertag.concat(resp.summary);
+                if (resp.summary.substr(0,10) != remindertag){
+                    resp.summary = remindertag.concat(resp.summary);
+                }
                 for (var c in $scope.countdown) {
                     if ($scope.countdown[c].eventID == id) {
                         $scope.countdown[c].tagValue = true;
@@ -434,7 +442,7 @@ angular
                     supersonic.logger.log('reminder tag added');
                 });
             });
-        }
+        };
 
         function getTaggedEvents() {
             $scope.countdown = [];
