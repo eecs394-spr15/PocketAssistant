@@ -229,11 +229,13 @@ angular
         }
 
         $scope.sugg = [
-            {"id": 0, "activity": 'SPAC', "count": 0, "take": false, "hourLong": true},
-            {"id": 1, "activity": 'Meal', "count": 0, "take": false, "hourLong": true},
-            {"id": 2, "activity": 'Walk', "count": 0, "take": false, "hourLong": false},
-            {"id": 3, "activity": 'Free Time', "count": 0, "take": false, "hourLong": true},
-            {"id": 4, "activity": 'Free Time', "count": 0, "take": false, "hourLong": false}
+            {"id": 0, "activity": 'Go for a run', "count": 0, "take": false, "hourLong": true},
+            {"id": 1, "activity": 'Eat a Meal', "count": 0, "take": false, "hourLong": true},
+            {"id": 2, "activity": 'Take a Walk', "count": 0, "take": false, "hourLong": false},
+            {"id": 3, "activity": 'Do jumping jacks', "count": 0, "take": false, "hourLong": false},
+            {"id": 4, "activity": 'Go on a bike ride', "count": 0, "take": false, "hourLong": true},
+            {"id": 5, "activity": 'Free Time', "count": 0, "take": false, "hourLong": true},
+            {"id": 6, "activity": 'Free Time', "count": 0, "take": false, "hourLong": false}
         ];
 
         $scope.isNotHourLong = function (sug) {
