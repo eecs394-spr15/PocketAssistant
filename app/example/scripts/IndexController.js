@@ -392,7 +392,15 @@ angular
                 $scope.addPage = true;}
         };
 
-        $scope.addEvent= function(){
+        $scope.addEvent = function () {
+            supersonic.ui.dialog.confirm("Are you sure you want to add a new event?", confirm).then(function(index) {
+                if (index == 0) {
+                    $scope.addNewEvent();
+                }
+            });
+        };
+
+        $scope.addNewEvent = function(){
             $scope.newEvent = $scope.updateData;
             $scope.eventTag = false;
             supersonic.logger.log($scope.updateData)
@@ -406,6 +414,7 @@ angular
                 $scope.addPage = false;
                 $scope.titleName = {name: 'Pocket Assistant', button:'',back: '', addBut:'Add'};
                 getCalendarData();
+                supersonic.ui.dialog.alert('Event Added!');
             });
         };
 
