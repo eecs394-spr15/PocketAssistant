@@ -123,8 +123,8 @@
                 <input style="font-size:22px" type="text" ng-model="updateData.summary" placeholder="Title">
             </div>
         </div>
-        <HR width="96%" color=#987cb9 SIZE=10/>
-        <div class="row area">
+        <HR ng-hide="true" width="96%" color=#987cb9 SIZE=10/>
+        <div ng-hide="true" class="row area">
             <i class="col col-20 column-icon icon super-ios7-clock-outline"></i>
             <div class="col">All day event?</div>
             <div class="col col-20">
@@ -137,7 +137,7 @@
             </div>
         </div>
 
-        <div style="padding-left:16%"><HR width="90%" color=#987cb9 SIZE=10 /></div>
+        <HR width="96%" color=#987cb9 SIZE=10/>
 
         <div class="row area">
             <i class="col col-20 column-icon icon super-ios7-clipboard-outline"></i>
@@ -152,7 +152,7 @@
             </div>
         </div>
 
-        <div style="padding-left:16%"><HR width="90%" color=#987cb9 SIZE=10 /></div>
+        <HR width="96%" color=#987cb9 SIZE=10/>
 
         <div class="row area">
             <i class="col col-20 column-icon icon super-ios7-star-outline"></i>
@@ -172,7 +172,7 @@
                 </label>
             </div>
         </div>
-        <div style="padding-left:16%"><HR width="90%" color=#987cb9 SIZE=10 /></div>
+        <HR width="96%" color=#987cb9 SIZE=10/>
 
         <div class="row area">
             <i class="col col-20 column-icon icon super-ios7-location-outline"></i>
@@ -181,7 +181,7 @@
                 <input style="font-size:18px" type="text" ng-show="re.location == Null" ng-model="updateData.location" placeholder="Add location">
             </div>
         </div>
-        <div style="padding-left:16%"><HR width="90%" color=#987cb9 SIZE=10 /></div>
+        <HR width="96%" color=#987cb9 SIZE=10/>
 
         <div class="row area">
             <i class="col col-20 column-icon icon super-aperture"></i>
@@ -200,7 +200,7 @@
             </label>
 
         </div>
-        <div style="padding-left:16%"><HR width="90%" color=#987cb9 SIZE=10 /></div>
+        <HR width="96%" color=#987cb9 SIZE=10/>
         <div class="row area">
             <button ng-hide="addPage" class="button button-calm col col-50" ng-click="update()">Update</button>
             <button ng-hide="addPage" class="button button-stable col col-50" ng-click="delete()">Delete</button>
