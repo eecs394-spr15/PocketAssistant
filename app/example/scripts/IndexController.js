@@ -74,24 +74,10 @@ angular
                 $scope.events = resp.items;
                 makeSuggestion();
                 getTaggedEvents();
-                substringReminders();
                 checkCurrent();
                 checkConflict();
                 $scope.loading = false;
             });
-        }
-
-        function substringReminders() {
-            $scope.allSubs = [];
-            for (var i in $scope.events) {
-                if ($scope.events[i].summary.substr(0, 10) == '[reminder]') {
-                    var subString = $scope.events[i].summary.substr(10);
-                }
-                else {
-                    var subString = $scope.events[i].summary;
-                }
-                $scope.allSubs.push(subString);
-            }
         }
 
         $scope.nextdate = function () {
@@ -102,6 +88,14 @@ angular
         $scope.prevdate = function () {
             dayCount -= 1;
             getCalendarData()
+        };
+
+        $scope.isReminder = function(ev){
+            return ev.summary.substr(0,10) == '[reminder]';
+        };
+
+        $scope.isUntitled = function(ev){
+            return ev.summary == null;
         };
 
         //Add a suggestion to the events list at index i
@@ -304,15 +298,15 @@ angular
             $scope.updateData = {};
             $scope.titleName = {name: 'Edit your event', button: 'Clear', back: 'Back', addBut:''};
             $scope.mainPage = false;
+            $scope.addPage = false;
             $scope.passedEvent = ev;
             $scope.evid = ev.id;
-            $scope.requestEvent = gapi.client.calendar.events.get({'calendarId': 'primary', 'eventId': $scope.evid});
-            $scope.requestEvent.execute(function (resp) {
+            $scope.requestEvent = gapi.client.calendar.events.get({'calendarId': 'primary', 'eventId': $scope.evid}).execute(function (resp) {
                 supersonic.logger.log(resp);
                 $scope.re = resp;
                 $scope.updateData = $scope.re;
-                $scope.updateData.start.dateTime = $scope.updateData.start.dateTime.substring(0,19) + ".000";
-                supersonic.logger.log($scope.updateData.start.dateTime);
+                supersonic.logger.log('geteevent');
+                //$scope.updateData.start.dateTime= '"2015-05-25T08:19:52.000Z"';
             });
 
             for (var c in $scope.countdown) {
@@ -337,11 +331,15 @@ angular
 
         $scope.updateEvent = function () {
             $scope.re = $scope.updateData;
+            supersonic.logger.log("updateData");
+            supersonic.logger.log($scope.re);
             $scope.requestevent = gapi.client.calendar.events.update(
                 {'calendarId': 'primary', 'eventId': $scope.re.id, 'resource': $scope.re});
             $scope.requestevent.execute(function (resp) {
-                supersonic.logger.log('update event');
-                supersonic.logger.log(resp)
+                $scope.mainPage = true;
+                $scope.titleName = {name: 'Pocket Assistant', button: '', back: '', addBut: 'Add'};
+                getCalendarData();
+                supersonic.ui.dialog.alert("Event Updated!");
             });
 
             if ($scope.eventTag == true) {
@@ -354,14 +352,6 @@ angular
                         supersonic.logger.log('will remove reminder tag');
                         $scope.removeReminder($scope.re.id);
                     }
-                }
-            }
-        };
-        
-        function findColor(array) {
-            for (var i in array) {
-                if ($scope.colorSelect == array[i].title) {
-                    $scope.updateData.colorId = array[i].id;
                 }
             }
         };
@@ -385,7 +375,7 @@ angular
             });
         };
         $scope.undoButton = function () {
-            if($scope.titleName.back!=''){
+            if($scope.mainPage==false && $scope.addPage==false){
                 $scope.getEvent($scope.re);}
         };
 
@@ -395,13 +385,16 @@ angular
         };
 
         $scope.addButton = function(){
-            $scope.updateData={};
-            $scope.mainPage=false;
-            $scope.titleName = {name: 'Add an event',button:'', back: 'Back', addBut:''};
-            $scope.addPage = true;
+            if($scope.mainPage==true){
+                $scope.updateData={};
+                $scope.mainPage=false;
+                $scope.titleName = {name: 'Add an event',button:'', back: 'Back', addBut:''};
+                $scope.addPage = true;}
         };
+
         $scope.addEvent= function(){
             $scope.newEvent = $scope.updateData;
+            $scope.eventTag = false;
             supersonic.logger.log($scope.updateData)
             var request = gapi.client.calendar.events.insert({
                 'calendarId': 'primary',
@@ -409,10 +402,9 @@ angular
             });
             request.execute(function (resp) {
                 supersonic.logger.log('Event Added');
-                supersonic.logger.log(resp);
                 $scope.mainPage = true;
                 $scope.addPage = false;
-                $scope.titleName = {name: 'Add an event', button:'',back: '', addBut:'Add'};
+                $scope.titleName = {name: 'Pocket Assistant', button:'',back: '', addBut:'Add'};
                 getCalendarData();
             });
         };

@@ -61,7 +61,12 @@
 
                     <div ng-hide="ev.colorId === '0'" class="row event" ng-class="{'conflict2': ev.conflict === 2,'currentEvent':ev.current === true,'conflict1': ev.conflict === 1,'blue': ev.colorId === '1','green': ev.colorId === '2' ,'purple': ev.colorId === '3','red': ev.colorId === '4','yellow': ev.colorId === '5','orange': ev.colorId === '6','turquoise': ev.colorId === '7','grey': ev.colorId === '8','boldBlue': ev.colorId === '9', 'boldGreen': ev.colorId === '10','pink': ev.colorId === '11','NoId': ev.colorId === Null}">
                         <div class="col col-20 eventTime" ng-class="'#ffc900'">{{ev.start.dateTime | date:"HH:mm"}} - {{ev.end.dateTime | date:"HH:mm"}}</div>
-                        <div class="col col-70">&emsp;{{allSubs[events.indexOf(ev)]}}<span class="now" ng-show="ev.current">&emsp;Now!</span></div>
+                        <div class="col col-70">&emsp;
+                            <span ng-if="!isReminder(ev)">{{ev.summary}}</span>
+                            <span ng-if="isReminder(ev)">{{ev.summary.substr(10)}}</span>
+                            <span ng-if="isUntitled(ev)">(No title)</span>
+                            <span class="now" ng-show="ev.current">&emsp;Now!</span>
+                        </div>
                         <div class="col col-10 icon super-edit" ng-click="getEvent(ev)"></div>
                     </div>
 
@@ -116,7 +121,7 @@
             <i class="col col-20 column-icon icon super-ios7-clock-outline"></i>
             <div class="col">All day event?</div>
             <div class="col col-20">
-                <label class="toggle toggle-assertive">
+                <label class="toggle toggle-royal">
                     <input type="checkbox" ng-model="dayEvent">
                     <div class="track">
                         <div class="handle"></div>
@@ -131,7 +136,7 @@
             <i class="col col-20 column-icon icon super-ios7-clipboard-outline"></i>
             <div class="col">Set Reminder?</div>
             <div class="col col-20">
-                <label class="toggle toggle-assertive">
+                <label class="toggle toggle-royal">
                     <input type="checkbox" ng-model="eventTag" ng-true-value="true" ng-false-value="false">
                     <div class="track">
                         <div class="handle"></div>
@@ -147,7 +152,7 @@
             <div style="padding-top:3%" class="col col-20">Start:</div>
             <div class="col">
                 <label class="item item-input">
-                    <input style="border:none" type="datetime-local" ng-model="updateData.start.dateTime">
+                    <input style="outline:none" type="datetime-local" ng-model="updateData.created" placeholder="Start Time">
                 </label>
             </div>
         </div>
@@ -156,7 +161,7 @@
             <div style="padding-top:3%" class="col col-20">End:</div>
             <div class="col">
                 <label class="item item-input">
-                    <input style="border:none" type="datetime-local" ng-model="updateData.end.dateTime" placeholder="End Time">
+                    <input style="outline:none" type="datetime-local" ng-model="updateData.end.dateTime" placeholder="End Time">
                 </label>
             </div>
         </div>
@@ -192,7 +197,7 @@
         <div class="row area">
             <button ng-hide="addPage" class="button button-calm col col-50" ng-click="update()">Update</button>
             <button ng-hide="addPage" class="button button-stable col col-50" ng-click="delete()">Delete</button>
-            <button ng-show="addPage" class="button button-calm col col-50" ng-click="addEvent()">Add Event</button>
+            <button ng-show="addPage" class="button button-calm button-block" ng-click="addEvent()">Add Event</button>
         </div>
     </div>
 </div>
