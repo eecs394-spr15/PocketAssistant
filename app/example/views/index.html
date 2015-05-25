@@ -36,7 +36,7 @@
                     <h5>{{numOfReminders}} Reminders!</h5>
                 </div>
             </div>
-            <div id="reminders">
+            <div id="reminders" ng-hide = "hideReminder">
                 <div ng-repeat="c in countdown">
                     <div class="row suggestion" >
                         {{c.title}} in {{c.daysUntil}} days <button ng-click="removeReminder(c.eventID)">X</button>
