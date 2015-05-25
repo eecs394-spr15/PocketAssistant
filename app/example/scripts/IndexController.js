@@ -95,7 +95,7 @@ angular
         };
 
         $scope.isUntitled = function(ev){
-            return ev.summary == null;
+            return ev.summary == null || ev.summary.substr(0,8) == 'undefined';
         };
 
         //Add a suggestion to the events list at index i
@@ -339,6 +339,7 @@ angular
                 $scope.mainPage = true;
                 $scope.titleName = {name: 'Pocket Assistant', button: '', back: '', addBut: 'Add'};
                 getCalendarData();
+                getTaggedEvents();
                 supersonic.ui.dialog.alert("Event Updated!");
             });
 
@@ -372,6 +373,7 @@ angular
                 $scope.titleName = {name: 'Pocket Assistant', button: '', back: '', addBut: 'Add'};
                 getCalendarData();
                 supersonic.ui.dialog.alert("Event Deleted!");
+                getTaggedEvents();
             });
         };
         $scope.undoButton = function () {
@@ -414,6 +416,7 @@ angular
                 $scope.addPage = false;
                 $scope.titleName = {name: 'Pocket Assistant', button:'',back: '', addBut:'Add'};
                 getCalendarData();
+                getTaggedEvents();
                 supersonic.ui.dialog.alert('Event Added!');
             });
         };
