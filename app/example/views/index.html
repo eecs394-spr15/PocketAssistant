@@ -37,25 +37,25 @@
                 </div>
             </div>
             <div ng-hide = "hideReminder">
-<!--                <div class="row suggestion">
-                    <div class="col col-20">
-                        <h6>Name:</h6>
-                    </div>
-                    <div class="col col-20">
-                        <input type="text" class="form-control" ng-model="titleInput">
-                    </div>
-                    <div class="col col-15">
-                        <h6>in:</h6>
-                    </div>
-                    <div class="col col-15">
-                        <input type="text" class="form-control" ng-model="numDays">
-                    </div>
-                    <div class="col col-10">
-                        <button class="clearButton" ng-click="addReminder()">
-                            <div>Add</div>
-                        </button>
-                    </div>
-                </div>-->
+                <!--                <div class="row suggestion">
+                                    <div class="col col-20">
+                                        <h6>Name:</h6>
+                                    </div>
+                                    <div class="col col-20">
+                                        <input type="text" class="form-control" ng-model="titleInput">
+                                    </div>
+                                    <div class="col col-15">
+                                        <h6>in:</h6>
+                                    </div>
+                                    <div class="col col-15">
+                                        <input type="text" class="form-control" ng-model="numDays">
+                                    </div>
+                                    <div class="col col-10">
+                                        <button class="clearButton" ng-click="addReminder()">
+                                            <div>Add</div>
+                                        </button>
+                                    </div>
+                                </div>-->
 
                 <div ng-repeat="c in countdown">
                     <div class="row suggestion" >
@@ -65,9 +65,9 @@
                     </div>
                 </div>
 
-<!--                <div style="color: dodgerblue; margin-left: 8px; margin-bottom: 12px">
-                    Tags: <span ng-repeat="t in tags">&emsp;{{t}}</span><br><button ng-click="addTag()">Add Tag</button>
-                </div>-->
+                <!--                <div style="color: dodgerblue; margin-left: 8px; margin-bottom: 12px">
+                                    Tags: <span ng-repeat="t in tags">&emsp;{{t}}</span><br><button ng-click="addTag()">Add Tag</button>
+                                </div>-->
             </div>
 
 
@@ -92,13 +92,10 @@
                     <div ng-show="ev.colorId === '0'">
                         <div ng-hide="ev.addedEvent">
                             <div class="row suggestion" ng-class="{'currentEvent': ev.current}">
-                                <div class="col col-70">
+                                <div class="col col-85">
                                     <div ng-show="isActive(ev,-1)"><i class="icon super-coffee"></i>&emsp;{{ev.start.dateTime | date:"HH:mm"}} - {{ev.end.dateTime | date:"HH:mm"}}<span class="now" ng-show="ev.current">&emsp;Now!</span></div>
                                     <div ng-hide="isActive(ev,-1)">{{ev.start.dateTime | date:"HH:mm"}}-{{ev.end.dateTime | date:"HH:mm"}}&emsp;{{sugg[ev.active].activity}}</div>
                                 </div>
-                                <button class="col col-15 button button-clear button-assertive addButton" ng-disabled="isActive(ev,-1) || ev.addedEvent" ng-click="addCalendarData(ev)">
-                                    <div>Add</div>
-                                </button>
                                 <button class="col col-15 button button-icon icon super-navicon" ng-click="toggle(ev)"></button>
                             </div>
 
@@ -116,6 +113,11 @@
                                             <i class="col col-10 icon super-checkmark"></i>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="sugglist addbar">
+                                    <button class="addButton button button-small button-assertive" ng-disabled="isActive(ev,-1) || ev.addedEvent" ng-click="addCalendarData(ev)">
+                                        <div>Add</div>
+                                    </button>
                                 </div>
                             </div>
                         </div>
