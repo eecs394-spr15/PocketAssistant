@@ -405,7 +405,7 @@ angular
 
             var eventList = gapi.client.calendar.events.list({
                 'calendarId': 'primary',
-                'timeMin': $scope.today,
+                'timeMin': todayDate.toISOString(),
                 'q': '[reminder]',
                 'showDeleted': false,
                 'singleEvents': true,
