@@ -116,6 +116,7 @@ angular
 
             if (isHourLong) {
                 suggestion.greaterThanHour = true;
+                suggestion.greaterThanHour = true;
             }
 
             $scope.events.splice(i, 0, suggestion)
@@ -381,6 +382,29 @@ angular
         $scope.backButton = function () {
             $scope.mainPage = true;
             $scope.titleName = {name: 'Pocket Assistant', button: '', back: '', addBut:'Add'};
+        };
+
+        $scope.addButton = function(){
+            $scope.updateData={};
+            $scope.mainPage=false;
+            $scope.titleName = {name: 'Add an event',button:'', back: 'Back', addBut:''};
+            $scope.addPage = true;
+        };
+        $scope.addEvent= function(){
+            $scope.newEvent = $scope.updateData;
+            supersonic.logger.log($scope.updateData)
+            var request = gapi.client.calendar.events.insert({
+                'calendarId': 'primary',
+                'resource': $scope.newEvent
+            });
+            request.execute(function (resp) {
+                supersonic.logger.log('Event Added');
+                supersonic.logger.log(resp);
+                $scope.mainPage = true;
+                $scope.addPage = false;
+                $scope.titleName = {name: 'Add an event', button:'',back: '', addBut:'Add'};
+                getCalendarData();
+            });
         };
 
         function getTaggedEvents() {
