@@ -40,8 +40,15 @@
             <div ng-hide = "hideReminder">
                 <div id="reminders">
                     <div ng-repeat="c in countdown">
-                        <div class="row suggestion" >
-                            {{c.title}} in {{c.daysUntil}} days <button ng-click="removeReminder(c.eventID)">X</button>
+                        <div class="row" >
+                            <div class="col col-75">
+                                {{c.title}} in {{c.daysUntil}} days
+                            </div>
+                            <div class="col col-25 col-offset-10">
+                                <button ng-click="removeReminder(c.eventID)" class="button button-clear">
+                                    <i class="icon super-android-close"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
