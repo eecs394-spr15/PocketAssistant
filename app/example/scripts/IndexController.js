@@ -471,7 +471,12 @@ angular
             }
             $scope.eventToTag = gapi.client.calendar.events.get({'calendarId': 'primary', 'eventId': id}).execute(function (resp) {
                 var remindertag = "[reminder]";
-                resp.summary = remindertag.concat(resp.summary);
+                if (resp.summary == null) {
+                    resp.summary = remindertag.concat('(No title)');
+                }
+                else{
+                    resp.summary = remindertag.concat(resp.summary);
+                }
                 gapi.client.calendar.events.update({'calendarId': 'primary', 'eventId': id, 'resource': resp}).execute(function () {
                     supersonic.logger.log(resp.summary);
                     supersonic.logger.log('new reminder; reminder tag added');
@@ -484,9 +489,13 @@ angular
             $scope.reminderToRemove = gapi.client.calendar.events.get({'calendarId': 'primary', 'eventId': id}).execute(function (resp) {
                 supersonic.logger.log(resp);
                 resp.summary = resp.summary.substr(10);
+                if (resp.summary == "(No title)"){
+                    resp.summary = null;
+                }
                 for (var c in $scope.countdown) {
                     if ($scope.countdown[c].eventID == id) {
                         $scope.countdown.splice($scope.countdown.indexOf(c),1);
+                        break;
                     }
                 }
                 gapi.client.calendar.events.update({'calendarId': 'primary', 'eventId': id, 'resource': resp}).execute(function () {
