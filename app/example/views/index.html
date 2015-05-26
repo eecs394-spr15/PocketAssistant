@@ -28,19 +28,15 @@
             <div class="title">
                 Reminders
                 <i class="icon super-clipboard"></i>
-                <button type="button" class="hideReminder button button-clear button-outline button-small button-stable button-positive" ng-click="switchButton()" ng-hide="zeroReminders">
+                <button type="button" class="hideReminder button button-clear button-outline button-small button-stable button-positive" ng-click="switchButton()" ng-hide="numOfReminders == 0">
                     {{showOrHide}} <span ng-class="chevron"></span>
                 </button>
             </div>
-            <div class="row suggestion" ng-show = "hideReminder">
-                <div class="col col-70" ng-hide="zeroReminders">
-                    <h5>{{numOfReminders}} Reminders!</h5>
-                </div>
+            <div class="suggestion" ng-show="numOfReminders == 0">
+                <h5>You don't have any Reminders!</h5>
             </div>
-            <div class="row suggestion" ng-show="zeroReminders">
-                <div class="zeroReminders">
-                    <h5>You don't have any Reminders!</h5>
-                </div>
+            <div class="row suggestion" ng-show = "hideReminder && numOfReminders > 0">
+                <h5>You have {{numOfReminders}} Reminders!</h5>
             </div>
             <div ng-hide = "hideReminder">
                 <div id="reminders">

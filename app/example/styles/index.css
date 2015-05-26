@@ -10,8 +10,6 @@ body{
     border-radius: 42px;
     font-family: Arial;
 }
-
-
 .date
 {
     background-color: #c9ffc7;
@@ -243,7 +241,6 @@ body{
     padding-top:10px;
     font-family:Times;
 }
-
 input[type="text"]
 {
     font-family:Times;
@@ -256,7 +253,6 @@ input[type="text"]
     left:81%;
     top:-10px;
 }
-
 .loading{
     padding: 20px;
 }

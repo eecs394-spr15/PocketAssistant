@@ -442,8 +442,6 @@ angular
 
         function getTaggedEvents() {
             $scope.countdown = [];
-            $scope.numOfReminders = 0;
-            $scope.zeroReminders = false;
             var todayDate = new Date();
             var yyyy = todayDate.getFullYear();
             var mm = todayDate.getMonth() + 1;
@@ -470,12 +468,9 @@ angular
                         'eventID': events[i].id
                     };
                     $scope.countdown.push(metadata);
-                    $scope.numOfReminders += 1;
                 }
+                $scope.numOfReminders = $scope.countdown.length;
                 supersonic.logger.log($scope.countdown);
-                if ($scope.numOfReminders == 0)
-                    $scope.zeroReminders = true;
-                supersonic.logger.log($scope.zeroReminders);
             });
         }
 
@@ -516,7 +511,9 @@ angular
                 }
                 gapi.client.calendar.events.update({'calendarId': 'primary', 'eventId': id, 'resource': resp}).execute(function () {
                     supersonic.logger.log('reminder tag removed');
+                    $scope.numOfReminders = $scope.countdown.length;
                 });
             });
+
         };
     });
