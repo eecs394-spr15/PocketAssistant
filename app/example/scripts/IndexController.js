@@ -198,8 +198,13 @@ angular
                 var thatEnd = new Date(eventA.end.dateTime);
                 var thisStart = new Date(ev.start.dateTime);
                 if (thatEnd.getTime() > thisStart.getTime()) {
-                    ev.conflict = 2;
-                    eventA.conflict = 1;
+                    if (eventA.conflict == 3) {
+                        eventA.conflict = 2;
+                    }
+                    else{
+                        eventA.conflict = 1;
+                    }
+                    ev.conflict = 3;
                 }
                 eventA = ev;
                 i += 1;
@@ -374,9 +379,9 @@ angular
                 $scope.titleName = {name: 'Pocket Assistant', button: '', back: '', addBut: 'Add'};
                 getCalendarData();
                 supersonic.ui.dialog.alert("Event Deleted!");
-                getTaggedEvents();
             });
         };
+
         $scope.undoButton = function () {
             if ($scope.mainPage == false && $scope.addPage == false) {
                 $scope.getEvent($scope.re);
@@ -386,6 +391,7 @@ angular
         $scope.backButton = function () {
             $scope.mainPage = true;
             $scope.titleName = {name: 'Pocket Assistant', button: '', back: '', addBut: 'Add'};
+            $scope.eventTag = false;
         };
 
         $scope.addButton = function () {
@@ -394,6 +400,7 @@ angular
                 $scope.mainPage = false;
                 $scope.titleName = {name: 'Add an event', button: '', back: 'Back', addBut: ''};
                 $scope.addPage = true;
+                $scope.eventTag = false;
             }
         };
         
@@ -406,8 +413,17 @@ angular
         };
 
         $scope.addNewEvent = function(){
+            var remindertag = "[reminder]";
+            if ($scope.eventTag == true){
+                supersonic.logger.log('adding reminder tag is needed');
+                if ($scope.updateData.summary == null) {
+                    $scope.updateData.summary = remindertag.concat('(No title)');
+                }
+                else{
+                    $scope.updateData.summary = remindertag.concat($scope.updateData.summary);
+                }
+            }
             $scope.newEvent = $scope.updateData;
-            $scope.eventTag = false;
             supersonic.logger.log($scope.updateData);
             var request = gapi.client.calendar.events.insert({
                 'calendarId': 'primary',
@@ -419,8 +435,8 @@ angular
                 $scope.addPage = false;
                 $scope.titleName = {name: 'Pocket Assistant', button: '', back: '', addBut: 'Add'};
                 getCalendarData();
-                getTaggedEvents();
                 supersonic.ui.dialog.alert('Event Added!');
+                $scope.re=resp;
             });
         };
 
@@ -494,7 +510,7 @@ angular
                 }
                 for (var c in $scope.countdown) {
                     if ($scope.countdown[c].eventID == id) {
-                        $scope.countdown.splice($scope.countdown.indexOf(c),1);
+                        $scope.countdown.splice($scope.countdown.indexOf(c)-1,1);
                         break;
                     }
                 }
