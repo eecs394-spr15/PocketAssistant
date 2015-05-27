@@ -436,7 +436,6 @@ angular
                 $scope.titleName = {name: 'Pocket Assistant', button: '', back: '', addBut: 'Add'};
                 getCalendarData();
                 supersonic.ui.dialog.alert('Event Added!');
-                $scope.re=resp;
             });
         };
 
@@ -514,6 +513,5 @@ angular
                     $scope.numOfReminders = $scope.countdown.length;
                 });
             });
-
         };
     });
