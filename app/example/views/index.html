@@ -28,19 +28,15 @@
             <div class="title">
                 Reminders
                 <i class="icon super-clipboard"></i>
-                <button type="button" class="hideReminder button button-clear button-outline button-small button-stable button-positive" ng-click="switchButton()" ng-hide="zeroReminders">
+                <button type="button" class="hideReminder button button-clear button-outline button-small button-stable button-positive" ng-click="switchButton()" ng-hide="numOfReminders == 0">
                     {{showOrHide}} <span ng-class="chevron"></span>
                 </button>
             </div>
-            <div class="row suggestion" ng-show = "hideReminder">
-                <div class="col col-70" ng-hide="zeroReminders">
-                    <h5>{{numOfReminders}} Reminders!</h5>
-                </div>
+            <div class="suggestion" ng-show="numOfReminders == 0">
+                <h5>You don't have any Reminders!</h5>
             </div>
-            <div class="row suggestion" ng-show="zeroReminders">
-                <div class="zeroReminders col col-70">
-                    <h5>You don't have any Reminders!</h5>
-                </div>
+            <div class="row suggestion" ng-show = "hideReminder && numOfReminders > 0">
+                <h5>You have {{numOfReminders}} Reminders!</h5>
             </div>
             <div ng-hide = "hideReminder">
                 <div id="reminders">
@@ -71,8 +67,8 @@
 
                 <div ng-repeat="ev in events" ng-hide="loading">
 
-                    <div ng-hide="ev.colorId === '0'" class="row event" ng-class="{'conflict2': ev.conflict === 2,'currentEvent':ev.current === true,'conflict1': ev.conflict === 1,'blue': ev.colorId === '1','green': ev.colorId === '2' ,'purple': ev.colorId === '3','red': ev.colorId === '4','yellow': ev.colorId === '5','orange': ev.colorId === '6','turquoise': ev.colorId === '7','grey': ev.colorId === '8','boldBlue': ev.colorId === '9', 'boldGreen': ev.colorId === '10','pink': ev.colorId === '11','NoId': ev.colorId === Null}">
-                        <div class="col col-20 eventTime" ng-class="'#ffc900'">{{ev.start.dateTime | date:"hh:mm"}} - {{ev.end.dateTime | date:"hh:mm"}}</div>
+                    <div ng-hide="ev.colorId === '0'" class="row event" ng-class="{'conflict1': ev.conflict === 1,'conflict2': ev.conflict === 2,'conflict3': ev.conflict === 3,'currentEvent':ev.current === true,'blue': ev.colorId === '1','green': ev.colorId === '2' ,'purple': ev.colorId === '3','red': ev.colorId === '4','yellow': ev.colorId === '5','orange': ev.colorId === '6','turquoise': ev.colorId === '7','grey': ev.colorId === '8','boldBlue': ev.colorId === '9', 'boldGreen': ev.colorId === '10','pink': ev.colorId === '11','NoId': ev.colorId === Null}">
+                        <div class="col col-20 eventTime" ng-class="'#ffc900'">{{ev.start.dateTime | date:"HH:mm"}}-{{ev.end.dateTime | date:"HH:mm"}}</div>
                         <div class="col col-70">&emsp;
                             <span ng-if="!isReminder(ev)">{{ev.summary}}</span>
                             <span ng-if="isReminder(ev)">{{ev.summary.substr(10)}}</span>
@@ -88,6 +84,8 @@
                                 <div class="col col-85">
                                     <div ng-show="isActive(ev,-1)"><i class="icon super-coffee"></i>&emsp;{{ev.start.dateTime | date:"hh:mm"}} - {{ev.end.dateTime | date:"hh:mm"}}<span class="now" ng-show="ev.current">&emsp;Now!</span></div>
                                     <div ng-hide="isActive(ev,-1)">{{ev.start.dateTime | date:"hh:mm"}}-{{ev.end.dateTime | date:"hh:mm"}}&emsp;{{sugg[ev.active].activity}}</div>
+                                    <div ng-show="isActive(ev,-1)"><i class="icon super-coffee"></i>&emsp;{{ev.start.dateTime | date:"HH:mm"}}-{{ev.end.dateTime | date:"HH:mm"}}<span class="now" ng-show="ev.current">&emsp;Now!</span></div>
+                                    <div ng-hide="isActive(ev,-1)">{{ev.start.dateTime | date:"HH:mm"}}-{{ev.end.dateTime | date:"HH:mm"}}&emsp;{{sugg[ev.active].activity}}</div>
                                 </div>
                                 <button class="col col-15 button button-icon icon super-navicon" ng-click="toggle(ev)"></button>
                             </div>

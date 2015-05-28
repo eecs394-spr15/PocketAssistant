@@ -10,8 +10,6 @@ body{
     border-radius: 42px;
     font-family: Arial;
 }
-
-
 .date
 {
     background-color: #c9ffc7;
@@ -151,6 +149,14 @@ body{
 }
 .conflict2
 {
+    border-left: 3px solid #06090a;
+    border-right: 3px solid #06090a;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding-top: 0;
+}
+.conflict3
+{
     border-bottom: 3px solid #06090a;
     border-left: 3px solid #06090a;
     border-right: 3px solid #06090a;
@@ -235,7 +241,6 @@ body{
     padding-top:10px;
     font-family:Times;
 }
-
 input[type="text"]
 {
     font-family:Times;
@@ -248,7 +253,6 @@ input[type="text"]
     left:81%;
     top:-10px;
 }
-
 .loading{
     padding: 20px;
 }
