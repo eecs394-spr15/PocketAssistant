@@ -513,6 +513,7 @@ angular
                     $scope.countdown.push(metadata);
                 }
                 $scope.numOfReminders = $scope.countdown.length;
+                $scope.visibleReminders = $scope.numOfReminders;
             });
         }
 
@@ -600,7 +601,6 @@ angular
                 $scope.cal = true;
                 $scope.events = resp.items;
                 makeSuggestion();
-                getTaggedEvents();
                 checkCurrent();
                 checkConflict();
                 $scope.loading = false;
