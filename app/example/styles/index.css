@@ -10,6 +10,17 @@ body{
     border-radius: 42px;
     font-family: Arial;
 }
+.chevron
+{
+    padding-top:5px;
+}
+.calendar
+{
+    border:#7eb267 2px solid;
+    background:none;
+    display:inline-block;
+    height:36px;
+}
 .date
 {
     background-color: #c9ffc7;
@@ -26,7 +37,7 @@ body{
 }
 .date-content
 {
-    padding-top: 15px;
+    padding-top: 11px;
 }
 .date .super-chevron-left
 {

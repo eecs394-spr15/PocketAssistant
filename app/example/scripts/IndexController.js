@@ -8,7 +8,7 @@ angular
         $scope.mainPage = true;
         $scope.titleName = {name: 'Pocket Assistant', button: '', back: '', addBut: 'Add'};
         $scope.loading = false;
-
+        $scope.exampleDate = Date.now();
         $scope.handleClientLoad = function () {
             // Step 2: Reference the API key
             gapi.client.setApiKey(apiKey);
@@ -54,6 +54,9 @@ angular
             $scope.loading = true;
             //limit our query to events occurring today
             var currDate = new Date(Date.now() + getFutureDay(dayCount));
+            supersonic.logger.log('show currDate')
+            supersonic.logger.log(currDate);
+            $scope.exampleDate=currDate;
             currDate.setHours(0, 0, 0, 0);
             $scope.today = currDate.toISOString();
             currDate.setHours(23, 59, 59, 999);
@@ -85,15 +88,15 @@ angular
         }
 
         $scope.nextdate = function () {
-            dayCount += 1;
+            var currDate = new Date(Date.now() + getFutureDay(Math.floor(dayCount+1.01)));
+            $scope.exampleDate = currDate;
             adjustCountdown(-1);
-            getCalendarData();
         };
 
         $scope.prevdate = function () {
-            dayCount -= 1;
+            var currDate = new Date(Date.now() + getFutureDay(Math.floor(dayCount-0.99)));
+            $scope.exampleDate = currDate;
             adjustCountdown(1);
-            getCalendarData();
         };
 
         $scope.isReminder = function (ev) {
@@ -127,8 +130,8 @@ angular
             //this will manually insert a suggestion at 9 am if there are no events
             if ($scope.events.length == 0) {
                 var t = new Date(new Date($scope.today));
-                var starttime = new Date(t.setHours(9));
-                var endtime = new Date(t.setHours(10));
+                var starttime = new Date(t.setHours(8));
+                var endtime = new Date(t.setHours(9));
                 addSuggestion(starttime, endtime, 0, 1);
             }
 
@@ -137,10 +140,10 @@ angular
                 var nextETime = nextStart.getTime();
 
                 if (i == 0) {
-                    if (nextStart.getHours() >= 10) {
+                    if (nextStart.getHours() >= 9) {
                         var t = new Date(new Date($scope.today));
-                        var starttime = new Date(t.setHours(9));
-                        var endtime = new Date(t.setHours(10));
+                        var starttime = new Date(t.setHours(8));
+                        var endtime = new Date(t.setHours(9));
                         addSuggestion(starttime, endtime, i, 1);
                     }
                     continue;
@@ -148,11 +151,19 @@ angular
 
                 var prevEnd = new Date($scope.events[i - 1].end.dateTime);
                 var prevETime = prevEnd.getTime();
+                if (i > 1){
+                    var prevEnd2 = new Date($scope.events[i - 2].end.dateTime);
+                    var prevETime2 = prevEnd2.getTime();
+                    if (prevETime2 > prevETime) {
+                        prevETime = prevETime2;
+                        prevEnd = new Date($scope.events[i - 2].end.dateTime);
+                    }
+                }
 
                 while (nextETime - prevETime >= 3600000) {
                     var currStart = new Date(prevETime);
                     var currEnd = new Date(prevETime + 3600000);
-                    if (currEnd.getHours() < 18) {
+                    if (currEnd.getHours() < 22) {
                         addSuggestion(currStart, currEnd, i, 1);
                         i += 1;
                         prevEnd = currEnd;
@@ -164,12 +175,12 @@ angular
                 }
 
                 if (nextETime - prevETime >= 1800000) {
-                    if (nextStart.getHours() < 18) {
+                    if (nextStart.getHours() < 22) {
                         addSuggestion(prevEnd, nextStart, i, 0);
                     }
                     else {
                         var t = new Date(new Date($scope.today));
-                        var currEnd = new Date(t.setHours(18));
+                        var currEnd = new Date(t.setHours(22));
                         var currETime = currEnd.getTime();
                         if (currETime - prevETime >= 1800000) {
                             var currEnd = new Date(currETime);
@@ -180,15 +191,15 @@ angular
             }
 
             var lastEnd = new Date($scope.events[$scope.events.length - 1].end.dateTime);
-            while (lastEnd.getHours() < 17) {
+            while (lastEnd.getHours() < 21) {
                 var newEnd = new Date(lastEnd.getTime() + 3600000);
                 addSuggestion(lastEnd, newEnd, $scope.events.length, 1);
                 lastEnd = newEnd;
             }
 
-            if (lastEnd.getHours() < 18) {
+            if (lastEnd.getHours() < 22) {
                 var t = new Date(new Date($scope.today));
-                newEnd = new Date(t.setHours(18));
+                newEnd = new Date(t.setHours(22));
                 addSuggestion(lastEnd, newEnd, $scope.events.length, 0);
             }
         }
@@ -199,7 +210,6 @@ angular
             var eventA = $scope.events[0];
             eventA.conflict = 0;
             while (i < $scope.events.length) {
-
                 ev = $scope.events[i];
                 ev.conflict = 0;
                 var thatEnd = new Date(eventA.end.dateTime);
@@ -306,6 +316,10 @@ angular
 
         $scope.getEvent = function (ev) {
             $scope.updateData = {};
+            var startTime = new Date(ev.start.dateTime);
+            $scope.updateData.start = {dateTime: startTime};
+            var endTime = new Date(ev.end.dateTime);
+            $scope.updateData.end = {dateTime: endTime};
             $scope.titleName = {name: 'Edit your event', button: 'Clear', back: 'Back', addBut: ''};
             $scope.mainPage = false;
             $scope.addPage = false;
@@ -403,7 +417,7 @@ angular
 
         $scope.addButton = function () {
             if ($scope.mainPage == true) {
-                $scope.updateData = {};
+                $scope.updateData = {"summary":'',"start":{"dateTime":''},"end":{"dateTime":''}};
                 $scope.mainPage = false;
                 $scope.titleName = {name: 'Add an event', button: '', back: 'Back', addBut: ''};
                 $scope.addPage = true;
@@ -412,11 +426,20 @@ angular
         };
         
         $scope.addEvent = function () {
-            supersonic.ui.dialog.confirm("Are you sure you want to add a new event?", confirm).then(function(index) {
-                if (index == 0) {
-                    $scope.addNewEvent();
-                }
-            });
+            if($scope.updateData.end.dateTime!='' && $scope.updateData.start.dateTime != ''){
+                supersonic.ui.dialog.confirm("Are you sure you want to add a new event?", confirm).then(function(index) {
+                    if (index == 0) {
+                        $scope.addNewEvent();
+                    }})}
+            else if($scope.updateData.summary == ''){
+                supersonic.ui.dialog.alert('Please add a Title for your event!')
+            }
+            else if($scope.updateData.end.dateTime == '' && $scope.updateData.start.dateTime == ''){
+                supersonic.ui.dialog.alert('Please select START and END time!')}
+            else if($scope.updateData.start.dateTime == ''){
+                supersonic.ui.dialog.alert('Please select a START time!')
+            }
+            else{supersonic.ui.dialog.alert('Please select an END time!')}
         };
 
         $scope.addNewEvent = function(){
@@ -444,6 +467,13 @@ angular
                 getCalendarData();
                 supersonic.ui.dialog.alert('Event Added!');
             });
+        };
+
+        $scope.updateEndTime = function(){
+            if ($scope.addPage && !$scope.updateData.end) {
+                var sTime = $scope.updateData.start.dateTime;
+                $scope.updateData.end = {dateTime: sTime}
+            }
         };
 
         function getTaggedEvents() {
@@ -552,4 +582,28 @@ angular
             }
             supersonic.logger.log($scope.countdown);
         }
+        $scope.$watch('exampleDate',function() {
+            supersonic.logger.log('date Selected');
+            $scope.loading = true;
+            var currDate = $scope.exampleDate;
+            dayCount = (currDate-Date.now())/(24 * 60 * 60 * 1000);
+            currDate.setHours(0, 0, 0, 0);
+            $scope.today = currDate.toISOString();
+            currDate.setHours(23, 59, 59, 999);
+            $scope.tomorrow = currDate.toISOString();
+            $scope.date = currDate.getDate();
+            var request = gapi.client.calendar.events.list({
+                'calendarId': 'primary', 'timeMin': $scope.today, 'timeMax': $scope.tomorrow,
+                'showDeleted': false, 'singleEvents': true, 'orderBy': 'startTime'
+            });
+            request.execute(function (resp) {
+                $scope.cal = true;
+                $scope.events = resp.items;
+                makeSuggestion();
+                getTaggedEvents();
+                checkCurrent();
+                checkConflict();
+                $scope.loading = false;
+            });
+        });
     });
