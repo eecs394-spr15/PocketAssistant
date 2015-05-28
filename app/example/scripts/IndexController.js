@@ -523,6 +523,7 @@ angular
                     $scope.countdown.push(metadata);
                 }
                 $scope.numOfReminders = $scope.countdown.length;
+                $scope.visibleReminders = $scope.numOfReminders;
             });
         }
 
