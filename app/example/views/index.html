@@ -33,20 +33,26 @@
                 </button>
             </div>
             <div class="suggestion" ng-show="numOfReminders == 0">
-                <h5>You don't have any Reminders!</h5>
+                <h5>You don't have any reminders!</h5>
             </div>
-            <div class="row suggestion" ng-show = "hideReminder && numOfReminders > 0">
-                <h5>You have {{numOfReminders}} Reminders!</h5>
+            <div class="hiddenReminders" ng-show="hideReminder && numOfReminders > 0">
+                <h5>You have {{visibleReminders}} reminders!</h5>
             </div>
             <div ng-hide = "hideReminder">
                 <div id="reminders">
+                    <div class="row suggestion" ng-show="visibleReminders == 0 && numOfReminders != 0">
+                        <h5>You don't have any reminders!</h5>
+                    </div>
                     <div ng-repeat="c in countdown">
-                        <div class="row suggestion" >
+                        <div class="row suggestion" ng-show="c.visible">
                             <div class="col col-75">
-                                {{c.title}} in {{c.daysUntil}} days
+                                {{c.title}}
+                                <span ng-if="c.untilToday == 0 && c.daysUntil == 0">in {{c.hrsUntil}} hours</span>
+                                <span ng-if="c.untilToday != 0 && c.daysUntil == 0">TODAY!</span>
+                                <span ng-if="c.daysUntil != 0">in {{c.daysUntil}} days</span>
                             </div>
                             <div class="col col-25 col-offset-10">
-                                <button ng-click="removeReminder(c.eventID)" class="button button-clear">
+                                <button ng-click="invisibleReminder(c.eventID)" class="button button-clear">
                                     <i class="icon super-android-close"></i>
                                 </button>
                             </div>
