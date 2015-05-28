@@ -123,8 +123,8 @@ angular
             //this will manually insert a suggestion at 9 am if there are no events
             if ($scope.events.length == 0) {
                 var t = new Date(new Date($scope.today));
-                var starttime = new Date(t.setHours(9));
-                var endtime = new Date(t.setHours(10));
+                var starttime = new Date(t.setHours(8));
+                var endtime = new Date(t.setHours(9));
                 addSuggestion(starttime, endtime, 0, 1);
             }
 
@@ -133,10 +133,10 @@ angular
                 var nextETime = nextStart.getTime();
 
                 if (i == 0) {
-                    if (nextStart.getHours() >= 10) {
+                    if (nextStart.getHours() >= 9) {
                         var t = new Date(new Date($scope.today));
-                        var starttime = new Date(t.setHours(9));
-                        var endtime = new Date(t.setHours(10));
+                        var starttime = new Date(t.setHours(8));
+                        var endtime = new Date(t.setHours(9));
                         addSuggestion(starttime, endtime, i, 1);
                     }
                     continue;
@@ -144,11 +144,19 @@ angular
 
                 var prevEnd = new Date($scope.events[i - 1].end.dateTime);
                 var prevETime = prevEnd.getTime();
+                if (i > 1){
+                    var prevEnd2 = new Date($scope.events[i - 2].end.dateTime);
+                    var prevETime2 = prevEnd2.getTime();
+                    if (prevETime2 > prevETime) {
+                        prevETime = prevETime2;
+                        prevEnd = new Date($scope.events[i - 2].end.dateTime);
+                    }
+                }
 
                 while (nextETime - prevETime >= 3600000) {
                     var currStart = new Date(prevETime);
                     var currEnd = new Date(prevETime + 3600000);
-                    if (currEnd.getHours() < 18) {
+                    if (currEnd.getHours() < 22) {
                         addSuggestion(currStart, currEnd, i, 1);
                         i += 1;
                         prevEnd = currEnd;
@@ -160,12 +168,12 @@ angular
                 }
 
                 if (nextETime - prevETime >= 1800000) {
-                    if (nextStart.getHours() < 18) {
+                    if (nextStart.getHours() < 22) {
                         addSuggestion(prevEnd, nextStart, i, 0);
                     }
                     else {
                         var t = new Date(new Date($scope.today));
-                        var currEnd = new Date(t.setHours(18));
+                        var currEnd = new Date(t.setHours(22));
                         var currETime = currEnd.getTime();
                         if (currETime - prevETime >= 1800000) {
                             var currEnd = new Date(currETime);
@@ -176,15 +184,15 @@ angular
             }
 
             var lastEnd = new Date($scope.events[$scope.events.length - 1].end.dateTime);
-            while (lastEnd.getHours() < 17) {
+            while (lastEnd.getHours() < 21) {
                 var newEnd = new Date(lastEnd.getTime() + 3600000);
                 addSuggestion(lastEnd, newEnd, $scope.events.length, 1);
                 lastEnd = newEnd;
             }
 
-            if (lastEnd.getHours() < 18) {
+            if (lastEnd.getHours() < 22) {
                 var t = new Date(new Date($scope.today));
-                newEnd = new Date(t.setHours(18));
+                newEnd = new Date(t.setHours(22));
                 addSuggestion(lastEnd, newEnd, $scope.events.length, 0);
             }
         }
@@ -195,7 +203,6 @@ angular
             var eventA = $scope.events[0];
             eventA.conflict = 0;
             while (i < $scope.events.length) {
-
                 ev = $scope.events[i];
                 ev.conflict = 0;
                 var thatEnd = new Date(eventA.end.dateTime);
@@ -302,6 +309,10 @@ angular
 
         $scope.getEvent = function (ev) {
             $scope.updateData = {};
+            var startTime = new Date(ev.start.dateTime);
+            $scope.updateData.start = {dateTime: startTime};
+            var endTime = new Date(ev.end.dateTime);
+            $scope.updateData.end = {dateTime: endTime};
             $scope.titleName = {name: 'Edit your event', button: 'Clear', back: 'Back', addBut: ''};
             $scope.mainPage = false;
             $scope.addPage = false;
@@ -449,6 +460,13 @@ angular
                 getCalendarData();
                 supersonic.ui.dialog.alert('Event Added!');
             });
+        };
+
+        $scope.updateEndTime = function(){
+            if ($scope.addPage && !$scope.updateData.end) {
+                var sTime = $scope.updateData.start.dateTime;
+                $scope.updateData.end = {dateTime: sTime}
+            }
         };
 
         function getTaggedEvents() {
