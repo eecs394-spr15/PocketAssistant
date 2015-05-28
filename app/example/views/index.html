@@ -82,6 +82,8 @@
                         <div ng-hide="ev.addedEvent">
                             <div class="row suggestion" ng-class="{'currentEvent': ev.current}">
                                 <div class="col col-85">
+                                    <div ng-show="isActive(ev,-1)"><i class="icon super-coffee"></i>&emsp;{{ev.start.dateTime | date:"hh:mm"}} - {{ev.end.dateTime | date:"hh:mm"}}<span class="now" ng-show="ev.current">&emsp;Now!</span></div>
+                                    <div ng-hide="isActive(ev,-1)">{{ev.start.dateTime | date:"hh:mm"}}-{{ev.end.dateTime | date:"hh:mm"}}&emsp;{{sugg[ev.active].activity}}</div>
                                     <div ng-show="isActive(ev,-1)"><i class="icon super-coffee"></i>&emsp;{{ev.start.dateTime | date:"HH:mm"}}-{{ev.end.dateTime | date:"HH:mm"}}<span class="now" ng-show="ev.current">&emsp;Now!</span></div>
                                     <div ng-hide="isActive(ev,-1)">{{ev.start.dateTime | date:"HH:mm"}}-{{ev.end.dateTime | date:"HH:mm"}}&emsp;{{sugg[ev.active].activity}}</div>
                                 </div>
@@ -121,7 +123,7 @@
     <div ng-hide="mainPage">
         <div class="row area">
             <div class="col title">
-                <input style="font-size:22px" type="text" ng-model="updateData.summary" placeholder="Title">
+                <input style="font-size:22px" type="text" ng-model="updateData.summary" placeholder="Title" required>
             </div>
         </div>
         <HR ng-hide="true" width="96%" color=#987cb9 SIZE=10/>
