@@ -9,8 +9,8 @@
         <super-navbar-button side="right" ng-bind="titleName.addBut" ng-click="addButton()"></super-navbar-button>
     </super-navbar>
 
-    <div ng-show="mainPage">
 
+    <div ng-show="mainPage">
         <div ng-hide="cal" style="top:500px">
             <button id="authorize-button" class="button button-stable" ng-click="handleClientLoad()">Click here to get your Calendar!</button>
         </div>
@@ -18,10 +18,12 @@
         <div ng-show="cal">
             <div class="date">
                 <div class="date-content">
-                    <i class="icon super-chevron-left" ng-click="prevdate()"></i>
+                    <i class="icon super-chevron-left chevron" ng-click="prevdate()">  </i>
                     <i class="icon super-calendar"></i>
-                    {{today | date:"EEE, MMM dd, yyyy"}}
-                    <i class="icon icon-right super-chevron-right" ng-click="nextdate()"></i>
+                    <label class="item item-input calendar">
+                        <input style="font-size:18px;font-weight:bold" type="date" ng-model="exampleDate">
+                    </label>
+                    <i class="icon icon-right super-chevron-right chevron" ng-click="nextdate()">  </i>
                 </div>
             </div>
 
@@ -124,24 +126,9 @@
                 <input style="font-size:22px" type="text" ng-model="updateData.summary" placeholder="Title">
             </div>
         </div>
-        <HR ng-hide="true" width="96%" color=#987cb9 SIZE=10/>
-        <div ng-hide="true" class="row area">
-            <i class="col col-20 column-icon icon super-ios7-clock-outline"></i>
-            <div class="col">All day event?</div>
-            <div class="col col-20">
-                <label class="toggle toggle-royal">
-                    <input type="checkbox" ng-model="dayEvent">
-                    <div class="track">
-                        <div class="handle"></div>
-                    </div>
-                </label>
-            </div>
-        </div>
-
         <HR width="96%" color=#987cb9 SIZE=10/>
-
         <div class="row area">
-            <i class="col col-20 column-icon icon super-ios7-clipboard-outline"></i>
+            <i class="col col-20 column-icon icon super-ios7-clock-outline"></i>
             <div class="col">Set Reminder?</div>
             <div class="col col-20">
                 <label class="toggle toggle-royal">
@@ -164,6 +151,7 @@
                 </label>
             </div>
         </div>
+        <button ng-hide="true" ng-click="showTime()">Hit</button>
         <div class="row area">
             <i class="col col-20 column-icon"></i>
             <div style="padding-top:3%" class="col col-20">End:</div>
@@ -174,7 +162,6 @@
             </div>
         </div>
         <HR width="96%" color=#987cb9 SIZE=10/>
-
         <div class="row area">
             <i class="col col-20 column-icon icon super-ios7-location-outline"></i>
             <div class="col">
@@ -183,7 +170,6 @@
             </div>
         </div>
         <HR width="96%" color=#987cb9 SIZE=10/>
-
         <div class="row area">
             <i class="col col-20 column-icon icon super-aperture"></i>
             <label style="border:none" class="item item-input item-select col">
