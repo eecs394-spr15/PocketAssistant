@@ -48,6 +48,8 @@ angular
             return (24 * 60 * 60 * 1000 * numDays);
         }
 
+        var initReminders = true;
+
         function getCalendarData() {
             $scope.loading = true;
             //limit our query to events occurring today
@@ -75,7 +77,10 @@ angular
                 $scope.cal = true;
                 $scope.events = resp.items;
                 makeSuggestion();
-                getTaggedEvents();
+                if (initReminders) {
+                    getTaggedEvents();
+                    initReminders = false;
+                }
                 checkCurrent();
                 checkConflict();
                 $scope.loading = false;
@@ -85,11 +90,13 @@ angular
         $scope.nextdate = function () {
             var currDate = new Date(Date.now() + getFutureDay(Math.floor(dayCount+1.01)));
             $scope.exampleDate = currDate;
+            adjustCountdown(-1);
         };
 
         $scope.prevdate = function () {
             var currDate = new Date(Date.now() + getFutureDay(Math.floor(dayCount-0.99)));
             $scope.exampleDate = currDate;
+            adjustCountdown(1);
         };
 
         $scope.isReminder = function (ev) {
@@ -475,6 +482,7 @@ angular
             var yyyy = todayDate.getFullYear();
             var mm = todayDate.getMonth() + 1;
             var dd = todayDate.getDate();
+            var hh = todayDate.getHours() + 1;
 
             var eventList = gapi.client.calendar.events.list({
                 'calendarId': 'primary',
@@ -486,20 +494,25 @@ angular
             });
             eventList.execute(function(resp) {
                 var events = resp.items;
+                supersonic.logger.log(events);
                 for (var i in events) {
                     var evDay = parseInt(events[i].start.dateTime.substr(8, 2));
                     var evMonth = parseInt(events[i].start.dateTime.substr(5, 2));
                     var evYear = parseInt(events[i].start.dateTime.substr(0, 4));
+                    var evHours = parseInt(events[i].start.dateTime.substr(11, 2));
                     var dayCount = Math.floor((365*evYear + evYear/4 - evYear/100 + evYear/400 + evDay + (153*evMonth+8)/5) - (365*yyyy + yyyy/4 - yyyy/100 + yyyy/400 + dd + (153*mm+8)/5));
+                    var hourCount = evHours - hh;
                     var metadata = {
                         'title': events[i].summary.substr(10),
+                        'untilToday': dayCount,
                         'daysUntil': dayCount,
-                        'eventID': events[i].id
+                        'hrsUntil': hourCount,
+                        'eventID': events[i].id,
+                        'visible': true
                     };
                     $scope.countdown.push(metadata);
                 }
                 $scope.numOfReminders = $scope.countdown.length;
-                supersonic.logger.log($scope.countdown);
             });
         }
 
@@ -521,7 +534,9 @@ angular
                     supersonic.logger.log(resp.summary);
                     supersonic.logger.log('new reminder; reminder tag added');
                 });
+                getTaggedEvents();
             });
+            supersonic.logger.log('updating tagged list');
         };
 
         $scope.removeReminder = function(id) {
@@ -544,6 +559,29 @@ angular
                 });
             });
         };
+
+        function adjustCountdown(numDays) {
+            $scope.visibleReminders = 0;
+            for (var c in $scope.countdown) {
+                $scope.countdown[c].daysUntil = $scope.countdown[c].daysUntil + numDays;
+                if ($scope.countdown[c].daysUntil < 0) {
+                    $scope.countdown[c].visible = false;
+                }
+                else if ($scope.countdown[c].daysUntil >= 0) {
+                    $scope.countdown[c].visible = true;
+                    $scope.visibleReminders += 1;
+                }
+            }
+        };
+
+        $scope.invisibleReminder = function(id) {
+            for (var c in $scope.countdown) {
+                if ($scope.countdown[c].eventID == id) {
+                    $scope.countdown[c].visible = false;
+                }
+            }
+            supersonic.logger.log($scope.countdown);
+        }
         $scope.$watch('exampleDate',function() {
             supersonic.logger.log('date Selected');
             $scope.loading = true;
