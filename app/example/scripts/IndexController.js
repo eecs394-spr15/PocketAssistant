@@ -8,7 +8,7 @@ angular
         $scope.mainPage = true;
         $scope.titleName = {name: 'Pocket Assistant', button: '', back: '', addBut: 'Add'};
         $scope.loading = false;
-
+        $scope.exampleDate = Date.now();
         $scope.handleClientLoad = function () {
             // Step 2: Reference the API key
             gapi.client.setApiKey(apiKey);
@@ -52,6 +52,9 @@ angular
             $scope.loading = true;
             //limit our query to events occurring today
             var currDate = new Date(Date.now() + getFutureDay(dayCount));
+            supersonic.logger.log('show currDate')
+            supersonic.logger.log(currDate);
+            $scope.exampleDate=currDate;
             currDate.setHours(0, 0, 0, 0);
             $scope.today = currDate.toISOString();
             currDate.setHours(23, 59, 59, 999);
@@ -80,13 +83,13 @@ angular
         }
 
         $scope.nextdate = function () {
-            dayCount += 1;
-            getCalendarData()
+            var currDate = new Date(Date.now() + getFutureDay(Math.floor(dayCount+1.01)));
+            $scope.exampleDate = currDate;
         };
 
         $scope.prevdate = function () {
-            dayCount -= 1;
-            getCalendarData()
+            var currDate = new Date(Date.now() + getFutureDay(Math.floor(dayCount-0.99)));
+            $scope.exampleDate = currDate;
         };
 
         $scope.isReminder = function (ev) {
@@ -407,7 +410,7 @@ angular
 
         $scope.addButton = function () {
             if ($scope.mainPage == true) {
-                $scope.updateData = {};
+                $scope.updateData = {"summary":'',"start":{"dateTime":''},"end":{"dateTime":''}};
                 $scope.mainPage = false;
                 $scope.titleName = {name: 'Add an event', button: '', back: 'Back', addBut: ''};
                 $scope.addPage = true;
@@ -416,11 +419,20 @@ angular
         };
         
         $scope.addEvent = function () {
-            supersonic.ui.dialog.confirm("Are you sure you want to add a new event?", confirm).then(function(index) {
-                if (index == 0) {
-                    $scope.addNewEvent();
-                }
-            });
+            if($scope.updateData.end.dateTime!='' && $scope.updateData.start.dateTime != ''){
+                supersonic.ui.dialog.confirm("Are you sure you want to add a new event?", confirm).then(function(index) {
+                    if (index == 0) {
+                        $scope.addNewEvent();
+                    }})}
+            else if($scope.updateData.summary == ''){
+                supersonic.ui.dialog.alert('Please add a Title for your event!')
+            }
+            else if($scope.updateData.end.dateTime == '' && $scope.updateData.start.dateTime == ''){
+                supersonic.ui.dialog.alert('Please select START and END time!')}
+            else if($scope.updateData.start.dateTime == ''){
+                supersonic.ui.dialog.alert('Please select a START time!')
+            }
+            else{supersonic.ui.dialog.alert('Please select an END time!')}
         };
 
         $scope.addNewEvent = function(){
@@ -532,4 +544,28 @@ angular
                 });
             });
         };
+        $scope.$watch('exampleDate',function() {
+            supersonic.logger.log('date Selected');
+            $scope.loading = true;
+            var currDate = $scope.exampleDate;
+            dayCount = (currDate-Date.now())/(24 * 60 * 60 * 1000);
+            currDate.setHours(0, 0, 0, 0);
+            $scope.today = currDate.toISOString();
+            currDate.setHours(23, 59, 59, 999);
+            $scope.tomorrow = currDate.toISOString();
+            $scope.date = currDate.getDate();
+            var request = gapi.client.calendar.events.list({
+                'calendarId': 'primary', 'timeMin': $scope.today, 'timeMax': $scope.tomorrow,
+                'showDeleted': false, 'singleEvents': true, 'orderBy': 'startTime'
+            });
+            request.execute(function (resp) {
+                $scope.cal = true;
+                $scope.events = resp.items;
+                makeSuggestion();
+                getTaggedEvents();
+                checkCurrent();
+                checkConflict();
+                $scope.loading = false;
+            });
+        });
     });
