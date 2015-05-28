@@ -141,6 +141,14 @@ angular
 
                 var prevEnd = new Date($scope.events[i - 1].end.dateTime);
                 var prevETime = prevEnd.getTime();
+                if (i > 1){
+                    var prevEnd2 = new Date($scope.events[i - 2].end.dateTime);
+                    var prevETime2 = prevEnd2.getTime();
+                    if (prevETime2 > prevETime) {
+                        prevETime = prevETime2;
+                        prevEnd = new Date($scope.events[i - 2].end.dateTime);
+                    }
+                }
 
                 while (nextETime - prevETime >= 3600000) {
                     var currStart = new Date(prevETime);
@@ -192,7 +200,6 @@ angular
             var eventA = $scope.events[0];
             eventA.conflict = 0;
             while (i < $scope.events.length) {
-
                 ev = $scope.events[i];
                 ev.conflict = 0;
                 var thatEnd = new Date(eventA.end.dateTime);
@@ -525,5 +532,4 @@ angular
                 });
             });
         };
-
     });
