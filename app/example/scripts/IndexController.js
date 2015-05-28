@@ -299,6 +299,10 @@ angular
 
         $scope.getEvent = function (ev) {
             $scope.updateData = {};
+            var startTime = new Date(ev.start.dateTime);
+            $scope.updateData.start = {dateTime: startTime};
+            var endTime = new Date(ev.end.dateTime);
+            $scope.updateData.end = {dateTime: endTime};
             $scope.titleName = {name: 'Edit your event', button: 'Clear', back: 'Back', addBut: ''};
             $scope.mainPage = false;
             $scope.addPage = false;
@@ -439,6 +443,13 @@ angular
             });
         };
 
+        $scope.updateEndTime = function(){
+            if ($scope.addPage && !$scope.updateData.end) {
+                var sTime = $scope.updateData.start.dateTime;
+                $scope.updateData.end = {dateTime: sTime}
+            }
+        };
+
         function getTaggedEvents() {
             $scope.countdown = [];
             var todayDate = new Date();
@@ -514,4 +525,5 @@ angular
                 });
             });
         };
+
     });

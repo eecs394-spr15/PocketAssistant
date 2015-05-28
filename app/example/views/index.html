@@ -68,7 +68,7 @@
                 <div ng-repeat="ev in events" ng-hide="loading">
 
                     <div ng-hide="ev.colorId === '0'" class="row event" ng-class="{'conflict1': ev.conflict === 1,'conflict2': ev.conflict === 2,'conflict3': ev.conflict === 3,'currentEvent':ev.current === true,'blue': ev.colorId === '1','green': ev.colorId === '2' ,'purple': ev.colorId === '3','red': ev.colorId === '4','yellow': ev.colorId === '5','orange': ev.colorId === '6','turquoise': ev.colorId === '7','grey': ev.colorId === '8','boldBlue': ev.colorId === '9', 'boldGreen': ev.colorId === '10','pink': ev.colorId === '11','NoId': ev.colorId === Null}">
-                        <div class="col col-20 eventTime" ng-class="'#ffc900'">{{ev.start.dateTime | date:"HH:mm"}}-{{ev.end.dateTime | date:"HH:mm"}}</div>
+                        <div class="col col-20 eventTime" ng-class="'#ffc900'">{{ev.start.dateTime | date:"hh:mm"}}-{{ev.end.dateTime | date:"hh:mm"}}</div>
                         <div class="col col-70">&emsp;
                             <span ng-if="!isReminder(ev)">{{ev.summary}}</span>
                             <span ng-if="isReminder(ev)">{{ev.summary.substr(10)}}</span>
@@ -84,8 +84,6 @@
                                 <div class="col col-85">
                                     <div ng-show="isActive(ev,-1)"><i class="icon super-coffee"></i>&emsp;{{ev.start.dateTime | date:"hh:mm"}} - {{ev.end.dateTime | date:"hh:mm"}}<span class="now" ng-show="ev.current">&emsp;Now!</span></div>
                                     <div ng-hide="isActive(ev,-1)">{{ev.start.dateTime | date:"hh:mm"}}-{{ev.end.dateTime | date:"hh:mm"}}&emsp;{{sugg[ev.active].activity}}</div>
-                                    <div ng-show="isActive(ev,-1)"><i class="icon super-coffee"></i>&emsp;{{ev.start.dateTime | date:"HH:mm"}}-{{ev.end.dateTime | date:"HH:mm"}}<span class="now" ng-show="ev.current">&emsp;Now!</span></div>
-                                    <div ng-hide="isActive(ev,-1)">{{ev.start.dateTime | date:"HH:mm"}}-{{ev.end.dateTime | date:"HH:mm"}}&emsp;{{sugg[ev.active].activity}}</div>
                                 </div>
                                 <button class="col col-15 button button-icon icon super-navicon" ng-click="toggle(ev)"></button>
                             </div>
@@ -170,7 +168,7 @@
             <i class="col col-20 column-icon"></i>
             <div style="padding-top:3%" class="col col-20">End:</div>
             <div class="col">
-                <label class="item item-input">
+                <label ng-click="updateEndTime()" class="item item-input">
                     <input type="datetime-local" ng-model="updateData.end.dateTime">
                 </label>
             </div>
@@ -211,4 +209,5 @@
         </div>
     </div>
 </div>
+
 
