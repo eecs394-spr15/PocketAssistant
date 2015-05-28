@@ -483,9 +483,6 @@ angular
                     $scope.countdown.push(metadata);
                 }
                 $scope.numOfReminders = $scope.countdown.length;
-                if ($scope.numOfReminders > 0) {
-                    $scope.zeroReminders = false;
-                }
             });
         }
 
