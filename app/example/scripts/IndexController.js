@@ -42,36 +42,27 @@ angular
             $scope.authorized = 1;
         }
 
-        var dayCount = 0;
-
-        function getFutureDay(numDays) {
-            return (24 * 60 * 60 * 1000 * numDays);
-        }
-
         function getCalendarData() {
             $scope.loading = true;
             //limit our query to events occurring today
             var currDate = new Date(Date.now() + getFutureDay(dayCount));
-            supersonic.logger.log('show currDate')
+            supersonic.logger.log('show currDate');
             supersonic.logger.log(currDate);
             $scope.exampleDate=currDate;
+            refreshCalendar(currDate);
+        }
+
+        function refreshCalendar(currDate) {
             currDate.setHours(0, 0, 0, 0);
             $scope.today = currDate.toISOString();
             currDate.setHours(23, 59, 59, 999);
             $scope.tomorrow = currDate.toISOString();
-
             $scope.date = currDate.getDate();
-
             var request = gapi.client.calendar.events.list({
-                'calendarId': 'primary',
-                'timeMin': $scope.today,
-                'timeMax': $scope.tomorrow,
-                'showDeleted': false,
-                'singleEvents': true,
-                'orderBy': 'startTime'
+                'calendarId': 'primary', 'timeMin': $scope.today, 'timeMax': $scope.tomorrow,
+                'showDeleted': false, 'singleEvents': true, 'orderBy': 'startTime'
             });
             request.execute(function (resp) {
-                //When Google Calendar Data is loaded, display it
                 $scope.cal = true;
                 $scope.events = resp.items;
                 makeSuggestion();
@@ -80,6 +71,11 @@ angular
                 checkConflict();
                 $scope.loading = false;
             });
+        }
+
+        var dayCount = 0;
+        function getFutureDay(numDays) {
+            return (24 * 60 * 60 * 1000 * numDays);
         }
 
         $scope.nextdate = function () {
@@ -110,11 +106,9 @@ angular
             suggestion.active = -1;
             suggestion.start = {dateTime: startTime};
             suggestion.end = {dateTime: endTime};
-
             if (isHourLong) {
                 suggestion.greaterThanHour = true;
             }
-
             $scope.events.splice(i, 0, suggestion)
         }
 
@@ -189,7 +183,6 @@ angular
                 addSuggestion(lastEnd, newEnd, $scope.events.length, 1);
                 lastEnd = newEnd;
             }
-
             if (lastEnd.getHours() < 22) {
                 var t = new Date(new Date($scope.today));
                 newEnd = new Date(t.setHours(22));
@@ -342,11 +335,16 @@ angular
         };
 
         $scope.update = function () {
-            supersonic.ui.dialog.confirm("Are you sure you want to update this event?", confirm).then(function (index) {
-                if (index == 0) {
-                    $scope.updateEvent();
-                }
-            });
+            if (new Date($scope.updateData.end.dateTime).getTime() >= new Date($scope.updateData.start.dateTime).getTime() ){
+                supersonic.ui.dialog.confirm("Are you sure you want to update this event?", confirm).then(function (index) {
+                    if (index == 0) {
+                        $scope.updateEvent();
+                    }
+                });
+            }
+            else {
+                supersonic.ui.dialog.alert('START time should be earlier than END time!')
+            }
         };
 
         $scope.updateEvent = function () {
@@ -419,20 +417,26 @@ angular
         };
         
         $scope.addEvent = function () {
-            if($scope.updateData.end.dateTime!='' && $scope.updateData.start.dateTime != ''){
+            if (!$scope.updateData.start.dateTime | !$scope.updateData.end.dateTime | $scope.updateData.start.dateTime >= $scope.updateData.end.dateTime){
+                if(!$scope.updateData.end.dateTime && !$scope.updateData.start.dateTime){
+                    supersonic.ui.dialog.alert('Please select START and END time!')}
+                else if(!$scope.updateData.start.dateTime){
+                    supersonic.ui.dialog.alert('Please select a START time!')
+                }
+                else if(!$scope.updateData.end.dateTime){
+                    supersonic.ui.dialog.alert('Please select an END time!')}
+                else {
+                    if ($scope.updateData.start.dateTime >= $scope.updateData.end.dateTime){
+                        supersonic.ui.dialog.alert('START time should be earlier than END time!')
+                    }
+                }
+            }
+            else {
                 supersonic.ui.dialog.confirm("Are you sure you want to add a new event?", confirm).then(function(index) {
                     if (index == 0) {
                         $scope.addNewEvent();
-                    }})}
-            else if($scope.updateData.summary == ''){
-                supersonic.ui.dialog.alert('Please add a Title for your event!')
+                    }});
             }
-            else if($scope.updateData.end.dateTime == '' && $scope.updateData.start.dateTime == ''){
-                supersonic.ui.dialog.alert('Please select START and END time!')}
-            else if($scope.updateData.start.dateTime == ''){
-                supersonic.ui.dialog.alert('Please select a START time!')
-            }
-            else{supersonic.ui.dialog.alert('Please select an END time!')}
         };
 
         $scope.addNewEvent = function(){
@@ -463,9 +467,9 @@ angular
         };
 
         $scope.updateEndTime = function(){
-            if ($scope.addPage && !$scope.updateData.end) {
+            if ($scope.addPage && !$scope.updateData.end.dateTime) {
                 var sTime = $scope.updateData.start.dateTime;
-                $scope.updateData.end = {dateTime: sTime}
+                $scope.updateData.end.dateTime=sTime;
             }
         };
 
@@ -549,23 +553,8 @@ angular
             $scope.loading = true;
             var currDate = $scope.exampleDate;
             dayCount = (currDate-Date.now())/(24 * 60 * 60 * 1000);
-            currDate.setHours(0, 0, 0, 0);
-            $scope.today = currDate.toISOString();
-            currDate.setHours(23, 59, 59, 999);
-            $scope.tomorrow = currDate.toISOString();
-            $scope.date = currDate.getDate();
-            var request = gapi.client.calendar.events.list({
-                'calendarId': 'primary', 'timeMin': $scope.today, 'timeMax': $scope.tomorrow,
-                'showDeleted': false, 'singleEvents': true, 'orderBy': 'startTime'
-            });
-            request.execute(function (resp) {
-                $scope.cal = true;
-                $scope.events = resp.items;
-                makeSuggestion();
-                getTaggedEvents();
-                checkCurrent();
-                checkConflict();
-                $scope.loading = false;
-            });
+            refreshCalendar(currDate);
         });
     });
+
+
