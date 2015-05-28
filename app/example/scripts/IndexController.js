@@ -582,7 +582,7 @@ angular
                     $scope.visibleReminders += 1;
                 }
             }
-        };
+        }
 
         $scope.invisibleReminder = function(id) {
             for (var c in $scope.countdown) {
@@ -591,7 +591,7 @@ angular
                 }
             }
             supersonic.logger.log($scope.countdown);
-        }
+        };
         $scope.$watch('exampleDate',function() {
             supersonic.logger.log('date Selected');
             $scope.loading = true;
