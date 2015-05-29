@@ -88,14 +88,12 @@ angular
         $scope.nextdate = function () {
             var currDate = new Date(Date.now() + getFutureDay(Math.floor(++dayCount)));
             $scope.exampleDate = currDate;
-            getCalendarData()
             adjustCountdown(-1);
         };
 
         $scope.prevdate = function () {
             var currDate = new Date(Date.now() + getFutureDay(Math.floor(--dayCount)));
             $scope.exampleDate = currDate;
-            getCalendarData()
             adjustCountdown(1);
         };
 
@@ -483,19 +481,11 @@ angular
                 $scope.updateData.end.dateTime=sTime;
             }
         };
-        $scope.clickTest = function(){
-        var xxx = new Date();
-        var yyy = xxx.getDate();
-            xxx.setHours(0, 0, 0, 0);
-            yyy = xxx.toISOString();
-        supersonic.logger.log('xxx')
-        supersonic.logger.log(xxx);
-        supersonic.logger.log('yyy');
-        supersonic.logger.log(yyy);}
 
         function getTaggedEvents() {
             $scope.countdown = [];
-            var todayDate = new Date();
+            //var todayDate = new Date();
+            var todayDate = new Date(Date.now() + getFutureDay(dayCount));
             var yyyy = todayDate.getFullYear();
             var mm = todayDate.getMonth() + 1;
             var dd = todayDate.getDate();
