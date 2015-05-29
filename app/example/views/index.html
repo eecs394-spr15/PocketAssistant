@@ -25,7 +25,7 @@
                     <i class="icon icon-right super-chevron-right chevron" ng-click="nextdate()"></i>
                 </div>
             </div>
-
+            <button ng-click="clickTest()" >click</button>
             <div class="title">
                 Reminders
                 <i class="icon super-clipboard"></i>
@@ -53,8 +53,7 @@
                                 <span ng-if="c.daysUntil != 0">in {{c.daysUntil}} days</span>
                             </div>
                             <div class="col col-25 col-offset-10">
-                                <button ng-click="invisibleReminder(c.eventID)" class="button button-clear">
-                                    <i class="icon super-android-close"></i>
+                                <button ng-click="invisibleReminder(c.eventID)" class="button button-icon super-android-close" style="margin-top:-10px">
                                 </button>
                             </div>
                         </div>

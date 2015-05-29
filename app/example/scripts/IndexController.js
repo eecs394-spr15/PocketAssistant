@@ -56,12 +56,8 @@ angular
             var currDate = new Date(Date.now() + getFutureDay(dayCount));
             supersonic.logger.log('show currDate');
             supersonic.logger.log(currDate);
-            $scope.exampleDate=currDate;
-            refreshCalendar(currDate);
-        }
-
-        function refreshCalendar(currDate) {
             currDate.setHours(0, 0, 0, 0);
+            $scope.exampleDate=currDate;
             $scope.today = currDate.toISOString();
             currDate.setHours(23, 59, 59, 999);
             $scope.tomorrow = currDate.toISOString();
@@ -90,14 +86,16 @@ angular
         }
 
         $scope.nextdate = function () {
-            var currDate = new Date(Date.now() + getFutureDay(Math.floor(dayCount+1.01)));
+            var currDate = new Date(Date.now() + getFutureDay(Math.floor(++dayCount)));
             $scope.exampleDate = currDate;
+            getCalendarData()
             adjustCountdown(-1);
         };
 
         $scope.prevdate = function () {
-            var currDate = new Date(Date.now() + getFutureDay(Math.floor(dayCount-0.99)));
+            var currDate = new Date(Date.now() + getFutureDay(Math.floor(--dayCount)));
             $scope.exampleDate = currDate;
+            getCalendarData()
             adjustCountdown(1);
         };
 
@@ -485,6 +483,15 @@ angular
                 $scope.updateData.end.dateTime=sTime;
             }
         };
+        $scope.clickTest = function(){
+        var xxx = new Date();
+        var yyy = xxx.getDate();
+            xxx.setHours(0, 0, 0, 0);
+            yyy = xxx.toISOString();
+        supersonic.logger.log('xxx')
+        supersonic.logger.log(xxx);
+        supersonic.logger.log('yyy');
+        supersonic.logger.log(yyy);}
 
         function getTaggedEvents() {
             $scope.countdown = [];
@@ -592,12 +599,20 @@ angular
                 }
             }
             supersonic.logger.log($scope.countdown);
-        };
-        $scope.$watch('exampleDate',function() {
+        }
+
+        /*$scope.$watch('exampleDate',function() {
             supersonic.logger.log('date Selected');
-            $scope.loading = true;
-            var currDate = $scope.exampleDate;
-            dayCount = (currDate-Date.now())/(24 * 60 * 60 * 1000);
-            refreshCalendar(currDate);
+            var selectDate = $scope.exampleDate;
+            selectDate.setHours(0, 0, 0, 0);
+            var currDate = new Date();
+            currDate.setHours(0, 0, 0, 0);
+            dayCount = (selectDate-currDate)/(24 * 60 * 60 * 1000);
+            $scope.daycount = dayCount;
+            supersonic.logger.log(dayCount)
+
         });
+        $scope.$watch('daycount',function(){
+            getCalendarData();
+        })*/
     });
