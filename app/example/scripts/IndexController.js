@@ -399,6 +399,7 @@ angular
                 $scope.mainPage = true;
                 $scope.titleName = {name: 'Pocket Assistant', button: '', back: '', addBut: 'Add'};
                 getCalendarData();
+                getTaggedEvents();
                 supersonic.ui.dialog.alert("Event Deleted!");
             });
         };
@@ -471,6 +472,9 @@ angular
                 $scope.addPage = false;
                 $scope.titleName = {name: 'Pocket Assistant', button: '', back: '', addBut: 'Add'};
                 getCalendarData();
+                if($scope.eventTag == true){
+                    getTaggedEvents();
+                }
                 supersonic.ui.dialog.alert('Event Added!');
             });
         };
@@ -484,8 +488,10 @@ angular
 
         function getTaggedEvents() {
             $scope.countdown = [];
-            //var todayDate = new Date();
             var todayDate = new Date(Date.now() + getFutureDay(dayCount));
+            if(dayCount<0){
+                var currDate = new Date();}
+            else{currDate = todayDate}
             var yyyy = todayDate.getFullYear();
             var mm = todayDate.getMonth() + 1;
             var dd = todayDate.getDate();
@@ -493,7 +499,7 @@ angular
 
             var eventList = gapi.client.calendar.events.list({
                 'calendarId': 'primary',
-                'timeMin': todayDate.toISOString(),
+                'timeMin': currDate.toISOString(),
                 'q': '[reminder]',
                 'showDeleted': false,
                 'singleEvents': true,
@@ -541,8 +547,8 @@ angular
                 gapi.client.calendar.events.update({'calendarId': 'primary', 'eventId': id, 'resource': resp}).execute(function () {
                     supersonic.logger.log(resp.summary);
                     supersonic.logger.log('new reminder; reminder tag added');
+                    getTaggedEvents();
                 });
-                getTaggedEvents();
             });
             supersonic.logger.log('updating tagged list');
         };
@@ -564,6 +570,7 @@ angular
                 gapi.client.calendar.events.update({'calendarId': 'primary', 'eventId': id, 'resource': resp}).execute(function () {
                     supersonic.logger.log('reminder tag removed');
                     $scope.numOfReminders = $scope.countdown.length;
+                    getTaggedEvents();
                 });
             });
         };
@@ -589,9 +596,9 @@ angular
                 }
             }
             supersonic.logger.log($scope.countdown);
-        }
+        };
 
-        /*$scope.$watch('exampleDate',function() {
+        $scope.$watch('exampleDate',function() {
             supersonic.logger.log('date Selected');
             var selectDate = $scope.exampleDate;
             selectDate.setHours(0, 0, 0, 0);
@@ -599,10 +606,10 @@ angular
             currDate.setHours(0, 0, 0, 0);
             dayCount = (selectDate-currDate)/(24 * 60 * 60 * 1000);
             $scope.daycount = dayCount;
-            supersonic.logger.log(dayCount)
-
         });
         $scope.$watch('daycount',function(){
+            getTaggedEvents();
             getCalendarData();
-        })*/
+
+        })
     });

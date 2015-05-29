@@ -20,12 +20,11 @@
                     <i class="icon super-chevron-left chevron" ng-click="prevdate()">  </i>
                     <i class="icon super-calendar"></i>
                     <label class="item item-input calendar">
-                        <input style="font-size:18px;font-weight:bold" type="date" ng-model="exampleDate">
+                        <input style="font-size:18px;font-weight:bold;padding-top:4px" type="date" ng-model="exampleDate">
                     </label>
                     <i class="icon icon-right super-chevron-right chevron" ng-click="nextdate()"></i>
                 </div>
             </div>
-            <button ng-click="clickTest()" >click</button>
             <div class="title">
                 Reminders
                 <i class="icon super-clipboard"></i>
@@ -33,6 +32,7 @@
                     {{showOrHide}} <span ng-class="chevron"></span>
                 </button>
             </div>
+            <div ng-hide="loading">
             <div class="suggestion" ng-show="numOfReminders == 0">
                 <h5>You don't have any reminders!</h5>
             </div>
@@ -48,8 +48,8 @@
                         <div class="row suggestion" ng-show="c.visible">
                             <div class="col col-75">
                                 {{c.title}}
-                                <span ng-if="c.untilToday == 0 && c.daysUntil == 0">in {{c.hrsUntil}} hours</span>
-                                <span ng-if="c.untilToday != 0 && c.daysUntil == 0">TODAY!</span>
+                                <span ng-if="c.untilToday != 0 && c.daysUntil == 0">in {{c.hrsUntil}} hours</span>
+                                <span ng-if="c.untilToday == 0 && c.daysUntil == 0">is TODAY!</span>
                                 <span ng-if="c.daysUntil != 0">in {{c.daysUntil}} days</span>
                             </div>
                             <div class="col col-25 col-offset-10">
@@ -60,7 +60,7 @@
                     </div>
                 </div>
             </div>
-
+            </div>
             <div>
                 <div class="title">
                     Schedule
