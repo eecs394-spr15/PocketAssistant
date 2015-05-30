@@ -22,8 +22,7 @@
                     <i class="icon super-chevron-left chevron" ng-click="prevdate()"></i>
                     <i class="icon super-calendar calicon"></i>
                     <label class="item item-input calendar">
-                        <input style="font-size:18px;font-weight:bold;padding-top:4px" type="date"
-                               ng-model="exampleDate">
+                        <input style="font-size:18px;font-weight:bold;padding-top:4px" type="date" ng-model="exampleDate">
                     </label>
                     <i class="icon icon-right super-chevron-right chevron" ng-click="nextdate()"></i>
                 </div>
@@ -77,9 +76,7 @@
 
                     <div ng-hide="ev.colorId === '0'" class="row event"
                          ng-class="{'conflict1': ev.conflict === 1,'conflict2': ev.conflict === 2,'conflict3': ev.conflict === 3,'currentEvent':ev.current === true,'blue': ev.colorId === '1','green': ev.colorId === '2' ,'purple': ev.colorId === '3','red': ev.colorId === '4','yellow': ev.colorId === '5','orange': ev.colorId === '6','turquoise': ev.colorId === '7','grey': ev.colorId === '8','boldBlue': ev.colorId === '9', 'boldGreen': ev.colorId === '10','pink': ev.colorId === '11','NoId': ev.colorId === Null}">
-                        <div class="col col-20 eventTime" ng-class="'#ffc900'">{{ev.start.dateTime |
-                            date:"hh:mm"}}-{{ev.end.dateTime | date:"hh:mm"}}
-                        </div>
+                        <div class="col col-20 eventTime" ng-class="'#ffc900'">{{ev.start.dateTime | date:"hh:mm"}}-{{ev.end.dateTime | date:"hh:mm"}}</div>
                         <div class="col col-70">&emsp;
                             <span ng-if="!isReminder(ev)">{{ev.summary}}</span>
                             <span ng-if="isReminder(ev)">{{ev.summary.substr(10)}}</span>
@@ -93,16 +90,11 @@
                         <div ng-hide="ev.addedEvent">
                             <div class="row suggestion" ng-class="{'currentEvent': ev.current}">
                                 <div class="col col-85">
-                                    <div ng-show="isActive(ev,-1)"><i class="icon super-coffee"></i>&emsp;{{ev.start.dateTime
-                                        | date:"hh:mm"}} - {{ev.end.dateTime | date:"hh:mm"}}<span class="now"
-                                                                                                   ng-show="ev.current">&emsp;Now!</span>
-                                    </div>
-                                    <div ng-hide="isActive(ev,-1)">{{ev.start.dateTime |
-                                        date:"hh:mm"}}-{{ev.end.dateTime | date:"hh:mm"}}&emsp;{{sugg[ev.active].activity}}
-                                    </div>
+                                    <div ng-if="isActive(ev,-1)"><i class="icon super-coffee"></i>&emsp;{{ev.start.dateTime | date:"hh:mm"}} - {{ev.end.dateTime | date:"hh:mm"}}<span class="now" ng-show="ev.current">&emsp;Now!</span></div>
+                                    <div ng-if="ev.active >= 0">{{ev.start.dateTime | date:"hh:mm"}}-{{ev.end.dateTime | date:"hh:mm"}}&emsp;{{sugg[ev.active].activity}}</div>
+                                    <div ng-if="isActive(ev, -2)">{{ev.start.dateTime | date:"hh:mm"}}-{{ev.end.dateTime | date:"hh:mm"}}&emsp;{{mySuggestion.summary}}</div>
                                 </div>
-                                <button class="col col-15 button button-icon icon super-navicon"
-                                        ng-click="toggle(ev)"></button>
+                                <button class="col col-15 button button-icon icon super-navicon" ng-click="toggle(ev)"></button>
                             </div>
 
                             <div ng-show="ev.showOption">
@@ -124,9 +116,14 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="sugglist row"
+                                     ng-class="{active: isActive(ev,-2)}"
+                                     ng-click="setActive(ev,-2)">
+                                    <input ng-model="mySuggestion.summary" placeholder="other" >
+                                </div>
                                 <div class="sugglist addbar">
                                     <button class="addButton button button-small button-assertive"
-                                            ng-disabled="isActive(ev,-1) || ev.addedEvent"
+                                            ng-disabled="isActive(ev,-1) || ev.addedEvent || (isActive(ev,-2) && !mySuggestion.summary)"
                                             ng-click="addCalendarData(ev)">
                                         <div>Add</div>
                                     </button>

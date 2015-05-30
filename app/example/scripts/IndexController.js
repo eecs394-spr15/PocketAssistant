@@ -303,9 +303,13 @@ angular
             ev.showOption = !ev.showOption;
         };
 
+        $scope.mySuggestion = {"summary":""};
         $scope.addCalendarData = function (ev) {
             $scope.newEvent = {};
-            $scope.newEvent.summary = $scope.sugg[ev.active].activity;
+            if (ev.active == -2) {
+                $scope.newEvent.summary = $scope.mySuggestion.summary;}
+            else {
+                $scope.newEvent.summary = $scope.sugg[ev.active].activity;}
             $scope.newEvent.start = ev.start;
             $scope.newEvent.end = ev.end;
             $scope.newEvent.colorId = "11";
@@ -318,6 +322,7 @@ angular
             });
             ev.addedEvent = true;
             ev.showOption = !ev.showOption;
+            $scope.mySuggestion.summary = "";
         };
 
         $scope.hideReminder = false;
