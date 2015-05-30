@@ -174,13 +174,13 @@
             <i class="col col-20 column-icon icon super-aperture"></i>
             <div class="colorBlock" ng-class="{'blue': updateData.colorId === '1','green': updateData.colorId === '2','purple': updateData.colorId === '3',
                 'red': updateData.colorId === '4','yellow': updateData.colorId === '5','orange': updateData.colorId === '6','turquoise': updateData.colorId === '7',
-                'grey': updateData.colorId === '8','boldBlue': updateData.colorId === '9', 'boldGreen': updateData.colorId === '10','pink': updateData.colorId === '11','blue': updateData.colorId === Null}">
+                'grey': updateData.colorId === '8','boldBlue': updateData.colorId === '9', 'boldGreen': updateData.colorId === '10','pink': updateData.colorId === '11','NoId': updateData.colorId === Null}">
             </div>
             <label style="border:none" class="item item-input item-select col">
                 <div  style="font-size:18px" class="input-label">
                     Color:
                 </div>
-                <select style="font-size:18px;font-family:times" ng-model="updateData.colorId">
+                <select style="font-size:18px;font-family:times;margin-top:-3px" ng-model="updateData.colorId">
                     <option value="7">Turquoise</option>
                     <option value="1">Blue</option><option value="9">Bold Blue</option>
                     <option value="2">Green</option><option value="10">Bold Green</option>

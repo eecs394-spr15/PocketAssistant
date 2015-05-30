@@ -1,6 +1,6 @@
 angular
     .module('example')
-    .controller('IndexController', function ($scope, supersonic) {
+    .controller('IndexController', function ($scope, supersonic,$timeout) {
         var clientId = '792909163379-01odbc9kccakdhrhpgognar3d8idug0q.apps.googleusercontent.com';
         var scopes = 'https://www.googleapis.com/auth/calendar';
         var apiKey = 'AIzaSyAZkvW_yVrdUVEjrO7_DwFq2NidEkSEAoE';
@@ -327,7 +327,6 @@ angular
                 $scope.re = resp;
                 $scope.updateData = $scope.re;
             });
-
         };
 
         var confirm = {
@@ -363,6 +362,7 @@ angular
                 $scope.mainPage = true;
                 $scope.titleName = {name: 'Pocket Assistant', button: '', back: '', addBut: 'Add'};
                 getCalendarData();
+                supersonic.ui.dialog.alert("Event Updated!");
             });
         };
 
@@ -381,6 +381,7 @@ angular
                 $scope.mainPage = true;
                 $scope.titleName = {name: 'Pocket Assistant', button: '', back: '', addBut: 'Add'};
                 getCalendarData();
+                supersonic.ui.dialog.alert("Event Deleted!");
             });
         };
 
@@ -411,14 +412,18 @@ angular
         };
         
         $scope.addEvent = function () {
-            if (!$scope.updateData.start.dateTime | !$scope.updateData.end.dateTime | $scope.updateData.start.dateTime >= $scope.updateData.end.dateTime){
+            if (!$scope.updateData.start.dateTime | !$scope.updateData.summary | !$scope.updateData.end.dateTime | $scope.updateData.start.dateTime >= $scope.updateData.end.dateTime){
                 if(!$scope.updateData.end.dateTime && !$scope.updateData.start.dateTime){
                     supersonic.ui.dialog.alert('Please select START and END time!')}
                 else if(!$scope.updateData.start.dateTime){
                     supersonic.ui.dialog.alert('Please select a START time!')
                 }
                 else if(!$scope.updateData.end.dateTime){
-                    supersonic.ui.dialog.alert('Please select an END time!')}
+                    supersonic.ui.dialog.alert('Please select an END time!')
+                }
+                else if(!$scope.updateData.summary){
+                    supersonic.ui.dialog.alert('Please add a SUMMARY for your new event!')
+                }
                 else {
                     if ($scope.updateData.start.dateTime >= $scope.updateData.end.dateTime){
                         supersonic.ui.dialog.alert('START time should be earlier than END time!')
@@ -456,6 +461,7 @@ angular
                 $scope.addPage = false;
                 $scope.titleName = {name: 'Pocket Assistant', button: '', back: '', addBut: 'Add'};
                 getCalendarData();
+                supersonic.ui.dialog.alert('Event Added!');
             });
         };
 
@@ -498,12 +504,6 @@ angular
                     var evHours = parseInt(events[i].start.dateTime.substr(11, 2));
                     var dayCount = Math.floor((365*evYear + evYear/4 - evYear/100 + evYear/400 + evDay + (153*evMonth+8)/5) - (365*yyyy + yyyy/4 - yyyy/100 + yyyy/400 + dd + (153*mm+8)/5));
                     var hourCount = evHours - hh;
-                    /*var selectDate = events[i].start.dateTime
-                    selectDate.toISOString();
-                     selectDate.setHours(0, 0, 0, 0);
-                     var currDate = new Date();
-                     currDate.setHours(0, 0, 0, 0);
-                     dayCount = (selectDate-currDate)/(24 * 60 * 60 * 1000);*/
                     var metadata = {
                         'title': events[i].summary.substr(10),
                         'untilToday': dayCount,
@@ -539,6 +539,6 @@ angular
         });
 
         $scope.$watch('daycount',function(){
-            getCalendarData();
+            $timeout(getCalendarData(),1000);
         })
     });
