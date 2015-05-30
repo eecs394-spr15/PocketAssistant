@@ -18,7 +18,7 @@
             <div class="date">
                 <div>
                     <i class="icon super-chevron-left chevron" ng-click="prevdate()">  </i>
-                    <i class="icon super-calendar"></i>
+                    <i class="icon super-calendar calicon"></i>
                     <label class="item item-input calendar">
                         <input style="font-size:18px;font-weight:bold;padding-top:4px" type="date" ng-model="exampleDate">
                     </label>
@@ -48,8 +48,7 @@
                         <div class="row suggestion" ng-show="c.visible">
                             <div class="col col-75">
                                 {{c.title}}
-                                <span ng-if="c.untilToday != 0 && c.daysUntil == 0">in {{c.hrsUntil}} hours</span>
-                                <span ng-if="c.untilToday == 0 && c.daysUntil == 0">is TODAY!</span>
+                                <span ng-if="c.daysUntil == 0">is TODAY!</span>
                                 <span ng-if="c.daysUntil != 0">in {{c.daysUntil}} days</span>
                             </div>
                             <div class="col col-25 col-offset-10">
@@ -148,7 +147,7 @@
             <i class="col col-20 column-icon icon super-ios7-star-outline"></i>
             <div style="padding-top:3%" class="col col-20">Start:</div>
             <div class="col">
-                <label class="item item-input chevron">
+                <label class="item item-input inputbox">
                     <input type="datetime-local" ng-model="updateData.start.dateTime">
                 </label>
             </div>
@@ -157,7 +156,7 @@
             <i class="col col-20 column-icon"></i>
             <div style="padding-top:3%" class="col col-20">End:</div>
             <div class="col">
-                <label ng-click="updateEndTime()" class="item item-input chevron">
+                <label ng-click="updateEndTime()" class="item item-input inputbox">
                     <input type="datetime-local" ng-model="updateData.end.dateTime">
                 </label>
             </div>
@@ -173,6 +172,10 @@
         <HR width="96%" color=#987cb9 SIZE=10/>
         <div class="row area">
             <i class="col col-20 column-icon icon super-aperture"></i>
+            <div class="colorBlock" ng-class="{'blue': updateData.colorId === '1','green': updateData.colorId === '2','purple': updateData.colorId === '3',
+                'red': updateData.colorId === '4','yellow': updateData.colorId === '5','orange': updateData.colorId === '6','turquoise': updateData.colorId === '7',
+                'grey': updateData.colorId === '8','boldBlue': updateData.colorId === '9', 'boldGreen': updateData.colorId === '10','pink': updateData.colorId === '11','blue': updateData.colorId === Null}">
+            </div>
             <label style="border:none" class="item item-input item-select col">
                 <div  style="font-size:18px" class="input-label">
                     Color:
@@ -181,7 +184,7 @@
                     <option value="7">Turquoise</option>
                     <option value="1">Blue</option><option value="9">Bold Blue</option>
                     <option value="2">Green</option><option value="10">Bold Green</option>
-                    <option value="4">Red</option><option value="11">Bold Red</option>
+                    <option value="4">Red</option><option value="11">Pink</option>
                     <option value="6">Orange</option><option value="5">Yellow</option>
                     <option value="8">Grey</option><option value="3">Purple</option>
                 </select>
