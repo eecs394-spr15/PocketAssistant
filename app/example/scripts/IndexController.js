@@ -83,6 +83,44 @@ angular
             });
         }
 
+        document.addEventListener('touchstart', handleTouchStart, false);
+        document.addEventListener('touchmove', handleTouchMove, false);
+
+        var xDown = null;
+        var yDown = null;
+
+        function handleTouchStart(evt) {
+            xDown = evt.touches[0].clientX;
+            yDown = evt.touches[0].clientY;
+        };
+
+        function handleTouchMove(evt) {
+            if ( ! xDown || ! yDown ) {
+                return;
+            }
+
+            var xUp = evt.touches[0].clientX;
+            var yUp = evt.touches[0].clientY;
+            var xDiff = xDown - xUp;
+            var yDiff = yDown - yUp;
+
+            if ( Math.abs( xDiff ) > Math.abs( yDiff ) ) {
+                if ( xDiff > 10 ) {
+                    $scope.nextdate();
+                    supersonic.logger.log('swipeLeft');
+
+                } else if (xDiff < -5){
+                    $scope.prevdate();
+                    supersonic.logger.log('swipeRight');
+
+                }
+            }
+            xDown = null;
+            yDown = null;
+        };
+
+
+
         $scope.nextdate = function () {
             var currDate = new Date(Date.now() + getFutureDay(Math.floor(++dayCount)));
             $scope.exampleDate = currDate;
