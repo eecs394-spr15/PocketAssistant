@@ -1,43 +1,46 @@
-body{
+body {
     background: url("/images/SplashScreen.jpg") no-repeat center center fixed;
     background-size: cover;
 }
-#authorize-button{
-    position:absolute;
-    top:71%;
-    left:10.1%;
-    width:80%;
+
+#authorize-button {
+    position: absolute;
+    top: 71%;
+    left: 10.1%;
+    width: 80%;
     border-radius: 42px;
     font-family: Arial;
 }
-.calicon{
-    position:absolute;
-    top:27px;
-    left:23%
+
+.calicon {
+    position: absolute;
+    top: 27px;
+    left: 23%
 }
-.chevron
-{
-    margin-top:5px;
+
+.chevron {
+    margin-top: 5px;
 }
-.calendar
-{
-    border:#7eb267 2px solid;
-    padding-top:10px;
-    background:none;
-    position:absolute;
-    top:20px;
-    left:30%;
-    height:36px;
+
+.calendar {
+    border: #7eb267 2px solid;
+    padding-top: 10px;
+    background: none;
+    position: absolute;
+    top: 20px;
+    left: 30%;
+    height: 36px;
 }
-.colorBlock{
-    height:18px;
-    width:18px;
-    margin-top:12px;
-    margin-left:-2px;
-    margin-right:3px;
+
+.colorBlock {
+    height: 18px;
+    width: 18px;
+    margin-top: 12px;
+    margin-left: -2px;
+    margin-right: 3px;
 }
-.date
-{
+
+.date {
     background-color: #c9ffc7;
     text-align: center;
     width: 100%;
@@ -49,28 +52,28 @@ body{
     border-radius: 2px;
     border: 1px solid #7eb267;
 }
-.date-content
-{
+
+.date-content {
     padding-top: 0;
 }
-.date .super-chevron-left
-{
+
+.date .super-chevron-left {
     float: left;
 }
-.date .super-chevron-right
-{
+
+.date .super-chevron-right {
     float: right;
 }
-.title
-{
+
+.title {
     margin-left: 8px;
     margin-bottom: 5px;
     font-size: 20px;
     color: black;
     font-weight: bold;
 }
-.event
-{
+
+.event {
     height: 52px;
     padding-left: 10px;
     color: #f8f8f8;
@@ -81,110 +84,110 @@ body{
     font-size: 16px;
     border-radius: 2px;
 }
-.eventTime
-{
+
+.eventTime {
     font-size: 14px;
 }
-.blue
-{
+
+.blue {
     background-color: #27c3ff;
     border: 1px solid #1c98ff;
 }
-.green
-{
+
+.green {
     background-color: #17b225;
     border: 1px solid #18b273;
 }
-.purple
-{
+
+.purple {
     background-color: #802f7a;
     border: 1px solid purple;
 }
-.red
-{
+
+.red {
     background-color: #ff332e;
     border: 1px solid red;
 }
-.yellow
-{
+
+.yellow {
     background-color: #ffce34;
     border: 1px solid #ffde1f;
 }
-.orange
-{
+
+.orange {
     background-color: #ff7a45;
     border: 1px solid #ff5b1e;
 }
-.turquoise
-{
+
+.turquoise {
     background-color: turquoise;
     border: 1px solid #13cae0;
 }
-.grey
-{
+
+.grey {
     background-color: #f8f8f8;
     border: 1px solid #b2b2b2;
     color: #444;
 }
-.boldBlue
-{
+
+.boldBlue {
     background-color: blue;
     border: 1px solid #2d02ff;
 }
-.boldGreen
-{
+
+.boldGreen {
     background-color: darkgreen;
     border: 1px solid darkgreen;
 }
-.pink
-{
+
+.pink {
     border-color: #ff122d;
     background-color: #ff517b;
 }
-.NoId
-{
+
+.NoId {
     border-color: #54ffee;
     background-color: #28e2ff;
 }
-.row .super-edit
-{
-    font-size:18px;
-    padding-top:4%
+
+.row .super-edit {
+    font-size: 18px;
+    padding-top: 4%
 }
-.currentEvent
-{
+
+.currentEvent {
     font-weight: bold;
 }
-.now
-{
+
+.now {
     color: black;
 }
-.conflict1
-{
+
+.conflict1 {
     border-top: 3px solid #06090a;
     border-left: 3px solid #06090a;
     border-right: 3px solid #06090a;
     position: relative;
     top: 5px;
 }
-.conflict2
-{
+
+.conflict2 {
     border-left: 3px solid #06090a;
     border-right: 3px solid #06090a;
     margin-top: 5px;
     margin-bottom: 5px;
     padding-top: 0;
 }
-.conflict3
-{
+
+.conflict3 {
     border-bottom: 3px solid #06090a;
     border-left: 3px solid #06090a;
     border-right: 3px solid #06090a;
     position: relative;
     top: -5px;
 }
-.suggestion
-{
+
+.suggestion {
     height: 52px;
     padding-left: 10px;
     background-color: #f8f8f8;
@@ -195,36 +198,36 @@ body{
     border-radius: 2px;
     border: 1px solid #b2b2b2;
 }
-.suggestion i
-{
+
+.suggestion i {
     font-size: 25px;
 }
-.addButton
-{
+
+.addButton {
     font-size: 13px;
     float: right;
-    margin-right:5px;
-    width:55px;
+    margin-right: 5px;
+    width: 55px;
 }
-.sugglist
-{
+
+.sugglist {
     height: 45px;
     background-color: #ffcaca;
     padding-left: 10px;
     padding-top: 10px;
     border: 1px solid #b2b2b2
 }
-.addbar
-{
+
+.addbar {
     background-color: white;
     border: 2px;
 }
-.active
-{
+
+.active {
     background-color: #ff8e9b;
 }
-.col-15
-{
+
+.col-15 {
     -webkit-box-flex: 0;
     -webkit-flex: 0 0 15%;
     -moz-box-flex: 0;
@@ -233,8 +236,8 @@ body{
     flex: 0 0 15%;
     max-width: 15%;
 }
-.col-70
-{
+
+.col-70 {
     -webkit-box-flex: 0;
     -webkit-flex: 0 0 70%;
     -moz-box-flex: 0;
@@ -243,47 +246,53 @@ body{
     flex: 0 0 70%;
     max-width: 70%;
 }
-.hideReminder{
+
+.hideReminder {
     float: right;
     margin-bottom: 4px;
 }
-.hline{
-    padding:0;
+
+.hline {
+    padding: 0;
 }
-.column-icon
-{
-    text-align:center;
-    font-size:25px;
+
+.column-icon {
+    text-align: center;
+    font-size: 25px;
 }
-.area{
-    font-size:18px;
-    height:55px;
-    padding-top:10px;
-    font-family:Times;
+
+.area {
+    font-size: 18px;
+    height: 55px;
+    padding-top: 10px;
+    font-family: Times;
 }
-input[type="text"]
-{
-    font-family:Times;
+
+input[type="text"] {
+    font-family: Times;
 }
-.inputbox{
-    padding-top:10px;
-    padding-left:8px;
-    margin-top:-5px;
-    margin-left:-3px;
+
+.inputbox {
+    padding-top: 10px;
+    padding-left: 8px;
+    margin-top: -5px;
+    margin-left: -3px;
 }
-.undo{
-    color:white;
-    font-family:Times;
-    font-size:28px;
-    position:absolute;
-    left:81%;
-    top:-10px;
+
+.undo {
+    color: white;
+    font-family: Times;
+    font-size: 28px;
+    position: absolute;
+    left: 81%;
+    top: -10px;
 }
-.loading{
+
+.loading {
     padding: 30px;
 }
-.hiddenReminders
-{
+
+.hiddenReminders {
     margin-top: 2px;
     margin-left: 8px;
 }

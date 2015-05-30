@@ -50,8 +50,6 @@ angular
             return (24 * 60 * 60 * 1000 * numDays);
         }
 
-        //var initReminders = true;
-
         function getCalendarData() {
             $scope.loading = true;
             //limit our query to events occurring today
@@ -79,7 +77,7 @@ angular
                 makeSuggestion();
                 checkCurrent();
                 checkConflict();
-                getTaggedEvents();;
+                getTaggedEvents();
             });
         }
 
@@ -92,7 +90,7 @@ angular
         function handleTouchStart(evt) {
             xDown = evt.touches[0].clientX;
             yDown = evt.touches[0].clientY;
-        };
+        }
 
         function handleTouchMove(evt) {
             if ( ! xDown || ! yDown ) {
@@ -117,7 +115,7 @@ angular
             }
             xDown = null;
             yDown = null;
-        };
+        }
 
 
 
@@ -345,7 +343,7 @@ angular
 
         $scope.getEvent = function (ev) {
             $scope.eventTag = false;
-            if(ev.summary.substring(0,10) == remindertag){
+            if (ev.summary.substring(0,10) == remindertag){
                 $scope.eventTag = true;
             }
             $scope.updateData = {};
@@ -451,16 +449,16 @@ angular
         
         $scope.addEvent = function () {
             if (!$scope.updateData.start.dateTime | !$scope.updateData.summary | !$scope.updateData.end.dateTime | $scope.updateData.start.dateTime >= $scope.updateData.end.dateTime){
-                if(!$scope.updateData.end.dateTime && !$scope.updateData.start.dateTime){
+                if(!$scope.updateData.summary){
+                    supersonic.ui.dialog.alert('Please add a SUMMARY for your new event!')
+                }
+                else if(!$scope.updateData.end.dateTime && !$scope.updateData.start.dateTime){
                     supersonic.ui.dialog.alert('Please select START and END time!')}
                 else if(!$scope.updateData.start.dateTime){
                     supersonic.ui.dialog.alert('Please select a START time!')
                 }
                 else if(!$scope.updateData.end.dateTime){
                     supersonic.ui.dialog.alert('Please select an END time!')
-                }
-                else if(!$scope.updateData.summary){
-                    supersonic.ui.dialog.alert('Please add a SUMMARY for your new event!')
                 }
                 else {
                     if ($scope.updateData.start.dateTime >= $scope.updateData.end.dateTime){
@@ -480,12 +478,7 @@ angular
         $scope.addNewEvent = function(){
             if ($scope.eventTag == true){
                 supersonic.logger.log('adding reminder tag is needed');
-                if ($scope.updateData.summary == null) {
-                    $scope.updateData.summary = remindertag.concat('(No title)');
-                }
-                else{
-                    $scope.updateData.summary = remindertag.concat($scope.updateData.summary);
-                }
+                $scope.updateData.summary = remindertag.concat($scope.updateData.summary);
             }
             $scope.newEvent = $scope.updateData;
             supersonic.logger.log($scope.updateData);
@@ -513,7 +506,7 @@ angular
         function getTaggedEvents() {
             $scope.countdown = [];
             var todayDate = new Date(Date.now() + getFutureDay(dayCount));
-            todayDate.setHours(0,0,0,0)
+            todayDate.setHours(0,0,0,0);
             if(dayCount < 0){
                 var currDate = new Date();
                 currDate.setHours(0,0,0,0)
@@ -552,8 +545,7 @@ angular
                     };
                     $scope.countdown.push(metadata);
                 }
-                $scope.numOfReminders = $scope.countdown.length;
-                $scope.visibleReminders = $scope.numOfReminders;
+                $scope.visibleReminders = $scope.countdown.length;
                 $scope.loading = false;
             });
         }
@@ -564,6 +556,7 @@ angular
                     $scope.countdown[c].visible = false;
                 }
             }
+            $scope.visibleReminders -= 1;
             supersonic.logger.log($scope.countdown);
         };
 
