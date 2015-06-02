@@ -1,6 +1,6 @@
 # PocketAssistant
-PocketAssistant is a cutting-edge calendar optimization tool that promotes activities to support health, wellness, and academic success.
-PocketAssistant provides an easy-to-use interface for students to view and modify their calendar as well as receiving suggestions for activities to benefit their cardiovascular health. Students are also reminded of important events on their calendar to assist in accomplishing the numerous activities in their busy schedules.
+PocketAssistant is a cutting-edge calendar optimization tool that promotes health, wellness, and academic success for college students.
+PocketAssistant provides an easy-to-use daily interface for students to view and modify their calendar. Furthermore, PocketAssitant provides suggestions for activities benefitting cardiovascular health that fit seamlessly within the student's schedule. Students are also reminded of important events on their calendar to assist in accomplishing all of their daily activities.
 
 ## Download and Installation
 1. Clone the repo: `git clone https://github.com/eecs394-spr15/PocketAssistant.git`
