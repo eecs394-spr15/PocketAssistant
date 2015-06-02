@@ -11,8 +11,8 @@
 
     <div ng-show="mainPage">
         <div ng-hide="cal" style="top:500px">
-            <button id="authorize-button" class="button button-stable" ng-click="handleClientLoad()">Click here to get
-                your Calendar!
+            <button id="authorize-button" class="button button-stable" ng-click="handleClientLoad()">
+                Click here to get your Calendar!
             </button>
         </div>
 
@@ -49,8 +49,9 @@
                             <div class="row suggestion" ng-show="c.visible">
                                 <div class="col col-75">
                                     {{c.title}}
-                                    <span ng-if="c.daysUntil == 0">is TODAY!</span>
                                     <span ng-if="c.daysUntil != 0">in {{c.daysUntil}} days</span>
+                                    <span ng-if="c.untilToday != 0 && c.daysUntil == 0">TODAY!</span>
+                                    <span ng-if="c.untilToday == 0 && c.hrsUntil >= 0">in {{c.hrsUntil}} hours</span>
                                 </div>
                                 <div class="col col-25 col-offset-10">
                                     <button ng-click="invisibleReminder(c.eventID)"
