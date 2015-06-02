@@ -163,6 +163,11 @@ body {
     color: black;
 }
 
+.TimeConflict{
+    text-align: center;
+    font-weight: bold;
+    margin: -4px;
+}
 .conflict1 {
     border-top: 3px solid #06090a;
     border-left: 3px solid #06090a;

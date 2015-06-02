@@ -73,6 +73,7 @@
                 </div>
 
                 <div ng-repeat="ev in events" ng-hide="loading">
+                    <div ng-if="ev.conflict === 1" class="TimeConflict">Time Conflict!</div>
 
                     <div ng-hide="ev.colorId === '0'" class="row event"
                          ng-class="{'conflict1': ev.conflict === 1,'conflict2': ev.conflict === 2,'conflict3': ev.conflict === 3,'currentEvent':ev.current === true,'blue': ev.colorId === '1','green': ev.colorId === '2' ,'purple': ev.colorId === '3','red': ev.colorId === '4','yellow': ev.colorId === '5','orange': ev.colorId === '6','turquoise': ev.colorId === '7','grey': ev.colorId === '8','boldBlue': ev.colorId === '9', 'boldGreen': ev.colorId === '10','pink': ev.colorId === '11','NoId': ev.colorId === Null}">

@@ -191,7 +191,16 @@ angular
                 while (nextETime - prevETime >= 3600000) {
                     var currStart = new Date(prevETime);
                     var currEnd = new Date(prevETime + 3600000);
-                    if (currEnd.getHours() < 22) {
+                    if (currStart.getHours()>7 && currEnd.getHours() < 22) {
+                        addSuggestion(currStart, currEnd, i, 1);
+                        i += 1;
+                        prevEnd = currEnd;
+                        prevETime = prevEnd.getTime();
+                    }
+                    else if (currStart.getHours() <= 7) {
+                        var t = new Date(new Date($scope.today));
+                        var currStart = new Date(t.setHours(8));
+                        var currEnd = new Date(t.setHours(9));
                         addSuggestion(currStart, currEnd, i, 1);
                         i += 1;
                         prevEnd = currEnd;
@@ -219,12 +228,24 @@ angular
             }
 
             var lastEnd = new Date($scope.events[$scope.events.length - 1].end.dateTime);
+            if (lastEnd.getHours() <= 7){
+                var t = new Date(new Date($scope.today));
+                var lastEnd = new Date(t.setHours(8));
+                var newEnd = new Date(t.setHours(9));
+                addSuggestion(lastEnd, newEnd, $scope.events.length, 1);
+                lastEnd = newEnd;
+            }
+            if (lastEnd.getHours() < 21){
+                if (prevEnd.getTime() > lastEnd.getTime()) {
+                    lastEnd = new Date(prevEnd);
+                }
+            }
             while (lastEnd.getHours() < 21) {
                 var newEnd = new Date(lastEnd.getTime() + 3600000);
                 addSuggestion(lastEnd, newEnd, $scope.events.length, 1);
                 lastEnd = newEnd;
             }
-            if (lastEnd.getHours() < 22) {
+            if (lastEnd.getHours() < 22 && lastEnd.getMinutes() <= 30) {
                 var t = new Date(new Date($scope.today));
                 newEnd = new Date(t.setHours(22));
                 addSuggestion(lastEnd, newEnd, $scope.events.length, 0);
