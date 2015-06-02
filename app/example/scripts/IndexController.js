@@ -174,6 +174,9 @@ angular
                         var endtime = new Date(t.setHours(9));
                         addSuggestion(starttime, endtime, i, 1);
                     }
+                    else if ($scope.events.length == 1) {
+                        var prevEnd = new Date($scope.events[0].end.dateTime);
+                    }
                     continue;
                 }
 
@@ -537,12 +540,10 @@ angular
                 var currDate = new Date();
                 currDate.setHours(0,0,0,0)
             }
-            else{currDate = todayDate}
-            var yyyy = todayDate.getFullYear();
-            var mm = todayDate.getMonth() + 1;
-            var dd = todayDate.getDate();
-            var hh = todayDate.getHours() + 1;
-
+            else {
+                currDate = todayDate
+            }
+            var hr = new Date().getHours();
             var eventList = gapi.client.calendar.events.list({
                 'calendarId': 'primary',
                 'timeMin': currDate.toISOString(),
@@ -555,20 +556,20 @@ angular
                 var events = resp.items;
                 supersonic.logger.log(events);
                 for (var i in events) {
-                    var evDay = parseInt(events[i].start.dateTime.substr(8, 2));
-                    var evMonth = parseInt(events[i].start.dateTime.substr(5, 2));
-                    var evYear = parseInt(events[i].start.dateTime.substr(0, 4));
                     var evHours = parseInt(events[i].start.dateTime.substr(11, 2));
-                    var dayCount = Math.floor((365*evYear + evYear/4 - evYear/100 + evYear/400 + evDay + (153*evMonth+8)/5) - (365*yyyy + yyyy/4 - yyyy/100 + yyyy/400 + dd + (153*mm+8)/5));
-                    var hourCount = evHours - hh;
+                    var dayleft = Math.floor((new Date(events[i].start.dateTime)-todayDate)/(24 * 60 * 60 * 1000));
+                    var hourleft = evHours - hr;
                     var metadata = {
                         'title': events[i].summary.substr(10),
                         'untilToday': dayCount,
-                        'daysUntil': dayCount,
-                        'hrsUntil': hourCount,
+                        'daysUntil': dayleft,
+                        'hrsUntil': hourleft,
                         'eventID': events[i].id,
                         'visible': true
                     };
+                    if (!metadata.daysUntil && metadata.hrsUntil < 0) {
+                        metadata.visible = false;
+                    }
                     $scope.countdown.push(metadata);
                 }
                 $scope.visibleReminders = $scope.countdown.length;
