@@ -14,10 +14,12 @@ PocketAssistant provides an easy-to-use interface for students to view and modif
 7. Scan the QR code in your browser created in step 5
 
 ## Setting up Cloud Deployment 
-8. Select the 'Cloud' tab from the steroids connect page in your browser.
-9. Select 'Deploy to Cloud'
-10. Select 'Open Cloud Share Page'
-11. Scan the QR code provided at the resulting page
+Cloud deployment allows you to generate a publicly share-able QR code like the one generated in the above steps. This allows you to share your application with anyone using Appgyver.
+
+1. Select the 'Cloud' tab from the steroids connect page in your browser.
+2. Select 'Deploy to Cloud'
+3. Select 'Open Cloud Share Page'
+4. Scan the QR code provided at the resulting page
   - This link is shareable with everyone!
 
 ## Setting up Google API access
