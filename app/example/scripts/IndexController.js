@@ -81,17 +81,37 @@ angular
             });
         }
 
+        //Xin
         document.addEventListener('touchstart', handleTouchStart, false);
         document.addEventListener('touchmove', handleTouchMove, false);
 
+        //Xin
         var xDown = null;
         var yDown = null;
 
+        /** Xin
+         * isReminder checks if an event is a reminder
+         *
+         * takes an event as an input
+         * returns a boolean
+         *
+         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
+         * This function checks if an event has that reminder tag.
+         */
         function handleTouchStart(evt) {
             xDown = evt.touches[0].clientX;
             yDown = evt.touches[0].clientY;
         }
 
+        /** Xin
+         * isReminder checks if an event is a reminder
+         *
+         * takes an event as an input
+         * returns a boolean
+         *
+         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
+         * This function checks if an event has that reminder tag.
+         */
         function handleTouchMove(evt) {
             if ( ! xDown || ! yDown ) {
                 return;
@@ -118,26 +138,69 @@ angular
         }
 
 
-
+        /** Corey
+         * isReminder checks if an event is a reminder
+         *
+         * takes an event as an input
+         * returns a boolean
+         *
+         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
+         * This function checks if an event has that reminder tag.
+         */
         $scope.nextdate = function () {
             var currDate = new Date(Date.now() + getFutureDay(++dayCount));
             $scope.exampleDate = currDate;
         };
 
+        /** Corey
+         * isReminder checks if an event is a reminder
+         *
+         * takes an event as an input
+         * returns a boolean
+         *
+         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
+         * This function checks if an event has that reminder tag.
+         */
         $scope.prevdate = function () {
             var currDate = new Date(Date.now() + getFutureDay(--dayCount));
             $scope.exampleDate = currDate;
         };
 
+        /**
+         * isReminder checks if an event is a reminder
+         *
+         * takes an event as an input
+         * returns a boolean
+         *
+         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
+         * This function checks if an event has that reminder tag.
+         */
         $scope.isReminder = function(ev){
             return ev.summary.substr(0, 10) == '[reminder]';
         };
 
+        /** Greg
+         * isReminder checks if an event is a reminder
+         *
+         * takes an event as an input
+         * returns a boolean
+         *
+         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
+         * This function checks if an event has that reminder tag.
+         */
         $scope.isUntitled = function(ev){
             return ev.summary == null || ev.summary.substr(0,8) == 'undefined';
         };
 
-        //Add a suggestion to the events list at index i
+        /** Ding
+         * isReminder checks if an event is a reminder
+         *
+         * takes an event as an input
+         * returns a boolean
+         *
+         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
+         * This function checks if an event has that reminder tag.
+         */
         function addSuggestion(startTime, endTime, i, isHourLong) {
             var suggestion = {};
             suggestion.summary = "";
@@ -153,6 +216,15 @@ angular
             $scope.events.splice(i, 0, suggestion)
         }
 
+        /** Ding
+         * isReminder checks if an event is a reminder
+         *
+         * takes an event as an input
+         * returns a boolean
+         *
+         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
+         * This function checks if an event has that reminder tag.
+         */
         function makeSuggestion() {
             supersonic.logger.log('making suggestions');
             //this will manually insert a suggestion at 9 am if there are no events
@@ -279,6 +351,15 @@ angular
             }
         }
 
+        /** Ding
+         * isReminder checks if an event is a reminder
+         *
+         * takes an event as an input
+         * returns a boolean
+         *
+         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
+         * This function checks if an event has that reminder tag.
+         */
         function checkCurrent() {
             var i = 0;
             var ev;
@@ -297,6 +378,15 @@ angular
             }
         }
 
+        /** Cathy Jo
+         * isReminder checks if an event is a reminder
+         *
+         * takes an event as an input
+         * returns a boolean
+         *
+         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
+         * This function checks if an event has that reminder tag.
+         */
         $scope.sugg = [
             {"id": 0, "activity": 'Go for a run', "count": 0, "take": false, "hourLong": true},
             {"id": 1, "activity": 'Eat a Meal', "count": 0, "take": false, "hourLong": true},
@@ -307,27 +397,83 @@ angular
             {"id": 6, "activity": 'Free Time', "count": 0, "take": false, "hourLong": false}
         ];
 
+        /** Greg
+         * isReminder checks if an event is a reminder
+         *
+         * takes an event as an input
+         * returns a boolean
+         *
+         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
+         * This function checks if an event has that reminder tag.
+         */
         $scope.isNotHourLong = function (sug) {
             return !sug.hourLong;
         };
 
+        /** Greg
+         * isReminder checks if an event is a reminder
+         *
+         * takes an event as an input
+         * returns a boolean
+         *
+         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
+         * This function checks if an event has that reminder tag.
+         */
         $scope.greaterThanHour = function (ev) {
             return ev.greaterThanHour;
         };
 
+        /** Xin
+         * isReminder checks if an event is a reminder
+         *
+         * takes an event as an input
+         * returns a boolean
+         *
+         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
+         * This function checks if an event has that reminder tag.
+         */
         $scope.isActive = function (ev, id) {
             return ev.active === id;
         };
 
+        /** Xin
+         * isReminder checks if an event is a reminder
+         *
+         * takes an event as an input
+         * returns a boolean
+         *
+         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
+         * This function checks if an event has that reminder tag.
+         */
         $scope.setActive = function (ev, id) {
             ev.active = id;
         };
 
+        /** Ding
+         * isReminder checks if an event is a reminder
+         *
+         * takes an event as an input
+         * returns a boolean
+         *
+         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
+         * This function checks if an event has that reminder tag.
+         */
         $scope.toggle = function (ev) {
             ev.showOption = !ev.showOption;
         };
 
+        //Ding
         $scope.mySuggestion = {"summary":""};
+
+        /**
+         * isReminder checks if an event is a reminder
+         *
+         * takes an event as an input
+         * returns a boolean
+         *
+         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
+         * This function checks if an event has that reminder tag.
+         */
         $scope.addCalendarData = function (ev) {
             $scope.newEvent = {};
             if (ev.active == -2) {
@@ -349,10 +495,20 @@ angular
             $scope.mySuggestion.summary = "";
         };
 
+        //Xin
         $scope.hideReminder = false;
         $scope.chevron = "super-chevron-up";
         $scope.showOrHide = "Hide Reminders";
 
+        /** Xin
+         * isReminder checks if an event is a reminder
+         *
+         * takes an event as an input
+         * returns a boolean
+         *
+         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
+         * This function checks if an event has that reminder tag.
+         */
         $scope.switchButton = function () {
             if ($scope.hideReminder == false) {
                 $scope.hideReminder = true;
@@ -366,10 +522,19 @@ angular
             }
         };
 
-        $scope.titleInput = "";
+        //Chen
         $scope.numDays = "";
         $scope.eventTag = false;
 
+        /** Chen
+         * isReminder checks if an event is a reminder
+         *
+         * takes an event as an input
+         * returns a boolean
+         *
+         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
+         * This function checks if an event has that reminder tag.
+         */
         $scope.getEvent = function (ev) {
             $scope.eventTag = false;
             if (ev.summary.substring(0,10) == remindertag){
@@ -394,10 +559,28 @@ angular
             });
         };
 
+        /**Chen
+         * isReminder checks if an event is a reminder
+         *
+         * takes an event as an input
+         * returns a boolean
+         *
+         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
+         * This function checks if an event has that reminder tag.
+         */
         var confirm = {
             buttonLabels: ["Yes", "No"]
         };
 
+        /** Chen
+         * isReminder checks if an event is a reminder
+         *
+         * takes an event as an input
+         * returns a boolean
+         *
+         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
+         * This function checks if an event has that reminder tag.
+         */
         $scope.update = function () {
             if (new Date($scope.updateData.end.dateTime).getTime() >= new Date($scope.updateData.start.dateTime).getTime() ){
                 supersonic.ui.dialog.confirm("Are you sure you want to update this event?", confirm).then(function (index) {
@@ -410,6 +593,15 @@ angular
             }
         };
 
+        /** Chen
+         * isReminder checks if an event is a reminder
+         *
+         * takes an event as an input
+         * returns a boolean
+         *
+         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
+         * This function checks if an event has that reminder tag.
+         */
         $scope.updateEvent = function () {
             $scope.re = $scope.updateData;
             if($scope.re.summary.substring(0,10) == remindertag){
@@ -431,6 +623,15 @@ angular
             });
         };
 
+        /** Cat
+         * isReminder checks if an event is a reminder
+         *
+         * takes an event as an input
+         * returns a boolean
+         *
+         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
+         * This function checks if an event has that reminder tag.
+         */
         $scope.delete = function () {
             supersonic.ui.dialog.confirm("Are you sure you want to delete this event?", confirm).then(function (index) {
                 if (index == 0) {
@@ -439,6 +640,15 @@ angular
             });
         };
 
+        /** Chen
+         * isReminder checks if an event is a reminder
+         *
+         * takes an event as an input
+         * returns a boolean
+         *
+         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
+         * This function checks if an event has that reminder tag.
+         */
         $scope.deleteEvent = function () {
             $scope.requestevent = gapi.client.calendar.events.delete(
                 {'calendarId': 'primary', 'eventId': $scope.re.id});
@@ -450,6 +660,15 @@ angular
             });
         };
 
+        /** Xin
+         * isReminder checks if an event is a reminder
+         *
+         * takes an event as an input
+         * returns a boolean
+         *
+         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
+         * This function checks if an event has that reminder tag.
+         */
         $scope.undoButton = function () {
             if ($scope.mainPage == false && $scope.addPage == false) {
                 $scope.eventTag = false;
@@ -460,12 +679,30 @@ angular
             }
         };
 
+        /** Xin
+         * isReminder checks if an event is a reminder
+         *
+         * takes an event as an input
+         * returns a boolean
+         *
+         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
+         * This function checks if an event has that reminder tag.
+         */
         $scope.backButton = function () {
             $scope.mainPage = true;
             $scope.titleName = {name: 'Pocket Assistant', button: '', back: '', addBut: 'Add'};
             $scope.eventTag = false;
         };
 
+        /** Xin
+         * isReminder checks if an event is a reminder
+         *
+         * takes an event as an input
+         * returns a boolean
+         *
+         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
+         * This function checks if an event has that reminder tag.
+         */
         $scope.addButton = function () {
             if ($scope.mainPage == true) {
                 $scope.updateData = {"summary":'',"start":{"dateTime":''},"end":{"dateTime":''}};
@@ -475,7 +712,16 @@ angular
                 $scope.eventTag = false;
             }
         };
-        
+
+        /** Chen
+         * isReminder checks if an event is a reminder
+         *
+         * takes an event as an input
+         * returns a boolean
+         *
+         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
+         * This function checks if an event has that reminder tag.
+         */
         $scope.addEvent = function () {
             if (!$scope.updateData.start.dateTime | !$scope.updateData.summary | !$scope.updateData.end.dateTime | $scope.updateData.start.dateTime >= $scope.updateData.end.dateTime){
                 if(!$scope.updateData.summary){
@@ -504,6 +750,15 @@ angular
             }
         };
 
+        /** Chen
+         * isReminder checks if an event is a reminder
+         *
+         * takes an event as an input
+         * returns a boolean
+         *
+         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
+         * This function checks if an event has that reminder tag.
+         */
         $scope.addNewEvent = function(){
             if ($scope.eventTag == true){
                 supersonic.logger.log('adding reminder tag is needed');
@@ -525,6 +780,15 @@ angular
             });
         };
 
+        /** Ding
+         * isReminder checks if an event is a reminder
+         *
+         * takes an event as an input
+         * returns a boolean
+         *
+         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
+         * This function checks if an event has that reminder tag.
+         */
         $scope.updateEndTime = function(){
             if ($scope.addPage && !$scope.updateData.end.dateTime) {
                 var sTime = $scope.updateData.start.dateTime;
@@ -532,6 +796,15 @@ angular
             }
         };
 
+        /** Cathy
+         * isReminder checks if an event is a reminder
+         *
+         * takes an event as an input
+         * returns a boolean
+         *
+         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
+         * This function checks if an event has that reminder tag.
+         */
         function getTaggedEvents() {
             $scope.countdown = [];
             var todayDate = new Date(Date.now() + getFutureDay(dayCount));
@@ -577,6 +850,15 @@ angular
             });
         }
 
+        /** Cathy
+         * isReminder checks if an event is a reminder
+         *
+         * takes an event as an input
+         * returns a boolean
+         *
+         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
+         * This function checks if an event has that reminder tag.
+         */
         $scope.invisibleReminder = function(id) {
             for (var c in $scope.countdown) {
                 if ($scope.countdown[c].eventID == id) {
@@ -587,6 +869,15 @@ angular
             supersonic.logger.log($scope.countdown);
         };
 
+        /** Chen
+         * isReminder checks if an event is a reminder
+         *
+         * takes an event as an input
+         * returns a boolean
+         *
+         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
+         * This function checks if an event has that reminder tag.
+         */
         $scope.$watch('exampleDate',function() {
             var selectDate = $scope.exampleDate;
             selectDate.setHours(0, 0, 0, 0);
@@ -596,6 +887,15 @@ angular
             $scope.daycount = dayCount;
         });
 
+        /** Chen
+         * isReminder checks if an event is a reminder
+         *
+         * takes an event as an input
+         * returns a boolean
+         *
+         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
+         * This function checks if an event has that reminder tag.
+         */
         $scope.$watch('daycount',function(){
             $timeout(getCalendarData(),1000);
         })
