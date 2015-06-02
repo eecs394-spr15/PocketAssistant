@@ -120,12 +120,12 @@ angular
 
 
         $scope.nextdate = function () {
-            var currDate = new Date(Date.now() + getFutureDay(Math.floor(++dayCount)));
+            var currDate = new Date(Date.now() + getFutureDay(dayCount++));
             $scope.exampleDate = currDate;
         };
 
         $scope.prevdate = function () {
-            var currDate = new Date(Date.now() + getFutureDay(Math.floor(--dayCount)));
+            var currDate = new Date(Date.now() + getFutureDay(dayCount--));
             $scope.exampleDate = currDate;
         };
 
