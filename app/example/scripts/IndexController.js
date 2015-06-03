@@ -81,36 +81,33 @@ angular
             });
         }
 
-        //Xin
+        // Call two functions to handle the start of touch and moving of touch.
         document.addEventListener('touchstart', handleTouchStart, false);
         document.addEventListener('touchmove', handleTouchMove, false);
 
-        //Xin
+        // Initialize two variables to store the value before moving the finger of  X and Y axis.
         var xDown = null;
         var yDown = null;
 
-        /** Xin
-         * isReminder checks if an event is a reminder
+        /**
+         * handleTouchStart get the value before moving the finger of  X and Y axis.
          *
-         * takes an event as an input
-         * returns a boolean
+         * Takes an moving event as an input.
+         * Calculate and store the values of xDown and yDown.
          *
-         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
-         * This function checks if an event has that reminder tag.
+         * Get the coordinate value by using .clientX or .clientY of the first element in the touches array.
          */
         function handleTouchStart(evt) {
             xDown = evt.touches[0].clientX;
             yDown = evt.touches[0].clientY;
         }
 
-        /** Xin
-         * isReminder checks if an event is a reminder
+        /**
+         * handleTouchMove fulfill the function of switching date when you swipe the page.
          *
-         * takes an event as an input
-         * returns a boolean
+         * takes an moving event as an input
          *
-         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
-         * This function checks if an event has that reminder tag.
+         * call the function of $scope.nextdate when swipe left, call the function of $scope.prevdate when swipe right
          */
         function handleTouchMove(evt) {
             if ( ! xDown || ! yDown ) {
@@ -433,27 +430,25 @@ angular
             return ev.greaterThanHour;
         };
 
-        /** Xin
-         * isReminder checks if an event is a reminder
+        /**
+         * isActive checks if an event is already set to active
          *
-         * takes an event as an input
+         * takes an event and an id as an input
          * returns a boolean
          *
-         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
-         * This function checks if an event has that reminder tag.
+         * If you already select the suggestion, it will return true, if you click another suggestion return false.
          */
         $scope.isActive = function (ev, id) {
             return ev.active === id;
         };
 
-        /** Xin
-         * isReminder checks if an event is a reminder
+        /**
+         * setActive set an event to active
          *
-         * takes an event as an input
-         * returns a boolean
+         * takes a suggestion event and an id as an input
+         * set the active event represented by the event's id
          *
-         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
-         * This function checks if an event has that reminder tag.
+         * Set the suggestion to active once you click on the suggestion.
          */
         $scope.setActive = function (ev, id) {
             ev.active = id;
@@ -510,19 +505,18 @@ angular
             $scope.mySuggestion.summary = "";
         };
 
-        //Xin
+        //Initialize the variables to show all reminders at initial state
         $scope.hideReminder = false;
         $scope.chevron = "super-chevron-up";
         $scope.showOrHide = "Hide Reminders";
 
-        /** Xin
-         * isReminder checks if an event is a reminder
+        /**
+         * switchButton, show or hide reminders when you click it
          *
-         * takes an event as an input
-         * returns a boolean
+         * Get the current state to make a change of the button and show or hide the reminders
          *
-         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
-         * This function checks if an event has that reminder tag.
+         * Change the truth-value of ng-hide or ng-show based on the current state, and also change the direction of
+         * the chevron.
          */
         $scope.switchButton = function () {
             if ($scope.hideReminder == false) {
@@ -675,14 +669,13 @@ angular
             });
         };
 
-        /** Xin
-         * isReminder checks if an event is a reminder
+        /**
+         * undoButton reset all the values modified after entered the edit page
          *
-         * takes an event as an input
-         * returns a boolean
+         * Called when the Clear button is clicked.
          *
-         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
-         * This function checks if an event has that reminder tag.
+         * Use a ng-click to call this function, and first clear all the input values, and then call the getEvent
+         * function to get the initial value for the input
          */
         $scope.undoButton = function () {
             if ($scope.mainPage == false && $scope.addPage == false) {
@@ -694,14 +687,13 @@ angular
             }
         };
 
-        /** Xin
-         * isReminder checks if an event is a reminder
+        /**
+         * backButton goes to the home page
          *
-         * takes an event as an input
-         * returns a boolean
+         * Called when the Back button is clicked.
          *
-         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
-         * This function checks if an event has that reminder tag.
+         * Use a ng-click to call this function, and hide the edit page and show the main page by change the truth
+         * values of the ng-show or ng-hide.
          */
         $scope.backButton = function () {
             $scope.mainPage = true;
@@ -709,14 +701,13 @@ angular
             $scope.eventTag = false;
         };
 
-        /** Xin
-         * isReminder checks if an event is a reminder
+        /**
+         * addButton enter the Add an event page and user can add new event
          *
-         * takes an event as an input
-         * returns a boolean
+         * Called when the Add button is clicked.
          *
-         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
-         * This function checks if an event has that reminder tag.
+         * Use a ng-click to call this function, and hide the main page by set the $scope.mainPage to false, and enter
+         * a new page which can add new event
          */
         $scope.addButton = function () {
             if ($scope.mainPage == true) {
