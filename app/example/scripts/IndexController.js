@@ -179,17 +179,16 @@ angular
             return ev.summary.substr(0, 10) == '[reminder]';
         };
 
-        /** Greg
-         * isReminder checks if an event is a reminder
+        /**
+         * isUntitled checks if an event is untitled
          *
          * takes an event as an input
          * returns a boolean
          *
-         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
-         * This function checks if an event has that reminder tag.
+         * This function checks if an event's title, denoted by its summary attribute, is empty or undefined
          */
         $scope.isUntitled = function(ev){
-            return ev.summary == null || ev.summary.substr(0,8) == 'undefined';
+            return ev.summary == null || ev.summary == undefined || ev.summary == '';
         };
 
         /** Ding
@@ -397,27 +396,31 @@ angular
             {"id": 6, "activity": 'Free Time', "count": 0, "take": false, "hourLong": false}
         ];
 
-        /** Greg
-         * isReminder checks if an event is a reminder
+        /**
+         * isNotHourLong checks if a suggestion is designed for an hour long free block or a half hour long free block
          *
-         * takes an event as an input
+         * takes a suggestion from the $scope.sugg array as an input
          * returns a boolean
          *
-         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
-         * This function checks if an event has that reminder tag.
+         * Suggestions are stored in the $scope.sugg array. Suggestions are made during free blocks of either an hour
+         * or a half hour. This function will check if the suggestions hourLong attribute is true or not in order to
+         * determine whether the suggestion should be made in an hour long free block or a half hour long free block.
          */
         $scope.isNotHourLong = function (sug) {
             return !sug.hourLong;
         };
 
-        /** Greg
-         * isReminder checks if an event is a reminder
+        /**
+         * greaterThanHour checks if an event is an hour long or half an hour long
          *
          * takes an event as an input
          * returns a boolean
          *
-         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
-         * This function checks if an event has that reminder tag.
+         * All the free time in one's calendar is split into blocks of one hour or half an hour suggestions. In the
+         * html, we only display certain suggestions that fit into either the half hour blocks or the full hour blocks
+         * using an ng-show and an ng-hide. This function will check if an event that has been assigned to be a
+         * suggestion event is an hour long or a half hour long, based on that event's greaterThanHour attribute,
+         * in order to determine which suggestions to display and which to hide.
          */
         $scope.greaterThanHour = function (ev) {
             return ev.greaterThanHour;
