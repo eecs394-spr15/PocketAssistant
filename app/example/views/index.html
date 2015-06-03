@@ -3,10 +3,10 @@
     <link rel="stylesheet" href="styles/index.css">
 
     <super-navbar ng-show="cal">
-        <super-navbar-title ng-bind="titleName.name"></super-navbar-title>
-        <super-navbar-button side="right" ng-bind="titleName.button" ng-click="undoButton()"></super-navbar-button>
-        <super-navbar-button side="left" ng-bind="titleName.back" ng-click="backButton()"></super-navbar-button>
-        <super-navbar-button side="right" ng-bind="titleName.addBut" ng-click="addButton()"></super-navbar-button>
+        <super-navbar-title ng-bind="titleBar.name"></super-navbar-title>
+        <super-navbar-button side="right" ng-bind="titleBar.button" ng-click="undoButton()"></super-navbar-button>
+        <super-navbar-button side="left" ng-bind="titleBar.back" ng-click="backButton()"></super-navbar-button>
+        <super-navbar-button side="right" ng-bind="titleBar.addBut" ng-click="addButton()"></super-navbar-button>
     </super-navbar>
 
     <div ng-show="mainPage">

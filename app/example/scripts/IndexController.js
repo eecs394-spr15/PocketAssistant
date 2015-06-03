@@ -1,26 +1,77 @@
 angular
     .module('example')
     .controller('IndexController', function ($scope, supersonic,$timeout) {
-        var clientId = '792909163379-01odbc9kccakdhrhpgognar3d8idug0q.apps.googleusercontent.com';
-        var scopes = 'https://www.googleapis.com/auth/calendar';
-        var apiKey = 'AIzaSyAZkvW_yVrdUVEjrO7_DwFq2NidEkSEAoE';
-        $scope.authorized = 0;
-        $scope.mainPage = true;
-        $scope.titleName = {name: 'Pocket Assistant', button: '', back: '', addBut: 'Add'};
-        $scope.loading = false;
-        $scope.exampleDate = Date.now();
-        var remindertag = "[reminder]";
+        //------------------------------------------------------------------
+        //GOOGLE API CREDENTIALS
+        //------------------------------------------------------------------
 
+        // clientId is the Oauth Client ID for web applications
+        var clientId = '792909163379-01odbc9kccakdhrhpgognar3d8idug0q.apps.googleusercontent.com';
+
+        //scopes is the applications we wish to authenticate for. This scope allows for Calendar read/write access
+        var scopes = 'https://www.googleapis.com/auth/calendar';
+
+        //apiKey is the public API key for browser applications
+        var apiKey = 'AIzaSyAZkvW_yVrdUVEjrO7_DwFq2NidEkSEAoE';
+
+        //------------------------------------------------------------------
+        //SET DEFAULT FLAGS AND VARIABLES
+        //------------------------------------------------------------------
+
+        //flag representing whether or not we are on the main page
+        $scope.mainPage = true;
+
+        //Data structure holding the page header contents.
+        $scope.titleBar = {name: 'Pocket Assistant', button: '', back: '', addBut: 'Add'};
+
+        //flag denoting if calendar data is loading in order to show or hide the loading icon
+        $scope.loading = false;
+
+        //Date object representing the current date page on the calendar
+        $scope.calendarDate = Date.now();
+
+        //Number of days navigated forward or backward used to calculate calendar dates to load
+        var dayCount = 0;
+
+        //Text for reminder tag
+        var reminderTag = "[reminder]";
+
+        //------------------------------------------------------------------
+        //Google Calendar Authentication
+        //------------------------------------------------------------------
+
+        /**
+         * handleClientLoad sets the API Key and checks user authentication
+         *
+         * This function is called when the Authorization button is clicked. It sets the API key and calls checkAuth()
+         * It can also be called on client load for automatic authentication.
+         */
         $scope.handleClientLoad = function () {
-            // Step 2: Reference the API key
             gapi.client.setApiKey(apiKey);
             window.setTimeout(checkAuth, 1);
         };
 
+        /**
+         * checkAuth checks the users authorization in the background.
+         *
+         * This function attempts to log in an already-authorized user for google calendar use without popping up a
+         * confirmation box once it succeeds or fails, it passes control to the handleAuthResult function with an object
+         * representing the result of the request.
+         */
         function checkAuth() {
             gapi.auth.authorize({client_id: clientId, scope: scopes, immediate: true}, handleAuthResult);
         }
 
+
+        /**
+         * handleAuthResult validates the result of an authorization request and determines if it was succesful or not
+         *
+         * takes an authResult, which is JSON returned by the Google API representing the success or failure of the
+         * authorization request.
+         *
+         * If the authorization was successful, this makes the API call. Otherwise it tries to authenticate again with
+         * Google's popup confirmation using the handleAuthClick function
+         */
         function handleAuthResult(authResult) {
             var authorizeButton = document.getElementById('authorize-button');
             if (authResult && !authResult.error) {
@@ -32,20 +83,35 @@ angular
             }
         }
 
-        function handleAuthClick(event) {
+        /**
+         * handleAuthClick attempts to authorize with an authorization popup through google.
+         *
+         * when the popup is completed, passes control back to handleAuthResult with the success or failure of the authorization
+         */
+        function handleAuthClick() {
             // Step 3: get authorization to use private data
             gapi.auth.authorize({client_id: clientId, scope: scopes, immediate: false}, handleAuthResult);
             return false;
         }
 
+        /**
+         * makeAPICall removes the splash screen and loads the calendar API for data lodaing
+         *
+         * sets the background image css property to blank, then loads the calendar v3 API and returns control to
+         * getCalendarData once loaded.
+         */
         function makeApiCall() {
             document.body.style.background = "url()";
             gapi.client.load('calendar', 'v3', getCalendarData);
-            $scope.authorized = 1;
         }
 
-        var dayCount = 0;
 
+        /**
+         * getFutureDay gets the number of milliseconds in numDays days
+         *
+         * Takes a number of days
+         * returns the number of milliseconds in that many days
+         */
         function getFutureDay(numDays) {
             return (24 * 60 * 60 * 1000 * numDays);
         }
@@ -54,10 +120,8 @@ angular
             $scope.loading = true;
             //limit our query to events occurring today
             var currDate = new Date(Date.now() + getFutureDay(dayCount));
-            supersonic.logger.log('show currDate');
-            supersonic.logger.log(currDate);
             currDate.setHours(0, 0, 0, 0);
-            $scope.exampleDate=currDate;
+            $scope.calendarDate=currDate;
             $scope.today = currDate.toISOString();
             currDate.setHours(23, 59, 59, 999);
             $scope.tomorrow = currDate.toISOString();
@@ -149,7 +213,7 @@ angular
          */
         $scope.nextdate = function () {
             var currDate = new Date(Date.now() + getFutureDay(++dayCount));
-            $scope.exampleDate = currDate;
+            $scope.calendarDate = currDate;
         };
 
         /** Corey
@@ -163,7 +227,7 @@ angular
          */
         $scope.prevdate = function () {
             var currDate = new Date(Date.now() + getFutureDay(--dayCount));
-            $scope.exampleDate = currDate;
+            $scope.calendarDate = currDate;
         };
 
         /**
@@ -552,7 +616,7 @@ angular
          */
         $scope.getEvent = function (ev) {
             $scope.eventTag = false;
-            if (ev.summary.substring(0,10) == remindertag){
+            if (ev.summary.substring(0,10) == reminderTag){
                 $scope.eventTag = true;
             }
             $scope.updateData = {};
@@ -560,7 +624,7 @@ angular
             $scope.updateData.start = {dateTime: startTime};
             var endTime = new Date(ev.end.dateTime);
             $scope.updateData.end = {dateTime: endTime};
-            $scope.titleName = {name: 'Edit your event', button: 'Clear', back: 'Back', addBut: ''};
+            $scope.titleBar = {name: 'Edit your event', button: 'Clear', back: 'Back', addBut: ''};
             $scope.mainPage = false;
             $scope.addPage = false;
             $scope.evid = ev.id;
@@ -619,20 +683,20 @@ angular
          */
         $scope.updateEvent = function () {
             $scope.re = $scope.updateData;
-            if($scope.re.summary.substring(0,10) == remindertag){
+            if($scope.re.summary.substring(0,10) == reminderTag){
                 if($scope.eventTag == false) {
                     $scope.re.summary = $scope.re.summary.substr(10);
                 }}
             else{
                 if($scope.eventTag == true){
-                    $scope.re.summary = remindertag.concat($scope.re.summary);
+                    $scope.re.summary = reminderTag.concat($scope.re.summary);
                 }
             }
             $scope.requestevent = gapi.client.calendar.events.update(
                 {'calendarId': 'primary', 'eventId': $scope.re.id, 'resource': $scope.re});
             $scope.requestevent.execute(function (resp) {
                 $scope.mainPage = true;
-                $scope.titleName = {name: 'Pocket Assistant', button: '', back: '', addBut: 'Add'};
+                $scope.titleBar = {name: 'Pocket Assistant', button: '', back: '', addBut: 'Add'};
                 getCalendarData();
                 supersonic.ui.dialog.alert("Event Updated!");
             });
@@ -669,7 +733,7 @@ angular
                 {'calendarId': 'primary', 'eventId': $scope.re.id});
             $scope.requestevent.execute(function (resp) {
                 $scope.mainPage = true;
-                $scope.titleName = {name: 'Pocket Assistant', button: '', back: '', addBut: 'Add'};
+                $scope.titleBar = {name: 'Pocket Assistant', button: '', back: '', addBut: 'Add'};
                 getCalendarData();
                 supersonic.ui.dialog.alert("Event Deleted!");
             });
@@ -688,7 +752,7 @@ angular
             if ($scope.mainPage == false && $scope.addPage == false) {
                 $scope.eventTag = false;
                 $scope.getEvent($scope.re);
-                if($scope.re.summary.substring(0,10) == remindertag){
+                if($scope.re.summary.substring(0,10) == reminderTag){
                     $scope.eventTag = true;
                 }
             }
@@ -705,7 +769,7 @@ angular
          */
         $scope.backButton = function () {
             $scope.mainPage = true;
-            $scope.titleName = {name: 'Pocket Assistant', button: '', back: '', addBut: 'Add'};
+            $scope.titleBar = {name: 'Pocket Assistant', button: '', back: '', addBut: 'Add'};
             $scope.eventTag = false;
         };
 
@@ -722,7 +786,7 @@ angular
             if ($scope.mainPage == true) {
                 $scope.updateData = {"summary":'',"start":{"dateTime":''},"end":{"dateTime":''}};
                 $scope.mainPage = false;
-                $scope.titleName = {name: 'Add an event', button: '', back: 'Back', addBut: ''};
+                $scope.titleBar = {name: 'Add an event', button: '', back: 'Back', addBut: ''};
                 $scope.addPage = true;
                 $scope.eventTag = false;
             }
@@ -777,7 +841,7 @@ angular
         $scope.addNewEvent = function(){
             if ($scope.eventTag == true){
                 supersonic.logger.log('adding reminder tag is needed');
-                $scope.updateData.summary = remindertag.concat($scope.updateData.summary);
+                $scope.updateData.summary = reminderTag.concat($scope.updateData.summary);
             }
             $scope.newEvent = $scope.updateData;
             supersonic.logger.log($scope.updateData);
@@ -789,7 +853,7 @@ angular
                 supersonic.logger.log('Event Added');
                 $scope.mainPage = true;
                 $scope.addPage = false;
-                $scope.titleName = {name: 'Pocket Assistant', button: '', back: '', addBut: 'Add'};
+                $scope.titleBar = {name: 'Pocket Assistant', button: '', back: '', addBut: 'Add'};
                 getCalendarData();
                 supersonic.ui.dialog.alert('Event Added!');
             });
@@ -895,8 +959,8 @@ angular
          * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
          * This function checks if an event has that reminder tag.
          */
-        $scope.$watch('exampleDate',function() {
-            var selectDate = $scope.exampleDate;
+        $scope.$watch('calendarDate',function() {
+            var selectDate = $scope.calendarDate;
             selectDate.setHours(0, 0, 0, 0);
             var currDate = new Date();
             currDate.setHours(0, 0, 0, 0);
