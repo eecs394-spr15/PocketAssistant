@@ -191,14 +191,16 @@ angular
             return ev.summary == null || ev.summary == undefined || ev.summary == '';
         };
 
-        /** Ding
-         * isReminder checks if an event is a reminder
+        /**
+         * addSuggestion inserts a free time slot (as an event) into events array
          *
-         * takes an event as an input
-         * returns a boolean
+         * takes start time and end time of an event as inputs, as well as index i where the event is to be inserted to
+         * isHourLong is a boolean indicating length of the event
+         * no returns
          *
-         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
-         * This function checks if an event has that reminder tag.
+         * MakeSuggestion function below locates free time slots in a day;
+         * Then addSuggestion will be called to add a free time slot to events array
+         * A new-added slot won't be sent to google calender until a customer chooses or adds an activity for this slot.
          */
         function addSuggestion(startTime, endTime, i, isHourLong) {
             var suggestion = {};
@@ -215,162 +217,167 @@ angular
             $scope.events.splice(i, 0, suggestion)
         }
 
-        /** Ding
-         * isReminder checks if an event is a reminder
+        /**
+         * Suggesetion8to9 inserts a 8am-9am suggestion into events array by calling addSuggestion function.
          *
-         * takes an event as an input
-         * returns a boolean
+         * takes insertion place (index i) as an input
+         * nothing returned
          *
-         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
-         * This function checks if an event has that reminder tag.
+         * Code inside this function are used for multiple time by makeSuggestion function, so the function is created to simplify makeSuggestion.
+         */
+        function Suggestion8to9(i) {
+            var t = new Date(new Date($scope.today));
+            var startTime = new Date(t.setHours(8));
+            var endTime = new Date(t.setHours(9));
+            addSuggestion(startTime, endTime, i, 1);
+        }
+        /**
+         * Given all events in a day, makeSuggestion function locates 1-hour long and 30-minute long free time slots, and inserts these slots into the events array by calling addSuggestion.
+         *
+         * takes no inputs
+         * nothing returned
+         *
+         * This function looks for free time slots longer than 30 minutes between 8am to 10pm.
+         * The function considers all the possible schedules of events in a day,
+         * so a bunch of code is used to take care of special cases, such as a day without any event, a day with conflicting events, etc.
+         *
+         * The core for-loop in the function checks free time between event[i-1] and event[i], so for-loop ignores following possibilities:
+         * - free all day (no events in a day)
+         * - free time from 8am to event[0].start
+         * - free time from end time of the last event to 10pm
          */
         function makeSuggestion() {
-            supersonic.logger.log('making suggestions');
-            //this will manually insert a suggestion at 9 am if there are no events
+            //Special case: if there are no events in a day, this will manually insert a suggestion at 8 am
             if ($scope.events.length == 0) {
-                var t = new Date(new Date($scope.today));
-                var starttime = new Date(t.setHours(8));
-                var endtime = new Date(t.setHours(9));
-                addSuggestion(starttime, endtime, 0, 1);
+                Suggestion8to9(0);
             }
-
-            for (var i = 0; i < $scope.events.length; i++) {
+            //whether there is free time from 8am to event[0].start
+            var FirstEventStart = new Date($scope.events[0].start.dateTime);
+            if (FirstEventStart.getHours() >= 9) {
+                Suggestion8to9(0);
+            }
+            else if (FirstEventStart.getHours() == 8 && FirstEventStart.getMinutes() >=30){
+                var start8am = new Date(new Date($scope.today).setHours(8));
+                addSuggestion(start8am, FirstEventStart, 0, 0);
+            }
+            else if ($scope.events.length == 1) {
+                var prevEnd = new Date($scope.events[0].end.dateTime);
+            }
+            //The core for-loop checks free time between event[i-1] and event[i]
+            for (var i = 1; i < $scope.events.length; i++) {
                 var nextStart = new Date($scope.events[i].start.dateTime);
-                var nextETime = nextStart.getTime();
-
-                if (i == 0) {
-                    if (nextStart.getHours() >= 9) {
-                        var t = new Date(new Date($scope.today));
-                        var starttime = new Date(t.setHours(8));
-                        var endtime = new Date(t.setHours(9));
-                        addSuggestion(starttime, endtime, i, 1);
-                    }
-                    else if ($scope.events.length == 1) {
-                        var prevEnd = new Date($scope.events[0].end.dateTime);
-                    }
-                    continue;
-                }
-
                 var prevEnd = new Date($scope.events[i - 1].end.dateTime);
-                var prevETime = prevEnd.getTime();
+                //Special case: event[i-1] ends before 8am, but a suggestion will not be made until 8am
+                if (prevEnd.getHours() <=7){
+                    prevEnd = new Date(new Date($scope.today).setHours(8));
+                }
+                //Special case: event[i-2] covers event[i-1]
                 if (i > 1){
                     var prevEnd2 = new Date($scope.events[i - 2].end.dateTime);
-                    var prevETime2 = prevEnd2.getTime();
-                    if (prevETime2 > prevETime) {
-                        prevETime = prevETime2;
-                        prevEnd = new Date($scope.events[i - 2].end.dateTime);
+                    if (prevEnd2 > prevEnd) {
+                        prevEnd = new Date(prevEnd2);
                     }
                 }
-
-                while (nextETime - prevETime >= 3600000) {
-                    var currStart = new Date(prevETime);
-                    var currEnd = new Date(prevETime + 3600000);
-                    if (currStart.getHours()>7 && currEnd.getHours() < 22) {
-                        addSuggestion(currStart, currEnd, i, 1);
+                //while-loop makes 1-hour suggestions between event[i-1].end and event[i].start
+                while (nextStart - prevEnd >= 3600000) {
+                    var currEnd = new Date(prevEnd.getTime() + 3600000);
+                    if (currEnd.getHours() < 22) {
+                        addSuggestion(prevEnd, currEnd, i, 1);
                         i += 1;
                         prevEnd = currEnd;
-                        prevETime = prevEnd.getTime();
-                    }
-                    else if (currStart.getHours() <= 7) {
-                        var t = new Date(new Date($scope.today));
-                        var currStart = new Date(t.setHours(8));
-                        var currEnd = new Date(t.setHours(9));
-                        addSuggestion(currStart, currEnd, i, 1);
-                        i += 1;
-                        prevEnd = currEnd;
-                        prevETime = prevEnd.getTime();
                     }
                     else {
                         break;
                     }
                 }
-
-                if (nextETime - prevETime >= 1800000) {
+                //make a half-hour suggestion if the interval lasts 30mins to 60 mins.
+                if (nextStart - prevEnd >= 1800000) {
                     if (nextStart.getHours() < 22) {
                         addSuggestion(prevEnd, nextStart, i, 0);
                     }
                     else {
-                        var t = new Date(new Date($scope.today));
-                        var currEnd = new Date(t.setHours(22));
-                        var currETime = currEnd.getTime();
-                        if (currETime - prevETime >= 1800000) {
-                            var currEnd = new Date(currETime);
+                        var currEnd = new Date(new Date($scope.today).setHours(22));
+                        if (currEnd - prevEnd >= 1800000) {
                             addSuggestion(prevEnd, currEnd, i, 0);
                         }
                     }
                 }
             }
-
+            //Code below is to find free time from end time of the last event to 10pm
             var lastEnd = new Date($scope.events[$scope.events.length - 1].end.dateTime);
-            if (lastEnd.getHours() <= 7){
-                var t = new Date(new Date($scope.today));
-                var lastEnd = new Date(t.setHours(8));
-                var newEnd = new Date(t.setHours(9));
-                addSuggestion(lastEnd, newEnd, $scope.events.length, 1);
-                lastEnd = newEnd;
+            if (prevEnd > lastEnd) {
+                lastEnd = new Date(prevEnd);
             }
-            if (lastEnd.getHours() < 21){
-                if (prevEnd.getTime() > lastEnd.getTime()) {
-                    lastEnd = new Date(prevEnd);
-                }
+            //Special case: last event is an early morning event ending before 8am
+            if (lastEnd.getHours() <= 7){
+                Suggestion8to9($scope.events.length);
+                lastEnd = new Date(new Date($scope.today).setHours(9));
             }
             while (lastEnd.getHours() < 21) {
                 var newEnd = new Date(lastEnd.getTime() + 3600000);
                 addSuggestion(lastEnd, newEnd, $scope.events.length, 1);
                 lastEnd = newEnd;
             }
+            //make a half-hour suggestion if the last event ends between 9pm to 9:30pm
             if (lastEnd.getHours() < 22 && lastEnd.getMinutes() <= 30) {
-                var t = new Date(new Date($scope.today));
-                newEnd = new Date(t.setHours(22));
+                newEnd = new Date(new Date($scope.today).setHours(22));
                 addSuggestion(lastEnd, newEnd, $scope.events.length, 0);
             }
         }
 
+        /**
+         * checkConflict checks if an event has time conflict with other events
+         *
+         * takes no inputs
+         * nothing returned
+         *
+         * A user is supposed to be shown conflicting events when opening the app.
+         * This function iterates $scope.events array to check each event.
+         */
         function checkConflict() {
+            var event1 = $scope.events[0];
+            event1.conflict = 0;
+            var event2;
             var i = 1;
-            var ev;
-            var eventA = $scope.events[0];
-            eventA.conflict = 0;
             while (i < $scope.events.length) {
-                ev = $scope.events[i];
-                ev.conflict = 0;
-                var thatEnd = new Date(eventA.end.dateTime);
-                var thisStart = new Date(ev.start.dateTime);
-                if (thatEnd.getTime() > thisStart.getTime()) {
-                    if (eventA.conflict == 3) {
-                        eventA.conflict = 2;
+                event2 = $scope.events[i];
+                event2.conflict = 0;
+                var event1End = new Date(event1.end.dateTime);
+                var event2Start = new Date(event2.start.dateTime);
+                // If an event has time conflict with other events, its 'conflict' attribute will be set to a positive number.
+                // Specific values 1, 2 and 3 are used for styling
+                if (event1End > event2Start) {
+                    event2.conflict = 3;
+                    if (event1.conflict == 3) {
+                        event1.conflict = 2;
                     }
                     else{
-                        eventA.conflict = 1;
+                        event1.conflict = 1;
                     }
-                    ev.conflict = 3;
                 }
-                eventA = ev;
+                event1 = event2;
                 i += 1;
             }
         }
 
-        /** Ding
-         * isReminder checks if an event is a reminder
+        /**
+         * checkCurrent looks for event that is currently ongoing.
          *
-         * takes an event as an input
-         * returns a boolean
+         * takes no inputs
+         * nothing returned
          *
-         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
-         * This function checks if an event has that reminder tag.
+         * A user is supposed to be shown which event is currently ongoing when opening the app.
+         * This function iterates $scope.events array to check each event.
          */
         function checkCurrent() {
             var i = 0;
-            var ev;
-            var thisStart;
-            var thisEnd;
             var currentTime = new Date();
             while (i < $scope.events.length) {
-                ev = $scope.events[i];
+                var ev = $scope.events[i];
                 ev.current = false;
-                thisStart = new Date(ev.start.dateTime);
-                thisEnd = new Date(ev.end.dateTime);
-                if (currentTime.getTime() >= thisStart.getTime() && currentTime.getTime() <= thisEnd.getTime()) {
+                var evStart = new Date(ev.start.dateTime);
+                var evEnd = new Date(ev.end.dateTime);
+                if (currentTime >= evStart && currentTime <= evEnd) {
                     ev.current = true;
                 }
                 i += 1;
@@ -452,33 +459,36 @@ angular
             ev.active = id;
         };
 
-        /** Ding
-         * isReminder checks if an event is a reminder
+        /**
+         * toggle shows or hides activity list
          *
-         * takes an event as an input
-         * returns a boolean
+         * takes an event (actually is a free time slot inserted by addSuggestion function) as an input
+         * no return
          *
-         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
-         * This function checks if an event has that reminder tag.
+         * The suggested activities are shown when showOption attribute of an event is true.
+         * This function will be called when the three-line button on an event is clicked.
          */
         $scope.toggle = function (ev) {
             ev.showOption = !ev.showOption;
         };
 
-        //Ding
+        // mySuggestion binds to an activity title input by a user; ng-model is used
         $scope.mySuggestion = {"summary":""};
 
         /**
-         * isReminder checks if an event is a reminder
+         * addCalendarData adds an activity into google calendar
          *
-         * takes an event as an input
-         * returns a boolean
+         * takes a free-time event as an input
+         * no return
          *
-         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
-         * This function checks if an event has that reminder tag.
+         * After an activity is selected/input and 'Add' button is clicked, the activity should be sent to google calendar as a new event.
+         * Its start/end time is same as start/end time of the free time slot to which the activity is added.
+         * This function creates a variable $scope.newEvent to store info of the activity and inserts $scope.newEvent to google calendar.
          */
         $scope.addCalendarData = function (ev) {
             $scope.newEvent = {};
+            //'ev.active is -2' means the input row in the activity list is highlighted, so newEvent's title should take the input.
+            //otherwise, newEvent's title should be the name of activity that is selected
             if (ev.active == -2) {
                 $scope.newEvent.summary = $scope.mySuggestion.summary;}
             else {
@@ -493,6 +503,8 @@ angular
             request.execute(function (resp) {
                 getCalendarData();
             });
+            //True addedEvent indicates an activity has been added to this free time slot
+            //This attribute is used to show/hide a free time slot.
             ev.addedEvent = true;
             ev.showOption = !ev.showOption;
             $scope.mySuggestion.summary = "";
@@ -783,14 +795,14 @@ angular
             });
         };
 
-        /** Ding
-         * isReminder checks if an event is a reminder
+        /**
+         * updateEndTime sets the default end time of a new event to be its start time when an event is being created
          *
-         * takes an event as an input
-         * returns a boolean
+         * takes no inputs
+         * no returns
          *
-         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
-         * This function checks if an event has that reminder tag.
+         * The earliest end time of an event is its start time.
+         * For user convenience, this function updates the end time to be start time if the end time has not been set
          */
         $scope.updateEndTime = function(){
             if ($scope.addPage && !$scope.updateData.end.dateTime) {
@@ -831,6 +843,7 @@ angular
             eventList.execute(function(resp) {
                 var events = resp.items;
                 supersonic.logger.log(events);
+                var passedReminder = 0;
                 for (var i in events) {
                     var evHours = parseInt(events[i].start.dateTime.substr(11, 2));
                     var dayleft = Math.floor((new Date(events[i].start.dateTime)-todayDate)/(24 * 60 * 60 * 1000));
@@ -843,12 +856,13 @@ angular
                         'eventID': events[i].id,
                         'visible': true
                     };
-                    if (!metadata.daysUntil && metadata.hrsUntil < 0) {
+                    if (!metadata.untilToday && !metadata.daysUntil && metadata.hrsUntil < 0) {
                         metadata.visible = false;
+                        passedReminder += 1;
                     }
                     $scope.countdown.push(metadata);
                 }
-                $scope.visibleReminders = $scope.countdown.length;
+                $scope.visibleReminders = $scope.countdown.length - passedReminder;
                 $scope.loading = false;
             });
         }
