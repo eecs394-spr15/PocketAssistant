@@ -116,16 +116,27 @@ angular
             return (24 * 60 * 60 * 1000 * numDays);
         }
 
+
+        /**
+         * getCalendarData gets the current day's events from your google calendar
+         *
+         * it gets events that start after midnight today, and end before 11:59:59:9999 today and responds with them in an
+         * array ordered by start time. Once this response is completed, the events are parsed, suggestions are made, and
+         * reminders are gathered.
+         */
         function getCalendarData() {
             $scope.loading = true;
             //limit our query to events occurring today
             var currDate = new Date(Date.now() + getFutureDay(dayCount));
             currDate.setHours(0, 0, 0, 0);
+
             $scope.calendarDate=currDate;
             $scope.today = currDate.toISOString();
             currDate.setHours(23, 59, 59, 999);
+
             $scope.tomorrow = currDate.toISOString();
             $scope.date = currDate.getDate();
+
             var request = gapi.client.calendar.events.list({
                 'calendarId': 'primary',
                 'timeMin': $scope.today,
@@ -138,9 +149,17 @@ angular
                 //When Google Calendar Data is loaded, display it
                 $scope.cal = true;
                 $scope.events = resp.items;
+
+                //make suggestions based on events
                 makeSuggestion();
+
+                //find the current event
                 checkCurrent();
+
+                //check for conflicting events
                 checkConflict();
+
+                //find all reminders
                 getTaggedEvents();
             });
         }
@@ -202,28 +221,19 @@ angular
         }
 
 
-        /** Corey
-         * isReminder checks if an event is a reminder
+        /**
+         * nextdate advances the calendar view forwards 1 day
          *
-         * takes an event as an input
-         * returns a boolean
-         *
-         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
-         * This function checks if an event has that reminder tag.
+         * Calculates the date to load using the current date and the day offset stored in dayCount
          */
         $scope.nextdate = function () {
-            var currDate = new Date(Date.now() + getFutureDay(++dayCount));
-            $scope.calendarDate = currDate;
+            $scope.calendarDate =  new Date(Date.now() + getFutureDay(++dayCount));
         };
 
-        /** Corey
-         * isReminder checks if an event is a reminder
+        /**
+         * prevdate moves the calendar view back 1 day
          *
-         * takes an event as an input
-         * returns a boolean
-         *
-         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
-         * This function checks if an event has that reminder tag.
+         * Calculates the date to load using the current date and the day offset stored in dayCount
          */
         $scope.prevdate = function () {
             var currDate = new Date(Date.now() + getFutureDay(--dayCount));
