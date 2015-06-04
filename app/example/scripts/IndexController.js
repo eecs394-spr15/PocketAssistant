@@ -853,14 +853,21 @@ angular
             }
         };
 
-        /** Cathy
-         * isReminder checks if an event is a reminder
+        /**
+         * getTaggedEvents searches user's calendar for events with '[reminder]' tag in summary attribute, pushes
+         * queried events to 'countdown' array and calculates days/hours until event occurs
          *
-         * takes an event as an input
-         * returns a boolean
+         * Takes no arguments
+         * Retrieves date currently being viewed by the user and present time of day ('hr')
+         * Queries the user's calendar for all events with '[reminder]' tag (set to be in summary attribute, but
+         * if elsewhere found, will also return those events)
          *
-         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
-         * This function checks if an event has that reminder tag.
+         * Retrieves date/time information from queried events and calculates time difference between event and the date
+         * currently in view by the user
+         * Checks whether reminder has already passed date in view and hides reminder if so
+         *
+         * Populates 'countdown' array with reminders
+         * Adjusts 'visibleReminders' count for display purposes (text displayed when reminders area is collapsed)
          */
         function getTaggedEvents() {
             $scope.countdown = [];
@@ -916,6 +923,7 @@ angular
          *
          * Takes event id as input and finds event within array of reminders
          * Sets 'visible' attribute to false to hide reminder and adjusts count of 'visibleReminders' for display purposes
+         * (text displayed when reminders area is collapsed)
          */
         $scope.setReminderToHidden = function(id) {
             for (var c in $scope.countdown) {
