@@ -51,7 +51,7 @@
                                     {{c.title}}
                                     <span ng-if="c.daysUntil > 1">in {{c.daysUntil}} days</span>
                                     <span ng-if="c.daysUntil == 1">in {{c.daysUntil}} day</span>
-                                    <span ng-if="c.untilToday != 0 && c.daysUntil == 0">TODAY!</span>
+                                    <span ng-if="c.untilToday != 0 && c.daysUntil == 0">is TODAY!</span>
                                     <span ng-if="c.untilToday == 0 && c.daysUntil == 0 && c.hrsUntil >= 0">in {{c.hrsUntil}} hours</span>
                                 </div>
                                 <div class="col col-25 col-offset-10">
