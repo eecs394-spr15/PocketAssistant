@@ -605,18 +605,18 @@ angular
             }
         };
 
-        //Chen
-        $scope.numDays = "";
+        //initialize numDays and clear eventTag to not set an event to be a reminder at the beginning
+       // $scope.numDays = "";
         $scope.eventTag = false;
 
-        /** Chen
-         * isReminder checks if an event is a reminder
+        /**
+         * getEvent pull an event from your calendar with it's event id
          *
          * takes an event as an input
-         * returns a boolean
          *
-         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
-         * This function checks if an event has that reminder tag.
+         * This function will check if this event is a reminder first.
+         * Then it will show edit page, and initial event information like summary, location, and etc.on this page.
+         *
          */
         $scope.getEvent = function (ev) {
             $scope.eventTag = false;
@@ -642,27 +642,17 @@ angular
             });
         };
 
-        /**Chen
-         * isReminder checks if an event is a reminder
-         *
-         * takes an event as an input
-         * returns a boolean
-         *
-         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
-         * This function checks if an event has that reminder tag.
-         */
+
+        //confirm is a prompt to give user two options as yes or no to confirm an action to delete, update or add an event
         var confirm = {
             buttonLabels: ["Yes", "No"]
         };
 
-        /** Chen
-         * isReminder checks if an event is a reminder
+        /**
+         * update is a function to update an event after user confirm 'yes'
          *
-         * takes an event as an input
-         * returns a boolean
-         *
-         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
-         * This function checks if an event has that reminder tag.
+         *  When user click update button on edit page, a prompt will pop out to ask user to confirm this update. If user choose 'yes',
+         *  event will be updated.
          */
         $scope.update = function () {
             if (new Date($scope.updateData.end.dateTime).getTime() >= new Date($scope.updateData.start.dateTime).getTime() ){
@@ -676,14 +666,12 @@ angular
             }
         };
 
-        /** Chen
-         * isReminder checks if an event is a reminder
+        /**
+         * updateEvent update an event on edit page to your google calendar
          *
-         * takes an event as an input
-         * returns a boolean
-         *
-         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
-         * This function checks if an event has that reminder tag.
+         * Event should be checked if it should be added or deleted a reminder tag at first.If event is not a reminder and reminder toggle is set,reminder
+         * tag should be added to event summary. If event is a reminder and reminder toggle is clear, tag should be removed as we cut the summary string.
+         * After event updated,getCalendarData function will be called to refresh event list.An alert will pop out and main page will show.
          */
         $scope.updateEvent = function () {
             $scope.re = $scope.updateData;
@@ -723,14 +711,11 @@ angular
             });
         };
 
-        /** Chen
-         * isReminder checks if an event is a reminder
+        /**
+         * deleteEvent delete an event currently on edit page from your calendar
          *
-         * takes an event as an input
-         * returns a boolean
-         *
-         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
-         * This function checks if an event has that reminder tag.
+         * Google api will be called to delete an event with it's id.After event deleted,,getCalendarData function will be
+         * called to refresh calendar list..An alert will pop out to notify event deleted, and main page will show.
          */
         $scope.deleteEvent = function () {
             $scope.requestevent = gapi.client.calendar.events.delete(
@@ -793,14 +778,13 @@ angular
             }
         };
 
-        /** Chen
-         * isReminder checks if an event is a reminder
+        /**
+         * addEvent is a function to add an event after user confirm 'yes'
          *
-         * takes an event as an input
-         * returns a boolean
-         *
-         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
-         * This function checks if an event has that reminder tag.
+         *  When user click add button on Add event page,it will check several conditions first, like if the summary of event is null,
+         *  or if start time and end time are be added. Then, user will be alerted with corresponding information
+         *  If this event is ready to be added, a prompt will pop out to ask user to confirm this add. If user choose 'yes',
+         *  event will be updated.If choosing 'no',no action.
          */
         $scope.addEvent = function () {
             if (!$scope.updateData.start.dateTime | !$scope.updateData.summary | !$scope.updateData.end.dateTime | $scope.updateData.start.dateTime >= $scope.updateData.end.dateTime){
@@ -830,14 +814,11 @@ angular
             }
         };
 
-        /** Chen
-         * isReminder checks if an event is a reminder
+        /**
+         * addNewEvent add a new event to your google calendar
          *
-         * takes an event as an input
-         * returns a boolean
-         *
-         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
-         * This function checks if an event has that reminder tag.
+         * Event should be checked if it need a reminder tag at first.If reminder toggle is set,reminder tag should be added to event summary.
+         * After event is added,event list will be refreshed.An alert will pop out to notify event adeed and main page will show.
          */
         $scope.addNewEvent = function(){
             if ($scope.eventTag == true){
@@ -951,14 +932,11 @@ angular
             supersonic.logger.log($scope.countdown);
         };
 
-        /** Chen
-         * isReminder checks if an event is a reminder
+        /**
+         * $watch used to watch every change of 'calendarDate' value
          *
-         * takes an event as an input
-         * returns a boolean
-         *
-         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
-         * This function checks if an event has that reminder tag.
+         * calendarDate is a ng-model value binding to date in calendar picker on the top of the main page. Every time user selects a date in calendar picker,
+         * it will re-calculate dayCount value as the difference between current date and selected date, which will be used to show correct events on selected date
          */
         $scope.$watch('calendarDate',function() {
             var selectDate = $scope.calendarDate;
@@ -969,14 +947,11 @@ angular
             $scope.daycount = dayCount;
         });
 
-        /** Chen
-         * isReminder checks if an event is a reminder
+        /**
+         * $watch used to watch every change of 'dayCount' value
          *
-         * takes an event as an input
-         * returns a boolean
-         *
-         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
-         * This function checks if an event has that reminder tag.
+         * Whenever daycount is changed,getCalendarData will be called to refresh event list to show events on selected date.
+         * Attribute $timeout is used to delay the function call, in case user will change the date too fast in calendar picker to cause problems.
          */
         $scope.$watch('daycount',function(){
             $timeout(getCalendarData(),1000);
