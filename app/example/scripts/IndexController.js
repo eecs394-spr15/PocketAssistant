@@ -605,8 +605,7 @@ angular
             }
         };
 
-        //initialize numDays and clear eventTag to not set an event to be a reminder at the beginning
-       // $scope.numDays = "";
+        //initialize clear eventTag to not set an event to be a reminder at the beginning
         $scope.eventTag = false;
 
         /**
