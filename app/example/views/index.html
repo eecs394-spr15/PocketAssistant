@@ -55,7 +55,7 @@
                                     <span ng-if="c.untilToday == 0 && c.daysUntil == 0 && c.hrsUntil >= 0">in {{c.hrsUntil}} hours</span>
                                 </div>
                                 <div class="col col-25 col-offset-10">
-                                    <button ng-click="invisibleReminder(c.eventID)"
+                                    <button ng-click="setReminderToHidden(c.eventID)"
                                             class="button button-icon super-android-close" style="margin-top:-10px">
                                     </button>
                                 </div>

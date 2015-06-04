@@ -455,14 +455,13 @@ angular
             }
         }
 
-        /** Cathy Jo
-         * isReminder checks if an event is a reminder
+        /**
+         * sugg array holds attributes of suggestions from suggestion drop-down menu
          *
-         * takes an event as an input
-         * returns a boolean
+         * Drop-down menu displays when user clicks navicon (three line icon) to the right of empty time slots
          *
-         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
-         * This function checks if an event has that reminder tag.
+         * id: order of appearance in drop down menu, activity: title, count: , take: whether user chooses option,
+         * hourLong: time duration of activity
          */
         $scope.sugg = [
             {"id": 0, "activity": 'Go for a run', "count": 0, "take": false, "hourLong": true},
@@ -693,14 +692,12 @@ angular
             });
         };
 
-        /** Cat
-         * isReminder checks if an event is a reminder
+        /**
+         * delete event confirms with user the deletion of a calendar event
          *
-         * takes an event as an input
-         * returns a boolean
-         *
-         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
-         * This function checks if an event has that reminder tag.
+         * Called when user clicks 'Delete' from edit page
+         * Takes no input
+         * If user confirms, calls 'deleteEvent' function
          */
         $scope.delete = function () {
             supersonic.ui.dialog.confirm("Are you sure you want to delete this event?", confirm).then(function (index) {
@@ -912,16 +909,15 @@ angular
             });
         }
 
-        /** Cathy
-         * isReminder checks if an event is a reminder
+        /**
+         * setReminderToHidden allows user to hide a reminder from view without deleting the reminder
          *
-         * takes an event as an input
-         * returns a boolean
+         * Called when user clicks "X" on reminder event bar
          *
-         * Reminders are denoted by a text tag of [reminder] at the beginning of their title (the summary attribute).
-         * This function checks if an event has that reminder tag.
+         * Takes event id as input and finds event within array of reminders
+         * Sets 'visible' attribute to false to hide reminder and adjusts count of 'visibleReminders' for display purposes
          */
-        $scope.invisibleReminder = function(id) {
+        $scope.setReminderToHidden = function(id) {
             for (var c in $scope.countdown) {
                 if ($scope.countdown[c].eventID == id) {
                     $scope.countdown[c].visible = false;
