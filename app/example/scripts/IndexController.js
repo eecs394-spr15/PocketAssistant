@@ -1,6 +1,6 @@
 angular
     .module('example')
-    .controller('IndexController', function ($scope, supersonic,$timeout) {
+    .controller('IndexController', function ($scope, supersonic, $timeout) {
         //------------------------------------------------------------------
         //GOOGLE API CREDENTIALS
         //------------------------------------------------------------------
