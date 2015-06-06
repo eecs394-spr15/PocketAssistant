@@ -2,7 +2,9 @@
   "name": "PocketAssistant",
   "version": "0.0.0",
   "private": true,
-  "dependencies": {},
+  "dependencies": {
+    "karma": "^0.12.36"
+  },
   "devDependencies": {
     "grunt-steroids": "1.x"
   }
