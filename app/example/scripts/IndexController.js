@@ -166,7 +166,27 @@ angular
             });
         }
 
-        $scope.Mock_events = {"kind":"calendar#events","etag":"\"1433436564831000\"","summary":"teambrown394@gmail.com","updated":"2015-06-04T16:49:24.831Z","timeZone":"America/Chicago","accessRole":"owner","defaultReminders":[{"method":"popup","minutes":30}],"items":[{"kind":"calendar#event","etag":"\"2866763623246000\"","id":"kqjhaugb2mkfmo7ddd8ngen50g","status":"confirmed","htmlLink":"https://www.google.com/calendar/event?eid=a3FqaGF1Z2IybWtmbW83ZGRkOG5nZW41MGcgdGVhbWJyb3duMzk0QG0","created":"2015-05-29T04:21:18.000Z","updated":"2015-06-04T01:36:51.623Z","summary":"Go for a run","colorId":"11","creator":{"email":"teambrown394@gmail.com","displayName":"Team Brown","self":true},"organizer":{"email":"teambrown394@gmail.com","displayName":"Team Brown","self":true},"start":{"dateTime":"2015-06-07T06:30:00-05:00"},"end":{"dateTime":"2015-06-07T07:30:00-05:00"},"iCalUID":"kqjhaugb2mkfmo7ddd8ngen50g@google.com","sequence":1,"reminders":{"useDefault":true}},{"kind":"calendar#event","etag":"\"2866763806744000\"","id":"gego598smdlf2d0ffm468i4oqc","status":"confirmed","htmlLink":"https://www.google.com/calendar/event?eid=Z2VnbzU5OHNtZGxmMmQwZmZtNDY4aTRvcWMgdGVhbWJyb3duMzk0QG0","created":"2015-06-04T01:38:23.000Z","updated":"2015-06-04T01:38:23.372Z","summary":"shopping with mom","creator":{"email":"teambrown394@gmail.com","displayName":"Team Brown","self":true},"organizer":{"email":"teambrown394@gmail.com","displayName":"Team Brown","self":true},"start":{"dateTime":"2015-06-07T14:00:00-05:00"},"end":{"dateTime":"2015-06-07T17:00:00-05:00"},"iCalUID":"gego598smdlf2d0ffm468i4oqc@google.com","sequence":0,"reminders":{"useDefault":true}},{"kind":"calendar#event","etag":"\"2866763761026000\"","id":"j80kcdm5jv6vq6pulpelqfdvms","status":"confirmed","htmlLink":"https://www.google.com/calendar/event?eid=ajgwa2NkbTVqdjZ2cTZwdWxwZWxxZmR2bXMgdGVhbWJyb3duMzk0QG0","created":"2015-06-04T01:37:53.000Z","updated":"2015-06-04T01:38:00.513Z","summary":"Emily's birthday party","colorId":"4","creator":{"email":"teambrown394@gmail.com","displayName":"Team Brown","self":true},"organizer":{"email":"teambrown394@gmail.com","displayName":"Team Brown","self":true},"start":{"dateTime":"2015-06-07T21:00:00-05:00"},"end":{"dateTime":"2015-06-07T22:00:00-05:00"},"iCalUID":"j80kcdm5jv6vq6pulpelqfdvms@google.com","sequence":0,"reminders":{"useDefault":true}}],"result":{"kind":"calendar#events","etag":"\"1433436564831000\"","summary":"teambrown394@gmail.com","updated":"2015-06-04T16:49:24.831Z","timeZone":"America/Chicago","accessRole":"owner","defaultReminders":[{"method":"popup","minutes":30}],"items":[{"kind":"calendar#event","etag":"\"2866763623246000\"","id":"kqjhaugb2mkfmo7ddd8ngen50g","status":"confirmed","htmlLink":"https://www.google.com/calendar/event?eid=a3FqaGF1Z2IybWtmbW83ZGRkOG5nZW41MGcgdGVhbWJyb3duMzk0QG0","created":"2015-05-29T04:21:18.000Z","updated":"2015-06-04T01:36:51.623Z","summary":"Go for a run","colorId":"11","creator":{"email":"teambrown394@gmail.com","displayName":"Team Brown","self":true},"organizer":{"email":"teambrown394@gmail.com","displayName":"Team Brown","self":true},"start":{"dateTime":"2015-06-07T06:30:00-05:00"},"end":{"dateTime":"2015-06-07T07:30:00-05:00"},"iCalUID":"kqjhaugb2mkfmo7ddd8ngen50g@google.com","sequence":1,"reminders":{"useDefault":true}},{"kind":"calendar#event","etag":"\"2866763806744000\"","id":"gego598smdlf2d0ffm468i4oqc","status":"confirmed","htmlLink":"https://www.google.com/calendar/event?eid=Z2VnbzU5OHNtZGxmMmQwZmZtNDY4aTRvcWMgdGVhbWJyb3duMzk0QG0","created":"2015-06-04T01:38:23.000Z","updated":"2015-06-04T01:38:23.372Z","summary":"shopping with mom","creator":{"email":"teambrown394@gmail.com","displayName":"Team Brown","self":true},"organizer":{"email":"teambrown394@gmail.com","displayName":"Team Brown","self":true},"start":{"dateTime":"2015-06-07T14:00:00-05:00"},"end":{"dateTime":"2015-06-07T17:00:00-05:00"},"iCalUID":"gego598smdlf2d0ffm468i4oqc@google.com","sequence":0,"reminders":{"useDefault":true}},{"kind":"calendar#event","etag":"\"2866763761026000\"","id":"j80kcdm5jv6vq6pulpelqfdvms","status":"confirmed","htmlLink":"https://www.google.com/calendar/event?eid=ajgwa2NkbTVqdjZ2cTZwdWxwZWxxZmR2bXMgdGVhbWJyb3duMzk0QG0","created":"2015-06-04T01:37:53.000Z","updated":"2015-06-04T01:38:00.513Z","summary":"Emily's birthday party","colorId":"4","creator":{"email":"teambrown394@gmail.com","displayName":"Team Brown","self":true},"organizer":{"email":"teambrown394@gmail.com","displayName":"Team Brown","self":true},"start":{"dateTime":"2015-06-07T21:00:00-05:00"},"end":{"dateTime":"2015-06-07T22:00:00-05:00"},"iCalUID":"j80kcdm5jv6vq6pulpelqfdvms@google.com","sequence":0,"reminders":{"useDefault":true}}]}}
+        $scope.mockEvents = [];
+        $scope.addMockEvents = function() {
+            for(i = 3; i < 7; i++)
+            {
+                var suggestion = {};
+                suggestion.summary = "Test Event" + i;
+                suggestion.colorId = "0";
+                suggestion.addedEvent = false;
+                suggestion.showOption = false;
+                suggestion.active = -1;
+
+                var start = new Date(new Date($scope.today));
+                start = new Date(start.getTime() + (i - 1) * 3600000);
+                var end = new Date(start.getTime() + i * 3600000);
+
+                suggestion.start = {dateTime: start};
+                suggestion.end = {dateTime: end};
+                $scope.mockEvents.push(suggestion);
+            }
+        };
+
         // Call two functions to handle the start of touch and moving of touch.
         document.addEventListener('touchstart', handleTouchStart, false);
         document.addEventListener('touchmove', handleTouchMove, false);
@@ -289,6 +309,24 @@ angular
                 suggestion.greaterThanHour = true;
             }
             $scope.events.splice(i, 0, suggestion)
+        }
+
+        /**
+         * this function tests add suggestion
+         */
+        $scope.testAddSuggestion = function(startTime, endTime, i, isHourLong) {
+            var suggestion = {};
+            suggestion.summary = "";
+            suggestion.colorId = "0";
+            suggestion.addedEvent = false;
+            suggestion.showOption = false;
+            suggestion.active = -1;
+            suggestion.start = {dateTime: startTime};
+            suggestion.end = {dateTime: endTime};
+            if (isHourLong) {
+                suggestion.greaterThanHour = true;
+            }
+            $scope.mockEvents.splice(i, 0, suggestion)
         }
 
         /**
