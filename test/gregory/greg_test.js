@@ -1,4 +1,4 @@
-/**
+    /**
  * Created by Gregory on 6/6/2015.
  */
 
@@ -30,8 +30,21 @@ describe('IndexController', function () {
         it("returns true if the suggestion is less than an hour long", function() {
             //var $scope = {};
             //var controller = IndexController;//$controller('IndexController', { $scope: $scope });
-            var testBoolean = scope.isNotHourLong(scope.sugg[0]);
-            expect(testBoolean).toEqual(false);
+
+            scope.addMockEvents();
+
+            var events_length = scope.mockEvents.length;
+
+            var start = new Date(new Date(scope.today));
+            var end = new Date(start.getTime() + 3600000);
+            scope.testAddSuggestion(start, end, 0, true);
+
+            var new_length = scope.mockEvents.length;
+
+            expect(events_length + 1).toEqual(new_length);
+
+            //var testBoolean = scope.isNotHourLong(scope.sugg[0]);
+            //expect(testBoolean).toEqual(false);
         });
     });
 
