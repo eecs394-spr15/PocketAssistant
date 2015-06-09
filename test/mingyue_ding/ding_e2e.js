@@ -8,10 +8,8 @@ describe('my app', function() {
 			element(by.buttonText("Click here to get your Calendar!")).click();
 			element(by.buttonText("Click here to get your Calendar!")).click();
 			browser.driver.sleep(30000);
-
 			element(by.buttonText("Add")).click();
 			browser.driver.sleep(2000);
-
 			element(by.model("updateData.summary")).sendKeys("Test Event");
 		});
 	});
