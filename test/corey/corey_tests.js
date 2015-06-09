@@ -1,19 +1,28 @@
-describe("A suite",function(){
+describe("Corey's Test Suite",function(){
 
-    beforeEach(module('example'));
+    describe('Client Load Testing', function(){
 
-    var controller, $scope;
+        beforeEach(module('example'));
 
-    beforeEach(inject(function($controller, $rootScope){
-        $scope = $rootScope.$new();
-        controller = $controller('IndexController',{
-            $scope:$scope
-        });
-    }));
+        var controller, $scope;
 
-    it("contains spec with an expectation", function(){
+        beforeEach(inject(function($controller, $rootScope){
+            $scope = $rootScope.$new();
+            controller = $controller('IndexController',{
+                $scope:$scope
+            });
+        }));
 
-        $scope.isNotHourLong($scope.sugg[0]);
-        expect(true).toBe(true);
-    })
+        it("Should try to get calendar data upon client load", function(){
+
+            $scope.addMockEvents();
+
+            spyOn($scope, 'getCalendarData').and.callThrough();
+
+            $scope.handleClientLoad();
+            expect($scope.getCalendarData).toHaveBeenCalled()
+        })
+    });
+
+
 });

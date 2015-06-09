@@ -27,7 +27,7 @@ describe('IndexController', function () {
     }));
 
     describe('$scope.isNotHourLong', function() {
-        it("returns true if the suggestion is less than an hour long", function() {
+        /*it("returns true if the suggestion is less than an hour long", function() {
             //var $scope = {};
             //var controller = IndexController;//$controller('IndexController', { $scope: $scope });
 
@@ -45,7 +45,7 @@ describe('IndexController', function () {
 
             //var testBoolean = scope.isNotHourLong(scope.sugg[0]);
             //expect(testBoolean).toEqual(false);
-        });
+        });*/
     });
 
     /*var $controller;

@@ -35,7 +35,7 @@ var browsers = {
 
 var config = {
     specs: [
-        './greg_end_tests.js'
+        './greg_e2e.js'
     ],
 
     baseUrl: 'http://localhost:3333'

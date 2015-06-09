@@ -46,10 +46,49 @@ angular
          * This function is called when the Authorization button is clicked. It sets the API key and calls checkAuth()
          * It can also be called on client load for automatic authentication.
          */
+
+        var gapi = {};
+        gapi.client = {};
+        gapi.client.setApiKey = function(){};
+        gapi.client.load = function(type, v, callback){
+            callback()
+        };
+        gapi.auth = {};
+        gapi.auth.authorize = function(opt, callback){
+            callback({})
+        };
+
+        gapi.client.calendar = {};
+        gapi.client.calendar.events = {};
+        gapi.client.calendar.events.list = function(opt){
+            return {
+                execute:function(callback){
+                    var resp = [];
+                    if(opt.q){
+                        for(var i in $scope.events){
+                            if($scope.events[i].summary.substr(0,10)=='[reminder]'){
+                                resp.push($scope.events[i]);
+                            }
+                        }
+                    }
+                    else{
+                        resp = $scope.events
+                    }
+
+                    callback({
+                        items:resp
+                    })
+                }
+            }
+        };
+
+
+
         $scope.handleClientLoad = function () {
             gapi.client.setApiKey(apiKey);
-            window.setTimeout(checkAuth, 1);
+            checkAuth();
         };
+
 
         /**
          * checkAuth checks the users authorization in the background.
@@ -74,6 +113,9 @@ angular
          */
         function handleAuthResult(authResult) {
             var authorizeButton = document.getElementById('authorize-button');
+            if(!authorizeButton){
+                authorizeButton = document.createElement("BUTTON")
+            }
             if (authResult && !authResult.error) {
                 authorizeButton.style.visibility = 'hidden';
                 makeApiCall();
@@ -124,7 +166,13 @@ angular
          * array ordered by start time. Once this response is completed, the events are parsed, suggestions are made, and
          * reminders are gathered.
          */
+
         function getCalendarData() {
+
+            $scope.getCalendarData();
+        }
+
+        $scope.getCalendarData = function() {
             $scope.loading = true;
             //limit our query to events occurring today
             var currDate = new Date(Date.now() + getFutureDay(dayCount));
@@ -149,8 +197,6 @@ angular
                 //When Google Calendar Data is loaded, display it
                 $scope.cal = true;
                 $scope.events = resp.items;
-                supersonic.logger.log("hi");
-                supersonic.logger.log(resp);
 
                 //make suggestions based on events
                 $scope.makeSuggestion();
@@ -164,34 +210,29 @@ angular
                 //find all reminders
                 getTaggedEvents();
             });
-        }
-
-        $scope.mockEvents = [];
-        $scope.addMockEvents = function() {
-            for(i = 3; i < 7; i++)
-            {
-                var suggestion = {};
-                suggestion.summary = "Test Event" + i;
-                suggestion.colorId = "0";
-                suggestion.addedEvent = false;
-                suggestion.showOption = false;
-                suggestion.active = -1;
-
-                var start = new Date(new Date($scope.today));
-                start = new Date(start.getTime() + (i - 1) * 3600000);
-                var end = new Date(start.getTime() + i * 3600000);
-
-                suggestion.start = {dateTime: start};
-                suggestion.end = {dateTime: end};
-                $scope.mockEvents.push(suggestion);
-            }
         };
 
-        // Call two functions to handle the start of touch and moving of touch.
+        $scope.addMockEvents = function() {
+            $scope.events = [
+                {
+                    "summary": "[reminder]Free Time",
+                    "colorId": "11",
+                    "start": {"dateTime": "2015-06-09T08:00:00-05:00"},
+                    "end": {"dateTime": "2015-06-09T09:00:00-05:00"}
+                },
+                {
+                    "summary": "Eat a Meal",
+                    "colorId": "11",
+                    "start": {"dateTime": "2015-06-09T08:58:00-05:00"},
+                    "end": {"dateTime": "2015-06-09T10:00:00-05:00"}
+                }]
+        };
+
+// Call two functions to handle the start of touch and moving of touch.
         document.addEventListener('touchstart', handleTouchStart, false);
         document.addEventListener('touchmove', handleTouchMove, false);
 
-        // Initialize two variables to store the value before moving the finger of  X and Y axis.
+// Initialize two variables to store the value before moving the finger of  X and Y axis.
         var xDown = null;
         var yDown = null;
 
@@ -228,11 +269,9 @@ angular
             if ( Math.abs( xDiff ) > Math.abs( yDiff ) ) {
                 if ( xDiff > 10 ) {
                     $scope.nextdate();
-                    supersonic.logger.log('swipeLeft');
 
                 } else if (xDiff < -5){
                     $scope.prevdate();
-                    supersonic.logger.log('swipeRight');
 
                 }
             }
@@ -586,7 +625,7 @@ angular
             ev.showOption = !ev.showOption;
         };
 
-        // mySuggestion binds to an activity title input by a user; ng-model is used
+// mySuggestion binds to an activity title input by a user; ng-model is used
         $scope.mySuggestion = {"summary":""};
 
         /**
@@ -624,7 +663,7 @@ angular
             $scope.mySuggestion.summary = "";
         };
 
-        //Initialize the variables to show all reminders at initial state
+//Initialize the variables to show all reminders at initial state
         $scope.hideReminder = false;
         $scope.chevron = "super-chevron-up";
         $scope.showOrHide = "Hide Reminders";
@@ -650,7 +689,7 @@ angular
             }
         };
 
-        //initialize clear eventTag to not set an event to be a reminder at the beginning
+//initialize clear eventTag to not set an event to be a reminder at the beginning
         $scope.eventTag = false;
 
         /**
@@ -680,14 +719,13 @@ angular
                 'calendarId': 'primary',
                 'eventId': $scope.evid
             }).execute(function (resp) {
-                supersonic.logger.log(resp);
                 $scope.re = resp;
                 $scope.updateData = $scope.re;
             });
         };
 
 
-        //confirm is a prompt to give user two options as yes or no to confirm an action to delete, update or add an event
+//confirm is a prompt to give user two options as yes or no to confirm an action to delete, update or add an event
         var confirm = {
             buttonLabels: ["Yes", "No"]
         };
@@ -864,17 +902,15 @@ angular
          */
         $scope.addNewEvent = function(){
             if ($scope.eventTag == true){
-                supersonic.logger.log('adding reminder tag is needed');
                 $scope.updateData.summary = reminderTag.concat($scope.updateData.summary);
             }
             $scope.newEvent = $scope.updateData;
-            supersonic.logger.log($scope.updateData);
+
             var request = gapi.client.calendar.events.insert({
                 'calendarId': 'primary',
                 'resource': $scope.newEvent
             });
             request.execute(function (resp) {
-                supersonic.logger.log('Event Added');
                 $scope.mainPage = true;
                 $scope.addPage = false;
                 $scope.titleBar = {name: 'Pocket Assistant', button: '', back: '', addBut: 'Add'};
@@ -937,7 +973,6 @@ angular
             });
             eventList.execute(function(resp) {
                 var events = resp.items;
-                supersonic.logger.log(events);
                 var passedReminder = 0;
                 for (var i in events) {
                     var evHours = parseInt(events[i].start.dateTime.substr(11, 2));
@@ -978,7 +1013,6 @@ angular
                 }
             }
             $scope.visibleReminders -= 1;
-            supersonic.logger.log($scope.countdown);
         };
 
         /**

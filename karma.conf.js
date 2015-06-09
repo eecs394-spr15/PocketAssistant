@@ -20,16 +20,14 @@ module.exports = function(config) {
       'bower_components/webcomponentsjs/webcomponents.js',
       'app/*/*.js',
       'app/**/**/*.js',
-      'test/*.js',
-      'test/*.js',
-      'test/*.js',
-      'test/gregory/greg_test.js',
-      'test/mingyue_ding/ding_unit_tests.js'
+      'test/**/*.js'
     ],
 
 
     // list of files to exclude
     exclude: [
+        'test/**/*conf.js',
+        'test/**/*e2e.js'
     ],
 
     // preprocess matching files before serving them to the browser
