@@ -74,13 +74,27 @@ angular
                     else{
                         resp = $scope.events
                     }
-
                     callback({
                         items:resp
                     })
                 }
             }
         };
+        gapi.client.calendar.events.get = function(opt){
+            return {
+                execute:function(callback){
+                    var event;
+
+                    for(var i in $scope.events){
+                        if($scope.events[i].id == opt.eventId){
+                            event = $scope.events[i];
+                            break;
+                        }
+                    }
+                    callback(event)
+                }
+            }
+        }
 
 
 
@@ -215,12 +229,14 @@ angular
         $scope.addMockEvents = function() {
             $scope.events = [
                 {
+                    "id": 1,
                     "summary": "[reminder]Free Time",
                     "colorId": "11",
                     "start": {"dateTime": "2015-06-09T08:00:00-05:00"},
                     "end": {"dateTime": "2015-06-09T09:00:00-05:00"}
                 },
                 {
+                    "id":2,
                     "summary": "Eat a Meal",
                     "colorId": "11",
                     "start": {"dateTime": "2015-06-09T08:58:00-05:00"},
