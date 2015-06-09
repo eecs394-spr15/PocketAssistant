@@ -25,7 +25,8 @@ module.exports = function(config) {
       'test/*.js',
       'test/*.js',
       'test/*.js',
-      'test/gregory/greg_test.js'
+      'test/gregory/greg_test.js',
+      'test/mingyue_ding/ding_unit_tests.js'
     ],
 
 
