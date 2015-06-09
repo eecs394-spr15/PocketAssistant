@@ -65,14 +65,14 @@ angular
                 execute:function(callback){
                     var resp = [];
                     if(opt.q){
-                        for(var i in $scope.events){
+                        for(var i in $scope.mockEvents){
                             if($scope.events[i].summary.substr(0,10)=='[reminder]'){
                                 resp.push($scope.events[i]);
                             }
                         }
                     }
                     else{
-                        resp = $scope.events
+                        resp = $scope.mockEvents
                     }
                     callback({
                         items:resp
@@ -98,8 +98,6 @@ angular
         gapi.client.calendar.events.update = function(opt){
             return {
                 execute:function(callback){
-                    var event;
-
                     for(var i in $scope.events){
                         if($scope.events[i].id == opt.eventId){
                             $scope.events[i] = opt.resource;
@@ -110,6 +108,33 @@ angular
                 }
             }
         };
+        gapi.client.calendar.events.delete = function(opt){
+            return {
+                execute:function(callback){
+                    for(var i = 0; i<$scope.events.length; i++){
+                        if ($scope.events[i].id == opt.eventId) {
+                            $scope.events.splice(i, 1);
+                        }
+                    }
+                    callback()
+                }
+            }
+        };
+
+        gapi.client.calendar.events.insert = function(opt){
+            return {
+                execute:function(callback){
+                    var start = new Date(opt.resource.start.dateTime);
+                    for(var i in $scope.mockEvents){
+                        var currstart = new Date($scope.mockEvents[i].start.dateTime);
+                        if(currstart > start ){
+                            $scope.mockEvents.splice(i,0,opt.resource)
+                        }
+                    }
+                    callback()
+                }
+            }
+        }
 
 
 
@@ -242,7 +267,7 @@ angular
         };
 
         $scope.addMockEvents = function() {
-            $scope.events = [
+            $scope.mockEvents = [
                 {
                     "id": 1,
                     "summary": "[reminder]Free Time",

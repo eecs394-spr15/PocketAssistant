@@ -40,11 +40,33 @@ describe("Corey's Test Suite",function(){
 
             $scope.addMockEvents();
 
-            $scope.getEvent($scope.events[0]);
+            var ev = $scope.mockEvents[0]
 
-            expect($scope.updateData).toBe($scope.events[0]);
+            $scope.getCalendarData();
+            $scope.getEvent(ev);
+
+            expect($scope.updateData).toBe(ev);
         });
 
+        it("Should edit the colorId of an event", function(){
+
+            $scope.addMockEvents();
+
+            $scope.getCalendarData();
+
+            var ev = $scope.updateData = {
+                "id": 3,
+                "summary": "[reminder]asdf",
+                "colorId": "11",
+                "start": {"dateTime": "2015-06-09T08:30:00-05:00"},
+                "end": {"dateTime": "2015-06-09T09:00:00-05:00"}
+            }
+
+            $scope.addNewEvent()
+            console.log($scope.mockEvents)
+            expect($scope.events).toContain(ev);
+
+        })
 
     });
 
