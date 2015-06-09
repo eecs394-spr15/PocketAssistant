@@ -153,13 +153,13 @@ angular
                 supersonic.logger.log(resp);
 
                 //make suggestions based on events
-                makeSuggestion();
+                $scope.makeSuggestion();
 
                 //find the current event
                 checkCurrent();
 
                 //check for conflicting events
-                checkConflict();
+                $scope.checkConflict();
 
                 //find all reminders
                 getTaggedEvents();
@@ -358,8 +358,8 @@ angular
          * - free time from 8am to event[0].start
          * - free time from end time of the last event to 10pm
          */
-        function makeSuggestion() {
-            //Special case: if there are no events in a day, this will manually insert a suggestion at 8 am
+        $scope.makeSuggestion = function() {
+            //Special case: if there are no events in a day, this will manually insert a suggestion at 8 am;
             if ($scope.events.length == 0) {
                 Suggestion8to9(0);
             }
@@ -435,7 +435,7 @@ angular
                 newEnd = new Date(new Date($scope.today).setHours(22));
                 addSuggestion(lastEnd, newEnd, $scope.events.length, 0);
             }
-        }
+        };
 
         /**
          * checkConflict checks if an event has time conflict with other events
@@ -446,15 +446,19 @@ angular
          * A user is supposed to be shown conflicting events when opening the app.
          * This function iterates $scope.events array to check each event.
          */
-        function checkConflict() {
+        $scope.checkConflict=function() {
             var event1 = $scope.events[0];
             event1.conflict = 0;
             var event2;
             var i = 1;
+            var prevEnd = new Date(event1.end.dateTime);
             while (i < $scope.events.length) {
                 event2 = $scope.events[i];
                 event2.conflict = 0;
                 var event1End = new Date(event1.end.dateTime);
+                if (prevEnd > event1End) {
+                    event1End = new Date(prevEnd);
+                }
                 var event2Start = new Date(event2.start.dateTime);
                 // If an event has time conflict with other events, its 'conflict' attribute will be set to a positive number.
                 // Specific values 1, 2 and 3 are used for styling
@@ -468,9 +472,10 @@ angular
                     }
                 }
                 event1 = event2;
+                prevEnd=event1End;
                 i += 1;
             }
-        }
+        };
 
         /**
          * checkCurrent looks for event that is currently ongoing.
