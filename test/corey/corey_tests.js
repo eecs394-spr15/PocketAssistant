@@ -62,8 +62,7 @@ describe("Corey's Test Suite",function(){
                 "end": {"dateTime": "2015-06-09T09:00:00-05:00"}
             }
 
-            $scope.addNewEvent()
-            console.log($scope.mockEvents)
+            $scope.addNewEvent();
             expect($scope.events).toContain(ev);
 
         })
