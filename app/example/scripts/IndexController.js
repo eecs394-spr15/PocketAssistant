@@ -94,7 +94,22 @@ angular
                     callback(event)
                 }
             }
-        }
+        };
+        gapi.client.calendar.events.update = function(opt){
+            return {
+                execute:function(callback){
+                    var event;
+
+                    for(var i in $scope.events){
+                        if($scope.events[i].id == opt.eventId){
+                            $scope.events[i] = opt.resource;
+                            break;
+                        }
+                    }
+                    callback()
+                }
+            }
+        };
 
 
 
