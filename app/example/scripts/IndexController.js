@@ -389,7 +389,7 @@ angular
          * Then addSuggestion will be called to add a free time slot to events array
          * A new-added slot won't be sent to google calender until a customer chooses or adds an activity for this slot.
          */
-        function addSuggestion(startTime, endTime, i, isHourLong) {
+        $scope.addSuggestion = function(startTime, endTime, i, isHourLong) {
             var suggestion = {};
             suggestion.summary = "";
             suggestion.colorId = "0";
@@ -402,7 +402,7 @@ angular
                 suggestion.greaterThanHour = true;
             }
             $scope.events.splice(i, 0, suggestion)
-        }
+        };
 
         /**
          * Suggesetion8to9 inserts a 8am-9am suggestion into events array by calling addSuggestion function.
@@ -412,12 +412,16 @@ angular
          *
          * Code inside this function are used for multiple time by makeSuggestion function, so the function is created to simplify makeSuggestion.
          */
-        function Suggestion8to9(i) {
+        function Suggestion8to9 (i) {
+            $scope.Suggestion8to9(i)
+        }
+
+        $scope.Suggestion8to9 = function(i) {
             var t = new Date(new Date($scope.today));
             var startTime = new Date(t.setHours(8));
             var endTime = new Date(t.setHours(9));
-            addSuggestion(startTime, endTime, i, 1);
-        }
+            $scope.addSuggestion(startTime, endTime, i, 1);
+        };
         /**
          * Given all events in a day, makeSuggestion function locates 1-hour long and 30-minute long free time slots, and inserts these slots into the events array by calling addSuggestion.
          *
@@ -445,7 +449,7 @@ angular
             }
             else if (FirstEventStart.getHours() == 8 && FirstEventStart.getMinutes() >=30){
                 var start8am = new Date(new Date($scope.today).setHours(8));
-                addSuggestion(start8am, FirstEventStart, 0, 0);
+                $scope.addSuggestion(start8am, FirstEventStart, 0, 0);
             }
             else if ($scope.events.length == 1) {
                 var prevEnd = new Date($scope.events[0].end.dateTime);
@@ -469,7 +473,7 @@ angular
                 while (nextStart - prevEnd >= 3600000) {
                     var currEnd = new Date(prevEnd.getTime() + 3600000);
                     if (currEnd.getHours() < 22) {
-                        addSuggestion(prevEnd, currEnd, i, 1);
+                        $scope.addSuggestion(prevEnd, currEnd, i, 1);
                         i += 1;
                         prevEnd = currEnd;
                     }
@@ -480,12 +484,12 @@ angular
                 //make a half-hour suggestion if the interval lasts 30mins to 60 mins.
                 if (nextStart - prevEnd >= 1800000) {
                     if (nextStart.getHours() < 22) {
-                        addSuggestion(prevEnd, nextStart, i, 0);
+                        $scope.addSuggestion(prevEnd, nextStart, i, 0);
                     }
                     else {
                         var currEnd = new Date(new Date($scope.today).setHours(22));
                         if (currEnd - prevEnd >= 1800000) {
-                            addSuggestion(prevEnd, currEnd, i, 0);
+                            $scope.addSuggestion(prevEnd, currEnd, i, 0);
                         }
                     }
                 }
@@ -497,18 +501,18 @@ angular
             }
             //Special case: last event is an early morning event ending before 8am
             if (lastEnd.getHours() <= 7){
-                Suggestion8to9($scope.events.length);
+                $scope.Suggestion8to9($scope.events.length);
                 lastEnd = new Date(new Date($scope.today).setHours(9));
             }
             while (lastEnd.getHours() < 21) {
                 var newEnd = new Date(lastEnd.getTime() + 3600000);
-                addSuggestion(lastEnd, newEnd, $scope.events.length, 1);
+                $scope.addSuggestion(lastEnd, newEnd, $scope.events.length, 1);
                 lastEnd = newEnd;
             }
             //make a half-hour suggestion if the last event ends between 9pm to 9:30pm
             if (lastEnd.getHours() < 22 && lastEnd.getMinutes() <= 30) {
                 newEnd = new Date(new Date($scope.today).setHours(22));
-                addSuggestion(lastEnd, newEnd, $scope.events.length, 0);
+                $scope.addSuggestion(lastEnd, newEnd, $scope.events.length, 0);
             }
         };
 
