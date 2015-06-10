@@ -72,7 +72,7 @@ angular
                         }
                     }
                     else{
-                        resp = $scope.mockEvents
+                        resp = angular.copy($scope.mockEvents)
                     }
                     callback({
                         items:resp
@@ -87,7 +87,7 @@ angular
 
                     for(var i in $scope.events){
                         if($scope.events[i].id == opt.eventId){
-                            event = $scope.events[i];
+                            event = angular.copy($scope.events[i]);
                             break;
                         }
                     }
@@ -98,9 +98,9 @@ angular
         gapi.client.calendar.events.update = function(opt){
             return {
                 execute:function(callback){
-                    for(var i in $scope.events){
-                        if($scope.events[i].id == opt.eventId){
-                            $scope.events[i] = opt.resource;
+                    for(var i in $scope.mockEvents){
+                        if($scope.mockEvents[i].id == opt.eventId){
+                            $scope.mockEvents[i] = opt.resource;
                             break;
                         }
                     }
@@ -111,9 +111,9 @@ angular
         gapi.client.calendar.events.delete = function(opt){
             return {
                 execute:function(callback){
-                    for(var i = 0; i<$scope.events.length; i++){
-                        if ($scope.events[i].id == opt.eventId) {
-                            $scope.events.splice(i, 1);
+                    for(var i = 0; i<$scope.mockEvents.length; i++){
+                        if ($scope.mockEvents[i].id == opt.eventId) {
+                            $scope.mockEvents.splice(i, 1);
                         }
                     }
                     callback()
@@ -404,24 +404,6 @@ angular
                 suggestion.greaterThanHour = true;
             }
             $scope.events.splice(i, 0, suggestion)
-        }
-
-        /**
-         * this function tests add suggestion
-         */
-        $scope.testAddSuggestion = function(startTime, endTime, i, isHourLong) {
-            var suggestion = {};
-            suggestion.summary = "";
-            suggestion.colorId = "0";
-            suggestion.addedEvent = false;
-            suggestion.showOption = false;
-            suggestion.active = -1;
-            suggestion.start = {dateTime: startTime};
-            suggestion.end = {dateTime: endTime};
-            if (isHourLong) {
-                suggestion.greaterThanHour = true;
-            }
-            $scope.mockEvents.splice(i, 0, suggestion)
         }
 
         /**
