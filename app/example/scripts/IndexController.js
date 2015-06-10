@@ -256,7 +256,7 @@ angular
                 $scope.makeSuggestion();
 
                 //find the current event
-                checkCurrent();
+                $scope.checkCurrent();
 
                 //check for conflicting events
                 $scope.checkConflict();
@@ -300,7 +300,7 @@ angular
          *
          * Get the coordinate value by using .clientX or .clientY of the first element in the touches array.
          */
-        function handleTouchStart(evt) {
+        function handleTouchStart (evt) {
             xDown = evt.touches[0].clientX;
             yDown = evt.touches[0].clientY;
         }
@@ -312,13 +312,11 @@ angular
          *
          * call the function of $scope.nextdate when swipe left, call the function of $scope.prevdate when swipe right
          */
-        function handleTouchMove(evt) {
+        function handleTouchMove (evt) {
             if ( ! xDown || ! yDown ) {
                 return;
             }
 
-            var xUp = evt.touches[0].clientX;
-            var yUp = evt.touches[0].clientY;
             var xDiff = xDown - xUp;
             var yDiff = yDown - yUp;
 
@@ -581,15 +579,15 @@ angular
          * A user is supposed to be shown which event is currently ongoing when opening the app.
          * This function iterates $scope.events array to check each event.
          */
-        function checkCurrent() {
+        $scope.checkCurrent = function() {
             var i = 0;
-            var currentTime = new Date();
+            $scope.currentTime = (new Date()).getHours();
             while (i < $scope.events.length) {
                 var ev = $scope.events[i];
                 ev.current = false;
                 var evStart = new Date(ev.start.dateTime);
                 var evEnd = new Date(ev.end.dateTime);
-                if (currentTime >= evStart && currentTime <= evEnd) {
+                if ($scope.currentTime >= evStart && $scope.currentTime <= evEnd) {
                     ev.current = true;
                 }
                 i += 1;
